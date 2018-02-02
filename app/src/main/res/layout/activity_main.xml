@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.group18.cs446.spacequest.MainActivity">
+
+    <TextView
+        android:id="@+id/game_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Space Quest"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.174"
+        android:layout_marginBottom="51dp"
+        android:layout_above="@+id/game_start_button"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/game_start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Game"
+        tools:layout_editor_absoluteX="137dp"
+        tools:layout_editor_absoluteY="191dp"
+        android:layout_marginBottom="47dp"
+        android:layout_above="@+id/upgrade_ship_button"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/upgrade_ship_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="201dp"
+        android:text="Upgrade Ship"
+        tools:layout_editor_absoluteX="148dp"
+        tools:layout_editor_absoluteY="282dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/shop_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="91dp"
+        android:text="Shop" />
+
+</RelativeLayout>
