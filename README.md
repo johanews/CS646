@@ -1,2 +1,2 @@
-# CS646
+# SpaceQuest
 A repository for the mobile application project
