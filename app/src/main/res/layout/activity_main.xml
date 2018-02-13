@@ -10,7 +10,7 @@
         android:id="@+id/game_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Space Quest"
+        android:text="@string/app_name"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -25,7 +25,7 @@
         android:id="@+id/game_start_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Game"
+        android:text="@string/start_game_button_string"
         tools:layout_editor_absoluteX="137dp"
         tools:layout_editor_absoluteY="191dp"
         android:layout_marginBottom="47dp"
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="201dp"
-        android:text="Upgrade Ship"
+        android:text="@string/upgrade_ship_button_string"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="282dp"
         android:layout_alignParentBottom="true"
@@ -50,6 +50,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="91dp"
-        android:text="Shop" />
+        android:text="@string/shop_button_string" />
 
 </RelativeLayout>
