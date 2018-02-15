@@ -16,26 +16,31 @@ import java.util.Random;
 public class Asteroid implements GameEntity {
     private static final int MIN_DISTANCE = 100;
     private static final int MAX_DISTACE = 300;
-    //private static final int RADIUS = ?;
 
-    private static Bitmap bitmap;
+    private Bitmap bitmap;
 
-    private Point coordinates;
-    private Point speed;
+    private Point coordinates = new Point();
+    private Point speed = new Point();
 
     // Arc speed and angle are in degrees
-    private double arcSpeed;
-    private double angle;
+    private float arcSpeed;
+    private float angle;
 
     private Random random = new Random();
 
-    public Asteroid(Point centre) {
-        
-    }
-
-    // Loads the bitmap for the asteroids. Must be called before any instances are created.
-    public static void setBitmap(Context context) {
+    public Asteroid(Point centre, Context context) {
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid);
+
+        double spawnAngle = random.nextDouble() * 2 * Math.PI;
+        double spawnDistance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTACE - MIN_DISTANCE);
+
+        coordinates.set((int) (centre.x + Math.cos(spawnAngle) * spawnDistance),
+                        (int) (centre.y + Math.sin(spawnAngle) * spawnDistance));
+
+
+        arcSpeed = random.nextBoolean() ? random.nextFloat() + 0.2f : - random.nextFloat() + 0.2f;
+        speed.x = random.nextBoolean() ? random.nextInt(5) + 1 : - random.nextInt(5) + 1;
+        speed.y = random.nextBoolean() ? random.nextInt(5) + 1 : - random.nextInt(5) + 1;
     }
 
     @Override
@@ -48,10 +53,14 @@ public class Asteroid implements GameEntity {
         coordinates.x += speed.x;
         coordinates.y += speed.y;
         angle = (angle + arcSpeed) % 360;
+        //System.out.println("xpos: " + coordinates.x + ", ypos: " + coordinates.y);
     }
 
-    @Override
     public Bitmap getBitmap() {
         return bitmap;
+    }
+
+    public float getAngle() {
+        return angle;
     }
 }

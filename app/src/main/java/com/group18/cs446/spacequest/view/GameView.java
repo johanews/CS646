@@ -8,7 +8,11 @@ import android.graphics.Point;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.group18.cs446.spacequest.game.objects.Asteroid;
 import com.group18.cs446.spacequest.game.objects.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Owen on 2018-02-08.
@@ -18,6 +22,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private boolean running = false;
     private Player player;
+    private List<Asteroid> asteroids = new ArrayList<>();
     private Thread gameThread = null;
     private int tickRate;
 
@@ -30,6 +35,10 @@ public class GameView extends SurfaceView implements Runnable {
         tickRate = 30;
 
         player = new Player(context);
+
+        for (int i = 0; i < 20; i++) {
+            asteroids.add(new Asteroid(player.getCoordinates(), context));
+        }
 
         surfaceHolder = getHolder();
         paint = new Paint();
@@ -47,6 +56,9 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update(){
+        for (Asteroid asteroid: asteroids) {
+            asteroid.update();
+        }
         player.update();
     }
 
@@ -71,6 +83,7 @@ public class GameView extends SurfaceView implements Runnable {
                 }
             }
 
+            drawAsteroids(topLeftCorner);
 
             //Alternatively, pass this to Player to paint themselves here
             canvas.save();
@@ -87,6 +100,18 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawPoint(canvas.getWidth()/2, canvas.getHeight()/2, paint);
 
             surfaceHolder.unlockCanvasAndPost(canvas);
+        }
+    }
+
+    private void drawAsteroids(Point topLeftCorner) {
+        for (Asteroid asteroid: asteroids) {
+            canvas.save();
+            canvas.rotate(asteroid.getAngle(), asteroid.getCoordinates().x - topLeftCorner.x, asteroid.getCoordinates().y - topLeftCorner.y);
+            canvas.drawBitmap(asteroid.getBitmap(),
+                    asteroid.getCoordinates().x - topLeftCorner.x - asteroid.getBitmap().getWidth() / 2,
+                    asteroid.getCoordinates().y - topLeftCorner.y - asteroid.getBitmap().getHeight() / 2,
+                    paint);
+            canvas.restore();
         }
     }
 
