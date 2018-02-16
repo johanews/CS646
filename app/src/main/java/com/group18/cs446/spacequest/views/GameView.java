@@ -79,10 +79,6 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.save();
             canvas.rotate(-player.getAngle(), canvas.getWidth()/2, canvas.getHeight()/2);
 
-            paint.setStrokeWidth(10);
-            paint.setColor(Color.RED);
-            canvas.drawPoint(canvas.getWidth()/2 + 100, canvas.getHeight()/2 + 100, paint);
-
             canvas.restore();
 
             surfaceHolder.unlockCanvasAndPost(canvas);

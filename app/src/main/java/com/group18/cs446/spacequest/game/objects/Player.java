@@ -80,4 +80,5 @@ public class Player implements GameEntity {
     public void setCurrentCommand(PlayerCommand cmd) {
         currentCommand = cmd;
     }
+
 }

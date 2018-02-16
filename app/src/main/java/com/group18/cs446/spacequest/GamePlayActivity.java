@@ -11,8 +11,9 @@ import com.group18.cs446.spacequest.views.GameView;
 public class GamePlayActivity extends AppCompatActivity implements View.OnTouchListener {
 
     private GameView gameView;
-    private Button right;
-    private Button left;
+
+    private Boolean right = false;
+    private Boolean left = false;
 
     @Override
     protected void onPause() {
@@ -44,35 +45,52 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
     @Override
     public boolean onTouch(View view, MotionEvent event) {
 
-        if(event.getAction() == MotionEvent.ACTION_UP) {
+        if(view.getId() == R.id.go_right) {
 
-            if(right.isPressed())
-                setCommand(PlayerCommand.RIGHT);
-            else if(left.isPressed())
-                setCommand(PlayerCommand.LEFT);
-            else
-                setCommand(PlayerCommand.NONE);
-        }
+            switch(event.getAction()) {
 
-        else if(event.getAction() == MotionEvent.ACTION_DOWN) {
-
-            switch(view.getId()) {
-
-                case R.id.go_right:
-                    if(!left.isPressed())
+                case MotionEvent.ACTION_DOWN:
+                    right = true;
+                    if(!left)
                         setCommand(PlayerCommand.RIGHT);
-                    break;
+                    return false;
 
-                case R.id.go_left:
-                    if(!right.isPressed())
-                        setCommand(PlayerCommand.RIGHT);
-                    break;
+                case MotionEvent.ACTION_UP:
+                    right = false;
+                    if(left)
+                        setCommand(PlayerCommand.LEFT);
+                    else
+                        setCommand(PlayerCommand.NONE);
+                    return false;
 
-                default:
-                    setCommand(PlayerCommand.NONE);
-                    break;
+                default: break;
             }
         }
+
+        else {
+
+            switch (event.getAction()) {
+
+                case MotionEvent.ACTION_DOWN:
+                    left = true;
+                    if(!right)
+                        setCommand(PlayerCommand.LEFT);
+                    return false;
+
+                case MotionEvent.ACTION_UP:
+                    left = false;
+                    if(right)
+                        setCommand(PlayerCommand.RIGHT);
+                    else
+                        setCommand(PlayerCommand.NONE);
+                    return false;
+
+                default: break;
+            }
+        }
+
+        if(left && right)
+            setCommand(PlayerCommand.NONE);
 
         return false;
     }
@@ -80,6 +98,5 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
     public void setCommand(PlayerCommand c) {
         gameView.getPlayer().setCurrentCommand(c);
     }
-
 
 }
