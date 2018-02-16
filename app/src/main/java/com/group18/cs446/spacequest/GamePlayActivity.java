@@ -53,7 +53,7 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
                     right = true;
                     if(!left)
                         setCommand(PlayerCommand.RIGHT);
-                    return false;
+                    return true;
 
                 case MotionEvent.ACTION_UP:
                     right = false;
@@ -61,7 +61,7 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
                         setCommand(PlayerCommand.LEFT);
                     else
                         setCommand(PlayerCommand.NONE);
-                    return false;
+                    return true;
 
                 default: break;
             }
@@ -75,7 +75,7 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
                     left = true;
                     if(!right)
                         setCommand(PlayerCommand.LEFT);
-                    return false;
+                    return true;
 
                 case MotionEvent.ACTION_UP:
                     left = false;
@@ -83,7 +83,7 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
                         setCommand(PlayerCommand.RIGHT);
                     else
                         setCommand(PlayerCommand.NONE);
-                    return false;
+                    return true;
 
                 default: break;
             }
@@ -92,7 +92,7 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
         if(left && right)
             setCommand(PlayerCommand.NONE);
 
-        return false;
+        return true;
     }
 
     public void setCommand(PlayerCommand c) {
