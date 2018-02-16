@@ -75,6 +75,7 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawColor(Color.BLACK);
             paint.setColor(Color.WHITE);
 
+            canvas.save();
             //drawing all stars
             for (int i = 0; i < 100 && i*200-topLeftCorner.x < canvas.getWidth(); i++) {
                 for (int j = 0; j < 100&& j*200-topLeftCorner.y < canvas.getHeight(); j++) {
@@ -82,6 +83,7 @@ public class GameView extends SurfaceView implements Runnable {
                     canvas.drawPoint(i*200-topLeftCorner.x, j*200-topLeftCorner.y, paint);
                 }
             }
+            canvas.restore();
 
             drawAsteroids(topLeftCorner);
 
@@ -95,9 +97,9 @@ public class GameView extends SurfaceView implements Runnable {
                     paint);
             canvas.restore();
 
-            paint.setColor(Color.RED);
+            /*paint.setColor(Color.RED);
             paint.setStrokeWidth(10);
-            canvas.drawPoint(canvas.getWidth()/2, canvas.getHeight()/2, paint);
+            canvas.drawPoint(canvas.getWidth()/2, canvas.getHeight()/2, paint);*/
 
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
@@ -106,11 +108,10 @@ public class GameView extends SurfaceView implements Runnable {
     private void drawAsteroids(Point topLeftCorner) {
         for (Asteroid asteroid: asteroids) {
             canvas.save();
-            canvas.rotate(asteroid.getAngle(), asteroid.getCoordinates().x - topLeftCorner.x, asteroid.getCoordinates().y - topLeftCorner.y);
-            canvas.drawBitmap(asteroid.getBitmap(),
-                    asteroid.getCoordinates().x - topLeftCorner.x - asteroid.getBitmap().getWidth() / 2,
-                    asteroid.getCoordinates().y - topLeftCorner.y - asteroid.getBitmap().getHeight() / 2,
-                    paint);
+            canvas.translate(asteroid.getCoordinates().x + asteroid.getBitmap().getWidth()/2,
+                             asteroid.getCoordinates().y + asteroid.getBitmap().getHeight()/2);
+            canvas.rotate(asteroid.getAngle());
+            canvas.drawBitmap(asteroid.getBitmap(), 0, 0, paint);
             canvas.restore();
         }
     }
