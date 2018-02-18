@@ -4,13 +4,17 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 
 /**
- * Created by Owen on 2018-02-08.
+ * An interface implemented by the game
+ * entities that provides them with the
+ * essential UI related functionality.
  */
-
 public interface GameEntity {
-    Point getCoordinates();
+
     void update();
+
     Bitmap getBitmap();
+    Point getCoordinates();
+
     default boolean contains(Point p){
         return false;
     }

@@ -1,10 +1,11 @@
-package com.group18.cs446.spacequest.view;
+package com.group18.cs446.spacequest.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -14,9 +15,6 @@ import com.group18.cs446.spacequest.game.objects.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Owen on 2018-02-08.
- */
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -30,8 +28,8 @@ public class GameView extends SurfaceView implements Runnable {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
-    public GameView(Context context, int screenX, int screenY) {
-        super(context);
+    public GameView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
         tickRate = 30;
 
         player = new Player(context);
@@ -136,6 +134,10 @@ public class GameView extends SurfaceView implements Runnable {
         running = true;
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
 

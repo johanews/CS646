@@ -9,9 +9,6 @@ import com.group18.cs446.spacequest.R;
 
 import java.util.Random;
 
-/**
- * Created by vegard on 13.02.2018.
- */
 
 public class Asteroid implements GameEntity {
     private static final int MIN_DISTANCE = 10;
