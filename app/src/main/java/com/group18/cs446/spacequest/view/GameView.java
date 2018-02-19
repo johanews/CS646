@@ -67,6 +67,9 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
+        if(sector != null){
+            sector.unpause();
+        }
         float x = e.getX();
         boolean left = (x < canvasWidth/2);
         int pointerIndex = e.getActionIndex();
