@@ -146,12 +146,13 @@ public class Sector {
 
     private void drawStars(Canvas canvas, Paint paint, Point topLeftCorner){
         paint.setColor(Color.WHITE);
-        int i = 0, width = 7;
+        int i = 0;
+        float width = 4;
         float divisor = Float.parseFloat("2.5");
         for(Point p : stars){
             if(i%1000 == 0){
                 divisor+=1.5;
-                width-=1;
+                width-=0.5;
             }
             i++;
             canvas.drawCircle((p.x-topLeftCorner.x/divisor+starDimension)%starDimension,
