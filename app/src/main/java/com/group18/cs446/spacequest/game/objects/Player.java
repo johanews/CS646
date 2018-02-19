@@ -47,6 +47,7 @@ public class Player implements GameEntity{
         updatesToTarget = time;
 
     }
+
     @Override
     public Point getCoordinates() {
         return coordinates;
@@ -100,7 +101,6 @@ public class Player implements GameEntity{
             }
         }
         bounds = null; // invalidate bounds since we moved
-        if(Math.random()>0.9)System.out.println("Player location: "+coordinates);
     }
 
     public int getAngle(){
@@ -188,12 +188,10 @@ public class Player implements GameEntity{
         if(intersect.intersect(e.getBounds())){
             // This just means the rectangle bounds intersect
             // now we will do a pixel by pixel search to see if they actually overlap
-            System.out.println("INTERSECTING?");
             for(int x = intersect.left; x < intersect.right; x++){
                 for(int y = intersect.top; y < intersect.bottom; y++){
                     if(bitmap.getPixel(x - getBounds().left, y-getBounds().top) != Color.TRANSPARENT){
                         if(e.getBitmap().getPixel(x - e.getBounds().left, y - e.getBounds().top) != Color.TRANSPARENT){
-                            System.out.println("Intersecting.");
                             return true;
                         }
                     }
