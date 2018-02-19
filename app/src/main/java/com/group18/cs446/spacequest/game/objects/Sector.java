@@ -129,6 +129,10 @@ public class Sector {
             paint.setStrokeWidth(10);
             canvas.drawPoint(canvas.getWidth()/2, canvas.getHeight()/2, paint);
 
+            // Draw coordinates, for help testing
+            paint.setColor(Color.YELLOW);
+            paint.setTextSize(40);
+            canvas.drawText("("+player.getCoordinates().x+", "+player.getCoordinates().y+")", canvasWidth-300, canvasHeight-100, paint);
             surfaceHolder.unlockCanvasAndPost(canvas); // unlock and draw the frame
         }
     }

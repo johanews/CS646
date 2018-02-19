@@ -49,18 +49,6 @@ public class GameView extends SurfaceView implements Runnable {
             boolean successfulSector = sector.run();
             if(successfulSector) { // returns true if successful, false otherwise
                 // Do all the store stuff
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
-                System.out.println("SUCCESS");
                 player.reset();
 
             } else {
