@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.group18.cs446.spacequest.Constants;
 import com.group18.cs446.spacequest.game.objects.Asteroid;
 import com.group18.cs446.spacequest.game.objects.Player;
 
@@ -40,6 +41,8 @@ public class GameView extends SurfaceView implements Runnable {
 
         surfaceHolder = getHolder();
         paint = new Paint();
+
+        setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
 
     }
 
