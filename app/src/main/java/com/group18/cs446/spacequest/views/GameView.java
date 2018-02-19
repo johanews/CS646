@@ -43,11 +43,11 @@ public class GameView extends SurfaceView implements Runnable {
         paint = new Paint();
 
         setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
-
     }
 
     @Override
     public void run() {
+
         while (running) {
             long tickStart = System.currentTimeMillis();
             update();
@@ -64,20 +64,21 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void draw(){
+
         if (surfaceHolder.getSurface().isValid()) {
+
             canvas = surfaceHolder.lockCanvas();
 
             Point topLeftCorner = new Point(player.getCoordinates().x-canvas.getWidth()/2,
                     player.getCoordinates().y-canvas.getHeight()/2);
-
-
 
             // Draw background
             canvas.drawColor(Color.BLACK);
             paint.setColor(Color.WHITE);
 
             canvas.save();
-            //drawing all stars
+
+            // Drawing all stars
             for (int i = 0; i < 100 && i*200-topLeftCorner.x < canvas.getWidth(); i++) {
                 for (int j = 0; j < 100&& j*200-topLeftCorner.y < canvas.getHeight(); j++) {
                     paint.setStrokeWidth(10);
@@ -90,7 +91,7 @@ public class GameView extends SurfaceView implements Runnable {
 
             //Alternatively, pass this to Player to paint themselves here
             canvas.save();
-            canvas.rotate(-player.getAngle(), player.getCoordinates().x-topLeftCorner.x, player.getCoordinates().y - topLeftCorner.y);
+            canvas.rotate(-player.getAngle(), player.getCoordinates().x - topLeftCorner.x, player.getCoordinates().y - topLeftCorner.y);
             canvas.drawBitmap(
                     player.getBitmap(),
                     player.getCoordinates().x - topLeftCorner.x - player.getBitmap().getWidth()/2,
@@ -119,9 +120,14 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void control(long start){
+
         try {
+
             long remaining = 1000/tickRate - System.currentTimeMillis() - start;
-            if(remaining > 0) gameThread.sleep(remaining);
+
+            if(remaining > 0)
+                Thread.sleep(remaining);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -132,6 +138,7 @@ public class GameView extends SurfaceView implements Runnable {
         try {
             gameThread.join();
         } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -145,17 +152,3 @@ public class GameView extends SurfaceView implements Runnable {
         return player;
     }
 }
-
-/*
-        playing = false;
-        try {
-            gameThread.join();
-        } catch (InterruptedException e) {
-        }
-    }
-
-    public void resume() {
-        playing = true;
-        gameThread = new Thread(this);
-        gameThread.start();
- */
