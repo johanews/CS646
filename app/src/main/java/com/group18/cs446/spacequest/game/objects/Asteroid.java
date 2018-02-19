@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class Asteroid implements GameEntity {
     private static final int MIN_DISTANCE = 10;
-    private static final int MAX_DISTACE = 30;
+    private static final int MAX_DISTANCE = 30;
 
     private Bitmap bitmap;
 
@@ -29,22 +29,18 @@ public class Asteroid implements GameEntity {
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid);
 
         double spawnAngle = random.nextDouble() * 2 * Math.PI;
-        System.out.println("Angle: " + spawnAngle);
-        //double spawnDistance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
-        double spawnDistance = 10;
+        //System.out.println("Angle: " + spawnAngle);
+        double spawnDistance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
 
         coordinates.set((int) (centre.x + Math.cos(spawnAngle) * spawnDistance),
                         (int) (centre.y + Math.sin(spawnAngle) * spawnDistance));
-        System.out.println(coordinates);
+        //System.out.println(coordinates);
 
 
         arcSpeed = random.nextBoolean() ? random.nextFloat() + 0.2f : - random.nextFloat() - 0.2f;
-        /*speed.x = random.nextBoolean() ? random.nextInt(5) + 1 : - random.nextInt(5) - 1;
-        speed.y = random.nextBoolean() ? random.nextInt(5) + 1 : - random.nextInt(5) - 1;*/
-        speed.x = random.nextBoolean() ? 1 : -1;
-        speed.y = random.nextBoolean() ? 1 : -1;
-        System.out.println("sx: " + speed.x + ", sy: " + speed.y);
-        //speed.set(1, 1);
+        speed.x = random.nextBoolean() ? random.nextInt(5) + 1 : - random.nextInt(5) - 1;
+        speed.y = random.nextBoolean() ? random.nextInt(5) + 1 : - random.nextInt(5) - 1;
+        //System.out.println("sx: " + speed.x + ", sy: " + speed.y);
     }
 
     @Override

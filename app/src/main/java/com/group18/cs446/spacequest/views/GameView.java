@@ -104,12 +104,13 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void drawAsteroids(Point topLeftCorner) {
+        int cx, cy;
         for (Asteroid asteroid: asteroids) {
+            cx = asteroid.getCoordinates().x - topLeftCorner.x;
+            cy = asteroid.getCoordinates().y - topLeftCorner.y;
             canvas.save();
-            canvas.translate(asteroid.getCoordinates().x + asteroid.getBitmap().getWidth()/2,
-                             asteroid.getCoordinates().y + asteroid.getBitmap().getHeight()/2);
-            canvas.rotate(asteroid.getAngle());
-            canvas.drawBitmap(asteroid.getBitmap(), 0, 0, paint);
+            canvas.rotate(asteroid.getAngle(), cx + asteroid.getBitmap().getWidth()/2, cy + asteroid.getBitmap().getHeight()/2);
+            canvas.drawBitmap(asteroid.getBitmap(), cx, cy, paint);
             canvas.restore();
         }
     }
@@ -130,6 +131,7 @@ public class GameView extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
         }
     }
+
     public void resume(){
         running = true;
         gameThread = new Thread(this);
