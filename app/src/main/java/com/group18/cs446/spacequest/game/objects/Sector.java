@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import java.util.LinkedList;
@@ -37,6 +38,7 @@ public class Sector {
 
 
     public Sector(Player player, Context context, SurfaceHolder surfaceHolder){
+        this.gameState = GameState.PAUSED;
         this.player = player;
         this.surfaceHolder = surfaceHolder;
         this.paint = new Paint();
@@ -50,8 +52,13 @@ public class Sector {
         }
     }
 
-    public boolean run() {
+    public void pause(){
+        gameState = GameState.PAUSED;
+    }
+    public void unpause(){
         gameState = GameState.RUNNING;
+    }
+    public boolean run() {
         while (gameState == GameState.RUNNING || gameState == GameState.PAUSED) {
             long tickStart = System.currentTimeMillis();
             if(gameState != GameState.PAUSED){
@@ -140,7 +147,7 @@ public class Sector {
     private void drawStars(Canvas canvas, Paint paint, Point topLeftCorner){
         paint.setColor(Color.WHITE);
         int i = 0, width = 7;
-        float divisor = Float.parseFloat("1.5");
+        float divisor = Float.parseFloat("2.5");
         for(Point p : stars){
             if(i%1000 == 0){
                 divisor+=1.5;
@@ -154,7 +161,6 @@ public class Sector {
         }
 
     }
-
     private void control(long start){
         try {
             long remaining = 1000/tickRate - System.currentTimeMillis() - start;
