@@ -16,6 +16,7 @@ public class Asteroid implements GameEntity {
 
     private Bitmap bitmap;
 
+    // Top left corner
     private Point coordinates = new Point();
     private Point speed = new Point();
 
@@ -56,8 +57,15 @@ public class Asteroid implements GameEntity {
         //System.out.println("xpos: " + coordinates.x + ", ypos: " + coordinates.y);
     }
 
+    @Override
     public Bitmap getBitmap() {
         return bitmap;
+    }
+
+    @Override
+    public boolean contains(Point p) {
+        Point centre = new Point(coordinates.x + bitmap.getWidth() / 2, coordinates.y + bitmap.getHeight()/2);
+        return Math.abs(p.x - centre.x) < bitmap.getWidth() / 2 && Math.abs(p.y - centre.y) < bitmap.getHeight() / 2;
     }
 
     public float getAngle() {
