@@ -24,7 +24,7 @@ public class Player implements GameEntity {
 
     public Player(Context context){
 
-        coordinates = new Point(100, 100);
+        coordinates = new Point(50, 50);
         speed = 10;
         maxHealth = 1000;
         currentHealth = 1000;
