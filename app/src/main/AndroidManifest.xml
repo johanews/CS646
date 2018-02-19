@@ -20,7 +20,7 @@
         </activity>
         <activity
             android:name="GamePlayActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
     </application>

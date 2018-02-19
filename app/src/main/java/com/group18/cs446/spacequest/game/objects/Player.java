@@ -54,10 +54,10 @@ public class Player implements GameEntity {
         switch (currentCommand){
 
             case LEFT:
-                heading = (heading + 360 - turnSpeed) % 360;
+                heading = (heading + 360 + turnSpeed) % 360;
                 break;
             case RIGHT:
-                heading = (heading + 360 + turnSpeed) % 360;
+                heading = (heading + 360 - turnSpeed) % 360;
                 break;
             case NONE:
                 break; // nothing needs to be done
