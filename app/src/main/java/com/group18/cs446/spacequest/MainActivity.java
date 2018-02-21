@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         game_start_button = findViewById(R.id.game_start_button);
         game_start_button.setOnClickListener(this);
+        View root = findViewById(android.R.id.content);
+        root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
     }
 
     @Override

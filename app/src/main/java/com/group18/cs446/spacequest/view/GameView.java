@@ -1,22 +1,15 @@
 package com.group18.cs446.spacequest.view;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.group18.cs446.spacequest.PlayerCommand;
-import com.group18.cs446.spacequest.game.objects.GameEntity;
-import com.group18.cs446.spacequest.game.objects.ParticleEffect;
+import com.group18.cs446.spacequest.Constants;
+import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.game.objects.Player;
 import com.group18.cs446.spacequest.game.objects.Sector;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Owen on 2018-02-08.
@@ -35,17 +28,19 @@ public class GameView extends SurfaceView implements Runnable {
     private int canvasWidth, canvasHeight;
     private long gameTick;
 
-    public GameView(Context context, int screenX, int screenY) {
-        super(context);
+    public GameView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
         player = new Player(context); // new player
         surfaceHolder = getHolder();
-
+        setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
     }
 
     @Override
     public void run() {
+        int currentSector = 0;
         while(running) {
-            sector = new Sector(player, getContext(), surfaceHolder);
+            currentSector++;
+            sector = new Sector(player, getContext(), surfaceHolder, currentSector);
             boolean successfulSector = sector.run();
             if(successfulSector) { // returns true if successful, false otherwise
                 // Do all the store stuff
@@ -53,7 +48,8 @@ public class GameView extends SurfaceView implements Runnable {
 
             } else {
                 // Update Highscores
-                player.reset();// this will reset the player for the next sector - do things like keep gold be delete damage and upgrades etc
+                player = new Player(getContext());
+                currentSector = 0;
             }
         }
     }

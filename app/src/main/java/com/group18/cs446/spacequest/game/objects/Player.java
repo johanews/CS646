@@ -5,16 +5,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.media.session.MediaSession;
+import android.util.Pair;
 
-import com.group18.cs446.spacequest.PlayerCommand;
+import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.R;
 
-/**
- * Created by Owen on 2018-02-08.
- */
+import java.util.AbstractMap;
+import java.util.Random;
 
 public class Player implements GameEntity{
     private Point coordinates; // Now represents the center of the character, not the top left
@@ -23,9 +25,14 @@ public class Player implements GameEntity{
     private PlayerCommand currentCommand;
     private Rect bounds;
 
+    private Random random = new Random();
+
     private boolean controlledByPlayer = true;
     private Point target;
     private int updatesToTarget;
+
+    private int timeToDeletion;
+    private boolean alive = true;
 
     public Player(Context context){
         int startingX = 1000, startingY = 1000;
@@ -45,7 +52,11 @@ public class Player implements GameEntity{
         controlledByPlayer = false;
         target = p;
         updatesToTarget = time;
+    }
 
+    public void explode(int timeToDeletion){
+        this.timeToDeletion = timeToDeletion;
+        alive = false;
     }
 
     @Override
@@ -75,32 +86,49 @@ public class Player implements GameEntity{
         if (currentHealth > 0 && currentHealth < maxHealth) {
             currentHealth = (currentHealth + regen > maxHealth) ? maxHealth : currentHealth + regen;
         }
-        if(controlledByPlayer) {
-            switch (currentCommand) {
-                case RIGHT:
-                    heading = (heading + 360 - turnSpeed) % 360;
-                    break;
-                case LEFT:
-                    heading = (heading + 360 + turnSpeed) % 360;
-                    break;
-                case BOTH:
-                case NONE:
-                    // Nothing needs to be done
-                    break;
+        if(alive) {
+            if (controlledByPlayer) {
+                switch (currentCommand) {
+                    case RIGHT:
+                        heading = (heading + 360 - turnSpeed) % 360;
+                        break;
+                    case LEFT:
+                        heading = (heading + 360 + turnSpeed) % 360;
+                        break;
+                    case BOTH:
+                    case NONE:
+                        // Nothing needs to be done
+                        break;
+                }
+                coordinates.y -= Math.cos(heading * Math.PI / 180) * speed;
+                coordinates.x -= Math.sin(heading * Math.PI / 180) * speed;
+            } else {
+                if (updatesToTarget > 0) {
+                    double normalized = Math.sqrt((coordinates.y - target.y) * (coordinates.y - target.y)
+                            + (coordinates.x - target.x) * (coordinates.x - target.x));
+                    if (Math.abs(coordinates.y - target.y) < speed) {
+                        coordinates.y = target.y;
+                    } else {
+                        coordinates.y -= ((coordinates.y - target.y) / normalized) * speed;
+                    }
+                    if (Math.abs(coordinates.x - target.x) < speed) {
+                        coordinates.x = target.x;
+                    } else {
+                        coordinates.x -= ((coordinates.x - target.x) / normalized) * speed;
+                    }
+                    if (heading > 180) {
+                        heading--;
+                    } else if (heading < 180) {
+                        heading++;
+                    }
+                    updatesToTarget--;
+                }
             }
-            coordinates.y -= Math.cos(heading*Math.PI/180)*speed;
-            coordinates.x -= Math.sin(heading*Math.PI/180)*speed;
+            bounds = null; // invalidate bounds since we moved
         } else {
-            if(updatesToTarget > 0) {
-                double normalized = Math.sqrt((coordinates.y - target.y)*(coordinates.y - target.y)
-                        + (coordinates.x - target.x)*(coordinates.x - target.x));
-                coordinates.y -= ((coordinates.y - target.y) / normalized) * speed;
-                coordinates.x -= ((coordinates.x - target.x) / normalized) * speed;
-                heading+= 3;
-                updatesToTarget--;
-            }
+            // any updates to happen while dead
+            timeToDeletion--;
         }
-        bounds = null; // invalidate bounds since we moved
     }
 
     public int getAngle(){
@@ -163,6 +191,12 @@ public class Player implements GameEntity{
                 getCoordinates().x - topLeftCorner.x - getBitmap().getWidth() / 2,
                 getCoordinates().y - topLeftCorner.y - getBitmap().getHeight() / 2,
                 paint);
+        if(!alive){ // Very ugly and simple explosion animation, TODO make this look nice - use a real animation
+            paint.setColor(Color.rgb(150+random.nextInt(155), random.nextInt(50), random.nextInt(50)));
+            canvas.drawCircle(getCoordinates().x - topLeftCorner.x - getBitmap().getWidth() / 2 - 10 + random.nextInt(getBitmap().getWidth()),
+                    getCoordinates().y - topLeftCorner.y - getBitmap().getWidth() / 2 - 10 + random.nextInt(getBitmap().getHeight()),
+                    random.nextInt(40), paint);
+        }
         canvas.restore();
     }
 
@@ -171,8 +205,6 @@ public class Player implements GameEntity{
         speed = 10;
         maxHealth = 1000;
         currentHealth = 1000;
-        regen = 3;
-        turnSpeed = 4;
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
         controlledByPlayer = true;

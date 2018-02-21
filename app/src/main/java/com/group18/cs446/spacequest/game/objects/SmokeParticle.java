@@ -7,15 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-/**
- * Created by Owen on 2018-02-09.
- */
-
-public class ParticleEffect implements GameEntity {
+public class SmokeParticle implements GameEntity {
     private Point coordinates;
     private int totalDuration;
     private int lifetime;
-    public ParticleEffect(int x, int y, int ticks){
+    public SmokeParticle(int x, int y, int ticks){
         coordinates = new Point(x, y);
         totalDuration = ticks;
         lifetime = 0;
@@ -30,17 +26,20 @@ public class ParticleEffect implements GameEntity {
     }
     @Override
     public void update() {
-        lifetime++;
         if(lifetime >= totalDuration){
-
+            //Trigger for deletion
+        } else {
+            lifetime++;
         }
     }
 
     @Override
     public void paint(Canvas canvas, Paint paint, Point topLeftCorner) {
+        if(lifetime >= totalDuration) return;
         paint.setColor(Color.GRAY);
-        paint.setStrokeWidth(30);
-        canvas.drawPoint(coordinates.x+topLeftCorner.x, coordinates.y+topLeftCorner.y, paint);
+        paint.setAlpha((255*(totalDuration-lifetime))/totalDuration);
+        canvas.drawCircle(coordinates.x-topLeftCorner.x, coordinates.y-topLeftCorner.y, 15, paint);
+        paint.setAlpha(255);
     }
 
     @Override

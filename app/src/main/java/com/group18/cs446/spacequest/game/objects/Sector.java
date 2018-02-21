@@ -6,8 +6,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
+
+import com.group18.cs446.spacequest.game.enums.CollisionEvent;
+import com.group18.cs446.spacequest.game.enums.GameState;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +22,8 @@ public class Sector {
     // Properties
     static final int tickRate = 30;
     private int victoryFinalizeTime = 200;
+    private int defeatFinalizeTime = 50;
+    private int sectorID;
 
     // Game Object Members
     private Player player;
@@ -36,11 +40,15 @@ public class Sector {
     private SurfaceHolder surfaceHolder;
     private int canvasWidth, canvasHeight;
 
+    private Context context;
 
-    public Sector(Player player, Context context, SurfaceHolder surfaceHolder){
+
+    public Sector(Player player, Context context, SurfaceHolder surfaceHolder, int sectorID){
         this.gameState = GameState.PAUSED;
+        this.context = context;
         this.player = player;
         this.surfaceHolder = surfaceHolder;
+        this.sectorID = sectorID;
         this.paint = new Paint();
         GameEntity exitGate = new ExitGate(context, 0, 0);
         this.entities = new LinkedList<>();
@@ -78,6 +86,13 @@ public class Sector {
                 }
                 return true;
             case LOST:
+                while (defeatFinalizeTime > 0) {
+                    defeatFinalizeTime--;
+                    long tickStart = System.currentTimeMillis();
+                    update();
+                    draw();
+                    control(tickStart);
+                }
                 return false;
             default:
                 throw new RuntimeException("ILLEGAL GAME STATE AT END OF LOOP");
@@ -89,13 +104,16 @@ public class Sector {
             e.update();
         }
         for(GameEntity e : entities){
-            if(e != player && player.intersects(e)){
+            if(e.getCollisionEvent() != CollisionEvent.NOTHING && player.intersects(e)){
                 triggerCollisionEvent(player, e);
             }
         }
-        if(gameTick%15 == 0) {
-            //ParticleEffect smoke = new ParticleEffect(player.getCenter().x, player.getCenter().y, 150);
-            //entities.add(smoke);
+        if(gameTick%3 == 0) {
+            SmokeParticle smoke = new SmokeParticle(player.getCoordinates().x, player.getCoordinates().y, 70);
+            entities.add(0, smoke);
+        }
+        if(gameTick%10 == 0){
+            entities.add(new Asteroid(player.getCoordinates(), context));
         }
     }
 
@@ -104,6 +122,11 @@ public class Sector {
             case VICTORY:
                 player.flyToTarget(e.getCoordinates(), victoryFinalizeTime);
                 gameState = GameState.WON;
+                break;
+            case DEFEAT:
+                player.explode(defeatFinalizeTime);
+                gameState = GameState.LOST;
+                break;
         }
     }
 
@@ -140,6 +163,9 @@ public class Sector {
             paint.setColor(Color.YELLOW);
             paint.setTextSize(40);
             canvas.drawText("("+player.getCoordinates().x+", "+player.getCoordinates().y+")", canvasWidth-300, canvasHeight-100, paint);
+            paint.setColor(Color.CYAN);
+            paint.setTextSize(60);
+            canvas.drawText("Current Sector: "+sectorID, canvasWidth-600, 20, paint);
             surfaceHolder.unlockCanvasAndPost(canvas); // unlock and draw the frame
         }
     }
