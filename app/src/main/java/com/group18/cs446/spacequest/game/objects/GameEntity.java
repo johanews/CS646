@@ -8,13 +8,10 @@ import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.game.enums.CollisionEvent;
 
-/**
- * Created by Owen on 2018-02-08.
- */
 
 public interface GameEntity {
     Point getCoordinates();
-    void update();
+    void update(long gameTick);
     void paint(Canvas canvas, Paint paint, Point topLeftCorner);
     Bitmap getBitmap();
     default boolean contains(Point p){

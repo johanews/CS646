@@ -5,17 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.media.session.MediaSession;
-import android.util.Pair;
 
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.R;
 
-import java.util.AbstractMap;
 import java.util.Random;
 
 public class Player implements GameEntity{
@@ -24,6 +20,7 @@ public class Player implements GameEntity{
     private Bitmap bitmap;
     private PlayerCommand currentCommand;
     private Rect bounds;
+    private Sector currentSector;
 
     private Random random = new Random();
 
@@ -46,6 +43,10 @@ public class Player implements GameEntity{
         currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
         bounds = null;
+    }
+
+    public void setCurrentSector(Sector s){
+        this.currentSector = s;
     }
 
     public void flyToTarget(Point p, int time){
@@ -82,7 +83,7 @@ public class Player implements GameEntity{
     }
 
     @Override
-    public void update() {
+    public void update(long gameTick) {
         if (currentHealth > 0 && currentHealth < maxHealth) {
             currentHealth = (currentHealth + regen > maxHealth) ? maxHealth : currentHealth + regen;
         }
@@ -128,6 +129,10 @@ public class Player implements GameEntity{
         } else {
             // any updates to happen while dead
             timeToDeletion--;
+        }
+        if(gameTick%2 == 0) {
+            SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x, coordinates.y, 70);
+            currentSector.addEntityToBack(smokeParticle);
         }
     }
 
