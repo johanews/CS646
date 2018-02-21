@@ -8,8 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-import com.group18.cs446.spacequest.PlayerCommand;
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.CollisionEvent;
 
 /**
  * Created by Owen on 2018-02-08.
