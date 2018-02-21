@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -22,13 +21,15 @@ public class Asteroid implements GameEntity {
 
     private Point coordinates = new Point();
     private Point speed = new Point();
+    private Sector currentSector;
 
     private float arcSpeed;
     private float angle;
 
     private Random random = new Random();
 
-    public Asteroid(Point center, Context context){
+    public Asteroid(Sector sector, Point center, Context context){
+        this.currentSector = sector;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid_1);
         double spawnAngle = random.nextDouble() * 2 * Math.PI;
         double spawnDistance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
@@ -45,10 +46,15 @@ public class Asteroid implements GameEntity {
     }
 
     @Override
-    public void update(){
+    public void update(long gameTick){
         coordinates.x += speed.x;
         coordinates.y += speed.y;
         angle = (angle+arcSpeed)%360;
+        int deltaX = currentSector.getPlayer().getCoordinates().x - coordinates.x;
+        int deltaY = currentSector.getPlayer().getCoordinates().y - coordinates.y;
+        if((deltaX*deltaX)+(deltaY*deltaY) > MAX_DISTANCE*MAX_DISTANCE){
+            currentSector.removeEntity(this);
+        }
     }
 
     @Override

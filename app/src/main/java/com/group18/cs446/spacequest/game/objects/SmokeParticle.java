@@ -11,7 +11,9 @@ public class SmokeParticle implements GameEntity {
     private Point coordinates;
     private int totalDuration;
     private int lifetime;
-    public SmokeParticle(int x, int y, int ticks){
+    private Sector sector;
+    public SmokeParticle(Sector sector, int x, int y, int ticks){
+        this.sector = sector;
         coordinates = new Point(x, y);
         totalDuration = ticks;
         lifetime = 0;
@@ -25,9 +27,9 @@ public class SmokeParticle implements GameEntity {
         return new Rect(0, 0, 0, 0);
     }
     @Override
-    public void update() {
+    public void update(long gameTick) {
         if(lifetime >= totalDuration){
-            //Trigger for deletion
+            sector.removeEntity(this);
         } else {
             lifetime++;
         }

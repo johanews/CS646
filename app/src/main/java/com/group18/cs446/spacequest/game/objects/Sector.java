@@ -13,10 +13,8 @@ import com.group18.cs446.spacequest.game.enums.GameState;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Created by Owen on 2018-02-09.
- */
 
 public class Sector {
     // Properties
@@ -47,13 +45,14 @@ public class Sector {
         this.gameState = GameState.PAUSED;
         this.context = context;
         this.player = player;
+        player.setCurrentSector(this);
         this.surfaceHolder = surfaceHolder;
         this.sectorID = sectorID;
         this.paint = new Paint();
         GameEntity exitGate = new ExitGate(context, 0, 0);
-        this.entities = new LinkedList<>();
-        entities.add(exitGate);
-        entities.add(player);
+        this.entities = new CopyOnWriteArrayList<>();
+        addEntityFront(exitGate);
+        addEntityFront(player);
         stars = new LinkedList<>();
         for(int i = 0; i < numStars; i++){
             stars.add(new Point((int)(Math.random()*starDimension),(int)(Math.random()*starDimension)));
@@ -65,6 +64,15 @@ public class Sector {
     }
     public void unpause(){
         gameState = GameState.RUNNING;
+    }
+    public void addEntityFront(GameEntity e){ // painted last, in the foreground (ie enemy ship)
+        entities.add(e);
+    }
+    public void addEntityToBack(GameEntity e){ // painted first, in the background (ie smoke effect)
+        entities.add(0, e);
+    }
+    public void removeEntity(GameEntity e){
+        entities.remove(e);
     }
     public boolean run() {
         while (gameState == GameState.RUNNING || gameState == GameState.PAUSED) {
@@ -101,20 +109,20 @@ public class Sector {
     private void update(){
         gameTick++;
         for(GameEntity e : entities){
-            e.update();
+            e.update(gameTick);
         }
         for(GameEntity e : entities){
             if(e.getCollisionEvent() != CollisionEvent.NOTHING && player.intersects(e)){
                 triggerCollisionEvent(player, e);
             }
         }
-        if(gameTick%3 == 0) {
-            SmokeParticle smoke = new SmokeParticle(player.getCoordinates().x, player.getCoordinates().y, 70);
-            entities.add(0, smoke);
+        if(gameTick%10 == 0){ // TODO put enemy entity spawning in a factory
+            addEntityFront(new Asteroid(this, player.getCoordinates(), context));
         }
-        if(gameTick%10 == 0){
-            entities.add(new Asteroid(player.getCoordinates(), context));
-        }
+    }
+
+    public Player getPlayer(){
+        return player;
     }
 
     private void triggerCollisionEvent(Player player, GameEntity e){
@@ -165,7 +173,7 @@ public class Sector {
             canvas.drawText("("+player.getCoordinates().x+", "+player.getCoordinates().y+")", canvasWidth-300, canvasHeight-100, paint);
             paint.setColor(Color.CYAN);
             paint.setTextSize(60);
-            canvas.drawText("Current Sector: "+sectorID, canvasWidth-600, 20, paint);
+            canvas.drawText("Current Sector: "+sectorID, canvasWidth-600, 70, paint);
             surfaceHolder.unlockCanvasAndPost(canvas); // unlock and draw the frame
         }
     }
