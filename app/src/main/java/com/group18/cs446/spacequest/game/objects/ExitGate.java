@@ -39,7 +39,7 @@ public class ExitGate implements GameEntity{
     }
 
     @Override
-    public CollisionEvent getCollisionEvent(){
+    public CollisionEvent getCollisionEvent(GameEntity e){
         return CollisionEvent.VICTORY;
     }
 

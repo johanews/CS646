@@ -66,9 +66,8 @@ public class GameView extends SurfaceView implements Runnable {
         if(sector != null){
             sector.unpause();
         }
-        float x = e.getX();
+        int maskedAction = e.getActionMasked();
         if(buttonId == R.id.go_left || buttonId == R.id.go_right) {
-            int maskedAction = e.getActionMasked();
             switch (maskedAction) {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_POINTER_DOWN: {
@@ -87,7 +86,16 @@ public class GameView extends SurfaceView implements Runnable {
                 }
             }
         } else if(buttonId == R.id.activate_ability){
-            System.out.println("Activating ability");
+            switch (maskedAction) {
+                case MotionEvent.ACTION_DOWN:
+                    player.doAction();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    player.stopAction();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    break;
+            }
         } else { // Unknown button
             return false;
         }

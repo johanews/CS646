@@ -21,7 +21,7 @@ public interface GameEntity {
         return false;
     }
     Rect getBounds();
-    default CollisionEvent getCollisionEvent(){
+    default CollisionEvent getCollisionEvent(GameEntity e){
         return CollisionEvent.NOTHING;
     }
 
