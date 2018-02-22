@@ -112,7 +112,7 @@ public class Sector {
             e.update(gameTick);
         }
         for(GameEntity e : entities){
-            if(e.getCollisionEvent() != CollisionEvent.NOTHING && player.intersects(e)){
+            if(e.getCollisionEvent(player) != CollisionEvent.NOTHING && player.intersects(e)){
                 triggerCollisionEvent(player, e);
             }
         }
@@ -126,10 +126,14 @@ public class Sector {
     }
 
     private void triggerCollisionEvent(Player player, GameEntity e){
-        switch (e.getCollisionEvent()){
+        switch (e.getCollisionEvent(player)){
             case VICTORY:
                 player.flyToTarget(e.getCoordinates(), victoryFinalizeTime);
                 gameState = GameState.WON;
+                break;
+            case DAMAGE: // TODO
+                player.explode(defeatFinalizeTime);
+                gameState = GameState.LOST;
                 break;
             case DEFEAT:
                 player.explode(defeatFinalizeTime);

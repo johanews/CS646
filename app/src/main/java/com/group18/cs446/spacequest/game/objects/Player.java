@@ -11,6 +11,8 @@ import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.objects.ship.Weapon;
+import com.group18.cs446.spacequest.game.objects.ship.components.BasicLaser;
 
 import java.util.Random;
 
@@ -30,6 +32,10 @@ public class Player implements GameEntity{
 
     private int timeToDeletion;
     private boolean alive = true;
+    private boolean doingAction;
+
+    //Components
+    private Weapon equipedWeapon;
 
     public Player(Context context){
 
@@ -43,10 +49,22 @@ public class Player implements GameEntity{
         currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
         bounds = null;
+        equipedWeapon = new BasicLaser(this, context);
+        doingAction = false;
+    }
+
+    public void doAction(){
+        doingAction = true;
+    }
+    public void stopAction(){
+        doingAction = false;
     }
 
     public void setCurrentSector(Sector s){
         this.currentSector = s;
+    }
+    public Sector getCurrentSector(){
+        return currentSector;
     }
 
     public void flyToTarget(Point p, int time){
@@ -88,6 +106,11 @@ public class Player implements GameEntity{
             currentHealth = (currentHealth + regen > maxHealth) ? maxHealth : currentHealth + regen;
         }
         if(alive) {
+            if(doingAction){
+                if(equipedWeapon != null){
+                    equipedWeapon.fire(gameTick);
+                }
+            }
             if (controlledByPlayer) {
                 switch (currentCommand) {
                     case RIGHT:
