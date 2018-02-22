@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.group18.cs446.spacequest.Constants;
+import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.game.objects.Player;
 import com.group18.cs446.spacequest.game.objects.Sector;
@@ -59,6 +60,38 @@ public class GameView extends SurfaceView implements Runnable {
         super.onSizeChanged(w, h, oldw, oldh);
         canvasWidth = w;
         canvasHeight = h;
+    }
+
+    public boolean handleButtonEvent(int buttonId, MotionEvent e){
+        if(sector != null){
+            sector.unpause();
+        }
+        float x = e.getX();
+        if(buttonId == R.id.go_left || buttonId == R.id.go_right) {
+            int maskedAction = e.getActionMasked();
+            switch (maskedAction) {
+                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_POINTER_DOWN: {
+                    player.addCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
+                    break;
+                }
+                case MotionEvent.ACTION_MOVE: {
+                    player.addCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
+                    break;
+                }
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_POINTER_UP:
+                case MotionEvent.ACTION_CANCEL: {
+                    player.removeCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
+                    break;
+                }
+            }
+        } else if(buttonId == R.id.activate_ability){
+            System.out.println("Activating ability");
+        } else { // Unknown button
+            return false;
+        }
+        return true;
     }
 
     @Override
