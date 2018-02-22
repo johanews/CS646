@@ -32,8 +32,8 @@ public class Player implements GameEntity{
     private boolean alive = true;
 
     public Player(Context context){
-        int startingX = 1000, startingY = 1000;
-        coordinates = new Point(startingX, startingY);
+
+        coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(10000+random.nextInt(5000)), (random.nextBoolean() ? 1 : -1 )*(10000+random.nextInt(5000)));
         speed = 10;
         maxHealth = 1000;
         currentHealth = 1000;
@@ -205,11 +205,8 @@ public class Player implements GameEntity{
         canvas.restore();
     }
 
-    public void reset() { // Everything thats required for making a new player
-        coordinates = new Point(1000, 1000);
-        speed = 10;
-        maxHealth = 1000;
-        currentHealth = 1000;
+    public void reset() { // Everything thats required for moving to a new sector
+        coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(1000+random.nextInt(4000)), (random.nextBoolean() ? 1 : -1 )*(1000+random.nextInt(4000)));
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
         controlledByPlayer = true;
