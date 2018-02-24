@@ -1,15 +1,20 @@
-package com.group18.cs446.spacequest.game.objects;
+package com.group18.cs446.spacequest.game.objects.hostile;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.enums.CollisionEvent;
+import com.group18.cs446.spacequest.game.objects.GameEntity;
+import com.group18.cs446.spacequest.game.objects.Sector;
 
 import java.util.Random;
 
@@ -26,6 +31,9 @@ public class Asteroid implements GameEntity {
     private float arcSpeed;
     private float angle;
 
+    private int maxDurability = 7;
+    private int durability;
+
     private Random random = new Random();
 
     public Asteroid(Sector sector, Point center, Context context){
@@ -38,6 +46,7 @@ public class Asteroid implements GameEntity {
         arcSpeed = random.nextBoolean() ? random.nextFloat() + 0.2F : -random.nextFloat();
         speed.x = random.nextBoolean() ? random.nextInt(5)+1 : -random.nextInt(5) -1;
         speed.y = random.nextBoolean() ? random.nextInt(5)+1 : -random.nextInt(5) -1;
+        durability = maxDurability;
     }
 
     @Override
@@ -58,6 +67,15 @@ public class Asteroid implements GameEntity {
     }
 
     @Override
+    public void takeDamage(int damage){
+        durability -= damage;
+        if(durability <= 0){
+            durability = 0;
+            currentSector.removeEntity(this);
+        }
+    }
+
+    @Override
     public void paint(Canvas canvas, Paint paint, Point topLeftCorner) {
         canvas.save();
         canvas.rotate(-getAngle(), getCoordinates().x - topLeftCorner.x, getCoordinates().y - topLeftCorner.y);
@@ -66,6 +84,13 @@ public class Asteroid implements GameEntity {
                 getCoordinates().x - topLeftCorner.x - getBitmap().getWidth() / 2,
                 getCoordinates().y - topLeftCorner.y - getBitmap().getHeight() / 2,
                 paint);
+        paint.setColorFilter(new PorterDuffColorFilter(Color.argb((255*(maxDurability-durability)/(maxDurability+maxDurability)), 255, 10, 10), PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(
+                getBitmap(),
+                getCoordinates().x - topLeftCorner.x - getBitmap().getWidth() / 2,
+                getCoordinates().y - topLeftCorner.y - getBitmap().getHeight() / 2,
+                paint);
+        paint.reset();
         canvas.restore();
     }
 
@@ -85,8 +110,19 @@ public class Asteroid implements GameEntity {
         return false;
     }
 
-    public float getAngle(){
-        return angle;
+    @Override
+    public int getAngle(){
+        return (int)angle;
+    }
+
+    @Override
+    public Sector getCurrentSector() {
+        return currentSector;
+    }
+
+    @Override
+    public int getSpeed() {
+        return speed.x+speed.y;
     }
 
     @Override

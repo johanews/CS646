@@ -10,6 +10,9 @@ import android.view.SurfaceHolder;
 
 import com.group18.cs446.spacequest.game.enums.CollisionEvent;
 import com.group18.cs446.spacequest.game.enums.GameState;
+import com.group18.cs446.spacequest.game.objects.hostile.Asteroid;
+import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
+import com.group18.cs446.spacequest.game.objects.hostile.npship.BasicEnemy;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +29,7 @@ public class Sector {
     // Game Object Members
     private Player player;
     private GameState gameState = GameState.PAUSED;
+    private GameState previousGameState = GameState.RUNNING;
     long gameTick = 0;
     private List<GameEntity> entities;
     private List<Point> stars;
@@ -57,13 +61,21 @@ public class Sector {
         for(int i = 0; i < numStars; i++){
             stars.add(new Point((int)(Math.random()*starDimension),(int)(Math.random()*starDimension)));
         }
+
+        for(int x = -5; x < 10; x+=2){
+            for(int y = -5; y < 10; y+=2){
+                Enemy e = new BasicEnemy(new Point(x*600, y*600), context, this);
+                addEntityFront(e);
+            }
+        }
     }
 
     public void pause(){
+        previousGameState = gameState;
         gameState = GameState.PAUSED;
     }
     public void unpause(){
-        gameState = GameState.RUNNING;
+        gameState = previousGameState;
     }
     public void addEntityFront(GameEntity e){ // painted last, in the foreground (ie enemy ship)
         entities.add(e);
@@ -71,14 +83,28 @@ public class Sector {
     public void addEntityToBack(GameEntity e){ // painted first, in the background (ie smoke effect)
         entities.add(0, e);
     }
+    public List<GameEntity> getEntities(){
+        return entities;
+    }
     public void removeEntity(GameEntity e){
         entities.remove(e);
     }
     public boolean run() {
+        int droppedFrames = 0;
+        int threshhold = 5;
         while (gameState == GameState.RUNNING || gameState == GameState.PAUSED) {
             long tickStart = System.currentTimeMillis();
             if(gameState != GameState.PAUSED){
                 update();
+            }
+            if(1000/tickRate - System.currentTimeMillis() - tickStart <= 0){
+                droppedFrames++;
+                if(droppedFrames > threshhold) {
+                    droppedFrames = 0;
+                    continue;
+                }
+            } else {
+                droppedFrames = 0;
             }
             draw();
             control(tickStart);
@@ -165,11 +191,6 @@ public class Sector {
             for(GameEntity e : entities) {
                 e.paint(canvas, paint, topLeftCorner);
             }
-
-            // Draw any foreground entities (such as healthbars or effects (like a red filter over everything)
-            paint.setColor(Color.RED);
-            paint.setStrokeWidth(10);
-            canvas.drawPoint(canvas.getWidth()/2, canvas.getHeight()/2, paint);
 
             // Draw coordinates, for help testing
             paint.setColor(Color.YELLOW);

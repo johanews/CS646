@@ -13,6 +13,7 @@ import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.objects.ship.Weapon;
 import com.group18.cs446.spacequest.game.objects.ship.components.BasicLaser;
+import com.group18.cs446.spacequest.game.objects.ship.components.ChainLaser;
 
 import java.util.Random;
 
@@ -39,17 +40,19 @@ public class Player implements GameEntity{
 
     public Player(Context context){
 
-        coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(10000+random.nextInt(5000)), (random.nextBoolean() ? 1 : -1 )*(10000+random.nextInt(5000)));
+        coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(5000+random.nextInt(2000)), (random.nextBoolean() ? 1 : -1 )*(5000+random.nextInt(2000)));
         speed = 10;
         maxHealth = 1000;
         currentHealth = 1000;
         regen = 3;
-        turnSpeed = 4;
+        turnSpeed = 5;
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
         bounds = null;
         equipedWeapon = new BasicLaser(this, context);
+        //equipedWeapon = new DualLaser(this, context);
+        //equipedWeapon = new ChainLaser(this, context);
         doingAction = false;
     }
 
@@ -162,6 +165,7 @@ public class Player implements GameEntity{
     public int getAngle(){
         return heading;
     }
+    public int getSpeed() {return speed; }
 
     @Override
     public Bitmap getBitmap() {
