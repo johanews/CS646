@@ -26,6 +26,12 @@ public class SmokeParticle implements GameEntity {
     public Rect getBounds(){
         return new Rect(0, 0, 0, 0);
     }
+
+    @Override
+    public Sector getCurrentSector() {
+        return sector;
+    }
+
     @Override
     public void update(long gameTick) {
         if(lifetime >= totalDuration){

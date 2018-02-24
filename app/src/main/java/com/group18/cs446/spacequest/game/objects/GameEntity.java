@@ -24,5 +24,13 @@ public interface GameEntity {
     default CollisionEvent getCollisionEvent(GameEntity e){
         return CollisionEvent.NOTHING;
     }
+    default void takeDamage(int damage){}
+    default int getAngle(){
+        return 0;
+    }
+    Sector getCurrentSector();
+    default int getSpeed(){
+        return 0;
+    }
 
 }

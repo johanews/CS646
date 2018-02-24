@@ -12,13 +12,11 @@ import android.graphics.Rect;
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.enums.CollisionEvent;
 
-/**
- * Created by Owen on 2018-02-08.
- */
 
 public class ExitGate implements GameEntity{
-    Point coordinates; // Center of the gate
-    Bitmap bitmap;
+    private Point coordinates; // Center of the gate
+    private Bitmap bitmap;
+    private Sector sector;
 
     public ExitGate(Context context, int x, int y){
         coordinates = new Point(x, y);
@@ -41,6 +39,11 @@ public class ExitGate implements GameEntity{
     @Override
     public CollisionEvent getCollisionEvent(GameEntity e){
         return CollisionEvent.VICTORY;
+    }
+
+    @Override
+    public Sector getCurrentSector() {
+        return sector;
     }
 
     @Override
