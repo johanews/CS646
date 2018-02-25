@@ -15,30 +15,27 @@ import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.CollisionEvent;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
+import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 
 import java.util.Random;
 
 public class Asteroid implements GameEntity {
     private static final int MIN_DISTANCE = 1500;
     private static final int MAX_DISTANCE = 3000;
-
     private Bitmap bitmap;
-
     private Point coordinates = new Point();
     private Point speed = new Point();
     private Sector currentSector;
-
     private float arcSpeed;
     private float angle;
-
-    private int maxDurability = 150;
+    private int maxDurability;
     private int durability;
+    private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 100);
 
     private Random random = new Random();
 
-    private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 100);
-
     public Asteroid(Sector sector, Point center, Context context){
+        this.maxDurability = 150;
         this.currentSector = sector;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid_1);
         double spawnAngle = random.nextDouble() * 2 * Math.PI;
@@ -73,6 +70,7 @@ public class Asteroid implements GameEntity {
         durability -= damage;
         if(durability <= 0){
             durability = 0;
+            currentSector.addEntityToBack(new SmokeParticle(currentSector, coordinates.x, coordinates.y, bitmap.getWidth()/2, Color.DKGRAY, 10));
             currentSector.removeEntity(this);
         }
     }

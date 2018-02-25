@@ -25,7 +25,7 @@ public class BasicProjectile implements GameEntity {
         this.bitmap = bitmap;
         this.source = source;
         this.sector = sector;
-        this.collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 1);
+        this.collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 50);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BasicProjectile implements GameEntity {
                     for(int y = intersection.top; y < intersection.bottom; y++){
                         if(bitmap.getPixel(x - getBounds().left, y-getBounds().top) != Color.TRANSPARENT){
                             if(e.getBitmap().getPixel(x - e.getBounds().left, y - e.getBounds().top) != Color.TRANSPARENT){
-                                e.takeDamage(50);
+                                e.takeDamage(collisionEvent.getValue());
                                 continue entityLoop;
                             }
                         }
@@ -75,15 +75,6 @@ public class BasicProjectile implements GameEntity {
     public Rect getBounds() {
         return new Rect(coordinates.x-bitmap.getWidth()/2, coordinates.y - bitmap.getHeight()/2, coordinates.x+bitmap.getWidth()/2, coordinates.y+bitmap.getWidth()/2);
     }
-
-    /*@Override
-    public CollisionEvent getCollisionEvent(GameEntity e) {
-        if(e == source){
-            return new CollisionEvent(CollisionEvent.NOTHING);
-        } else {
-            return collisionEvent;
-        }
-    }*/
 
     @Override
     public Sector getCurrentSector() {
