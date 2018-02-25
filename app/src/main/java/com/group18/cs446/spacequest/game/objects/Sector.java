@@ -80,7 +80,9 @@ public class Sector {
         gameState = GameState.PAUSED;
     }
     public void unpause(){
-        gameState = previousGameState;
+        if(gameState == GameState.PAUSED) {
+            gameState = previousGameState;
+        }
     }
     public void addEntityFront(GameEntity e){ // painted last, in the foreground (ie enemy ship)
         entities.add(e);

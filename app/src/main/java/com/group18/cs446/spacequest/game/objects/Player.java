@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 
 import com.group18.cs446.spacequest.game.CollisionEvent;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
@@ -21,7 +22,7 @@ import java.util.Random;
 
 public class Player implements GameEntity{
     private Point coordinates; // Now represents the center of the character, not the top left
-    private int speed, maxHealth, currentHealth, heading, regen, turnSpeed;
+    private int speed, maxHealth, currentHealth, regen, maxShield, currentShield, shieldRegen, heading, turnSpeed;
     private Bitmap bitmap;
     private PlayerCommand currentCommand;
     private Rect bounds;
@@ -40,7 +41,8 @@ public class Player implements GameEntity{
 
     private boolean tookDamage;
     private long lastDamage;
-    private long regenCooldown = 300;
+    private long regenCooldown = 600;
+    private long shieldRegenCooldown = 300;
 
     //Components
     private Weapon equipedWeapon;
@@ -49,17 +51,20 @@ public class Player implements GameEntity{
 
         coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(3500+random.nextInt(1000)), (random.nextBoolean() ? 1 : -1 )*(3500+random.nextInt(1000)));
         speed = 15;
-        maxHealth = 1000;
-        currentHealth = 1000;
-        regen = 3;
-        turnSpeed = 5;
+        maxHealth = 250;
+        currentHealth = maxHealth;
+        maxShield = 750;
+        currentShield = maxShield;
+        regen = 1;
+        shieldRegen = 3;
+        turnSpeed = 6;
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
         bounds = null;
-        equipedWeapon = new BasicLaser(this, context);
+        //equipedWeapon = new BasicLaser(this, context);
         //equipedWeapon = new DualLaser(this, context);
-        //equipedWeapon = new ChainLaser(this, context);
+        equipedWeapon = new ChainLaser(this, context);
         doingAction = false;
         collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 100);
         tookDamage = false;
@@ -99,16 +104,29 @@ public class Player implements GameEntity{
     public int getMaxHealth(){
         return maxHealth;
     }
+    public int getCurrentShield(){
+        return currentShield;
+    }
+    public int getMaxShield(){
+        return maxShield;
+    }
 
     @Override
     public void takeDamage(int damage){
         if(!controlledByPlayer) return;
         tookDamage = true;
         currentSector.addFilter(new DamageFilter(currentSector));
-        this.currentHealth -= damage;
-        if(currentHealth <= 0){
-            currentHealth = 0;
-            currentSector.triggerDefeat();
+        if(currentShield > 0){
+            this.currentShield -= damage;
+            if(this.currentShield < 0){
+                currentShield = 0;
+            }
+        } else {
+            this.currentHealth -= damage;
+            if (currentHealth <= 0) {
+                currentHealth = 0;
+                currentSector.triggerDefeat();
+            }
         }
     }
 
@@ -144,9 +162,16 @@ public class Player implements GameEntity{
         if(tookDamage){
             tookDamage = false;
             lastDamage = gameTick;
-        } else if(gameTick > lastDamage + regenCooldown) {
-            if (currentHealth > 0 && currentHealth < maxHealth) {
-                currentHealth = (currentHealth + regen > maxHealth) ? maxHealth : currentHealth + regen;
+        } else {
+            if(gameTick > lastDamage + regenCooldown) {
+                if (currentHealth > 0 && currentHealth < maxHealth) {
+                    currentHealth = (currentHealth + regen > maxHealth) ? maxHealth : currentHealth + regen;
+                }
+            }
+            if(gameTick > lastDamage + shieldRegenCooldown) {
+                if (currentShield > 0 && currentShield < maxShield) {
+                    currentShield = (currentShield + shieldRegen > maxShield) ? maxShield : currentShield + shieldRegen;
+                }
             }
         }
         if(alive) {
@@ -204,11 +229,11 @@ public class Player implements GameEntity{
             SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.sin(heading*Math.PI/180)), coordinates.y+(int)(20*Math.cos(heading*Math.PI/180)), 70);
             currentSector.addEntityToBack(smokeParticle);
         }
-        if(gameTick%3 == 0 && currentHealth < 2*maxHealth/3){ // extra trail at 66% health
+        if(gameTick%3 == 0 && currentHealth < maxHealth){ // extra trail when damaged
             SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(20*Math.sin(heading*Math.PI/180)), 20, Color.DKGRAY, 80);
             currentSector.addEntityToBack(smokeParticle);
         }
-        if(gameTick%2 == 1 && currentHealth < maxHealth/3){ // extra trail at 33% health
+        if(currentHealth < maxHealth/2){ // extra trail at 50% health
             SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(-20*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(-20*Math.sin(heading*Math.PI/180)), 10, Color.RED, 100);
             currentSector.addEntityToBack(smokeParticle);
         }
@@ -281,6 +306,25 @@ public class Player implements GameEntity{
                     getCoordinates().y - topLeftCorner.y - getBitmap().getWidth() / 2 - 10 + random.nextInt(getBitmap().getHeight()),
                     random.nextInt(40), paint);
         }
+        int shieldXRadi = getBitmap().getWidth() / 2 + 40;
+        int shieldYRadi = getBitmap().getHeight() / 2 + 40;
+        if(currentShield > 0){
+            paint.setColor(Color.argb(50, 10, 100, 255));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                canvas.drawOval(getCoordinates().x - topLeftCorner.x - shieldXRadi,
+                        getCoordinates().y - topLeftCorner.y - shieldYRadi,
+                        getCoordinates().x - topLeftCorner.x + shieldXRadi,
+                        getCoordinates().y - topLeftCorner.y +shieldYRadi,
+                        paint);
+            } else {
+                canvas.drawCircle(getCoordinates().x,
+                        getCoordinates().y,
+                        Math.max(shieldXRadi, shieldYRadi),
+                        paint);
+
+            }
+        }
+        paint.reset();
         canvas.restore();
     }
 

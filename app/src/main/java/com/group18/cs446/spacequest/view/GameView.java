@@ -12,10 +12,6 @@ import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.game.objects.Player;
 import com.group18.cs446.spacequest.game.objects.Sector;
 
-/**
- * Created by Owen on 2018-02-08.
- */
-
 public class GameView extends SurfaceView implements Runnable {
 
     private boolean running = false;
@@ -103,40 +99,10 @@ public class GameView extends SurfaceView implements Runnable {
         return true;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        if(sector != null){
-            sector.unpause();
-        }
-        float x = e.getX();
-        boolean left = (x < canvasWidth/2);
-        int pointerIndex = e.getActionIndex();
-        int pointerId = e.getPointerId(pointerIndex);
-        int maskedAction = e.getActionMasked();
-        switch (maskedAction) {
-
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_POINTER_DOWN: {
-                player.addCommand(left ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
-                break;
-            }
-            case MotionEvent.ACTION_MOVE: {
-                player.addCommand(left ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
-                break;
-            }
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP:
-            case MotionEvent.ACTION_CANCEL:{
-                player.removeCommand(left ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
-                break;
-            }
-        }
-        return true;
-    }
-
     public void pause(){
         running = false;
         try {
+            if(sector != null) sector.pause();
             gameThread.join();
         } catch (InterruptedException e) {
         }

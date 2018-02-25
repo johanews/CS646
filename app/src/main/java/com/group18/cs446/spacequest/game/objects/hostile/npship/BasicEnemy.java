@@ -29,7 +29,7 @@ public class BasicEnemy implements Enemy {
     private Sector sector;
     private Bitmap bitmap;
     private int angle;
-    private int speed = 6;
+    private int speed = 10;
     private int sightDistance = 2000;
     private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE,200);
 
@@ -89,7 +89,7 @@ public class BasicEnemy implements Enemy {
                     coordinates.offset((int) (dx * adjustedSpeed / distanceToTarget), (int) (dy * adjustedSpeed / distanceToTarget));
                 }
             }
-            if(distanceToTarget < 450){
+            if(distanceToTarget < 550){
                 weapon.fire(gameTick);
             }
             if(currentHealth < (maxHealth/2)){
