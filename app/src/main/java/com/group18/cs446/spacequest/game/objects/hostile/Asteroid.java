@@ -31,7 +31,7 @@ public class Asteroid implements GameEntity {
     private float arcSpeed;
     private float angle;
 
-    private int maxDurability = 7;
+    private int maxDurability = 150;
     private int durability;
 
     private Random random = new Random();

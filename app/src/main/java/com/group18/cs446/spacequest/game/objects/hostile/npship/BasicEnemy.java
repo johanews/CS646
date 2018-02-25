@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -12,6 +13,7 @@ import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.CollisionEvent;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
+import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
 import com.group18.cs446.spacequest.game.objects.ship.Weapon;
 import com.group18.cs446.spacequest.game.objects.ship.components.BasicLaser;
@@ -19,7 +21,7 @@ import com.group18.cs446.spacequest.game.objects.ship.components.ChainLaser;
 import com.group18.cs446.spacequest.game.objects.ship.components.DualLaser;
 
 public class BasicEnemy implements Enemy {
-    private int maxHealth = 300;
+    private int maxHealth = 100;
     private int currentHealth;
     private Point coordinates;
     private GameEntity target;
@@ -89,6 +91,9 @@ public class BasicEnemy implements Enemy {
             }
             if(distanceToTarget < 450){
                 weapon.fire(gameTick);
+            }
+            if(currentHealth < (maxHealth/2)){
+                sector.addEntityToBack(new SmokeParticle(sector, coordinates.x, coordinates.y, bitmap.getWidth()/2, Color.GRAY,30));
             }
         }
     }

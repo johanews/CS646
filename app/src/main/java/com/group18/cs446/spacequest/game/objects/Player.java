@@ -47,8 +47,8 @@ public class Player implements GameEntity{
 
     public Player(Context context){
 
-        coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(5000+random.nextInt(2000)), (random.nextBoolean() ? 1 : -1 )*(5000+random.nextInt(2000)));
-        speed = 10;
+        coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(3500+random.nextInt(1000)), (random.nextBoolean() ? 1 : -1 )*(3500+random.nextInt(1000)));
+        speed = 15;
         maxHealth = 1000;
         currentHealth = 1000;
         regen = 3;
@@ -204,11 +204,11 @@ public class Player implements GameEntity{
             SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.sin(heading*Math.PI/180)), coordinates.y+(int)(20*Math.cos(heading*Math.PI/180)), 70);
             currentSector.addEntityToBack(smokeParticle);
         }
-        if(gameTick%3 == 0 && currentHealth < maxHealth/2){ // extra trail at 50% health
+        if(gameTick%3 == 0 && currentHealth < 2*maxHealth/3){ // extra trail at 66% health
             SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(20*Math.sin(heading*Math.PI/180)), 20, Color.DKGRAY, 80);
             currentSector.addEntityToBack(smokeParticle);
         }
-        if(gameTick%2 == 1 && currentHealth < maxHealth/5){ // extra trail at 20% health
+        if(gameTick%2 == 1 && currentHealth < maxHealth/3){ // extra trail at 33% health
             SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(-20*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(-20*Math.sin(heading*Math.PI/180)), 10, Color.RED, 100);
             currentSector.addEntityToBack(smokeParticle);
         }
