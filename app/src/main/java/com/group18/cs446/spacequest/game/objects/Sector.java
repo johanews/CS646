@@ -65,8 +65,8 @@ public class Sector {
             stars.add(new Point((int)(Math.random()*starDimension),(int)(Math.random()*starDimension)));
         }
 
-        for(int x = -5; x < 10; x+=2){
-            for(int y = -5; y < 10; y+=2){
+        for(int x = -5; x <= 5; x+=2){
+            for(int y = -5; y <= 5; y+=2){
                 if((Math.random()*(sectorID+5))>4) {
                     Enemy e = new BasicEnemy(new Point(x * 600, y * 600), context, this);
                     addEntityFront(e);
