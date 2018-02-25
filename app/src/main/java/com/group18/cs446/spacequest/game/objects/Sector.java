@@ -67,7 +67,7 @@ public class Sector {
 
         for(int x = -5; x <= 5; x+=2){
             for(int y = -5; y <= 5; y+=2){
-                if((Math.random()*(sectorID+5))>4) {
+                if((Math.random()*(sectorID+5))>5) {
                     Enemy e = new BasicEnemy(new Point(x * 600, y * 600), context, this);
                     addEntityFront(e);
                 }
@@ -111,10 +111,8 @@ public class Sector {
                 update();
             }
             if(1000/tickRate < System.currentTimeMillis() - tickStart){
-                System.out.println("minor");
                 droppedFrames++;
                 if(droppedFrames > threshhold) {
-                    System.out.println("DROP");
                     droppedFrames = 0;
                 } else {
                     continue;
@@ -218,6 +216,10 @@ public class Sector {
                 e.paint(canvas, paint, topLeftCorner);
             }
 
+            for(Filter filter : filters){
+                filter.paint(canvas);
+            }
+
             // Draw coordinates, for help testing
             paint.setColor(Color.YELLOW);
             paint.setTextSize(40);
@@ -227,10 +229,9 @@ public class Sector {
             canvas.drawText("Current Sector: "+sectorID, canvasWidth-600, 70, paint);
             paint.setColor(Color.RED);
             canvas.drawText(player.getCurrentHealth()+"/"+player.getMaxHealth(), 70, 70, paint);
+            paint.setColor(Color.CYAN);
+            canvas.drawText(player.getCurrentShield() + "/" + player.getMaxShield(), 70, 140, paint);
 
-            for(Filter filter : filters){
-                filter.paint(canvas);
-            }
 
             paint.reset();
 

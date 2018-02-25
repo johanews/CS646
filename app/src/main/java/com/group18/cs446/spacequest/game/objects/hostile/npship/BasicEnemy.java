@@ -20,34 +20,48 @@ import com.group18.cs446.spacequest.game.objects.ship.components.BasicLaser;
 import com.group18.cs446.spacequest.game.objects.ship.components.ChainLaser;
 import com.group18.cs446.spacequest.game.objects.ship.components.DualLaser;
 
+import java.util.Random;
+
 public class BasicEnemy implements Enemy {
-    private int maxHealth = 100;
-    private int currentHealth;
+    private int maxHealth, currentHealth;
+    private int speed;
+    private int angle;
+    private int sightDistance;
+    private int fireDistance;
+    private int hoverDistance;
     private Point coordinates;
     private GameEntity target;
     private Weapon weapon;
     private Sector sector;
     private Bitmap bitmap;
-    private int angle;
-    private int speed = 10;
-    private int sightDistance = 2000;
+    private Random random = new Random();
     private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE,200);
 
     public BasicEnemy(Point spawnPoint, Context context, Sector currentSector){
-        this.coordinates = spawnPoint;
-        this.currentHealth = maxHealth;
+        this.coordinates = new Point(spawnPoint);
+        this.speed = 15;
+        this.sightDistance = 3000;
+        this.fireDistance = 650;
+        this.hoverDistance = 500;
+        this.maxHealth = 100;
         this.sector = currentSector;
         this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_1);
         this.angle = 0;
-        if(Math.random() < .8){ // 80% basic laser
+        if(random.nextInt(10) < 8){ // 80% basic laser
             this.weapon = new BasicLaser(this, context);
         } else {
-            if(Math.random() > 0.5){ // 10% dual laser
+            if(random.nextBoolean()){ // 10% dual laser
                 this.weapon = new DualLaser(this, context);
+                this.speed = 10;
             } else { // 10% chainlaser
                 this.weapon = new ChainLaser(this, context);
+                this.fireDistance = 900;
+                this.hoverDistance = 600;
+                this.maxHealth = 50;
+                this.speed = 10;
             }
         }
+        this.currentHealth = maxHealth;
     }
 
     @Override
@@ -72,28 +86,20 @@ public class BasicEnemy implements Enemy {
             if(distanceToTarget > sightDistance){
                 target = null;
             } else {
-                //angle =  (int)((180/Math.PI)*(dy != 0 ? (dx < 0 ? -1 : 1)*Math.atan(dx/dy) : (dx > 0 ? Math.PI/2: 3*Math.PI/2)));
                 angle = ((int)(Math.atan2(dx, dy)*180/Math.PI)+180)%360;
                 int adjustedSpeed = speed;
-                if(distanceToTarget < 400){
-                    //at 400 do normal full ahead (1x)
-                    //at 100 do full backwards (-1x)
-                    //at 250 do neutral (0x)
-                    if(distanceToTarget < 100){
-                        adjustedSpeed*=-1;
-                    } else {
-                        adjustedSpeed = (adjustedSpeed*(distanceToTarget-250))/150;
-                    }
+                if(distanceToTarget < hoverDistance){
+                    adjustedSpeed = (adjustedSpeed*(2*distanceToTarget-hoverDistance))/hoverDistance;
                 }
-                if(distanceToTarget > 1) {
-                    coordinates.offset((int) (dx * adjustedSpeed / distanceToTarget), (int) (dy * adjustedSpeed / distanceToTarget));
+                if(distanceToTarget != 0) {
+                    coordinates.offset((dx * adjustedSpeed / distanceToTarget), (dy * adjustedSpeed / distanceToTarget));
                 }
             }
-            if(distanceToTarget < 550){
+            if(distanceToTarget < fireDistance){
                 weapon.fire(gameTick);
             }
-            if(currentHealth < (maxHealth/2)){
-                sector.addEntityToBack(new SmokeParticle(sector, coordinates.x, coordinates.y, bitmap.getWidth()/2, Color.GRAY,30));
+            if(currentHealth < maxHealth){
+                sector.addEntityToBack(new SmokeParticle(sector, coordinates.x, coordinates.y, bitmap.getWidth()/4, Color.GRAY,20));
             }
         }
     }
@@ -135,6 +141,13 @@ public class BasicEnemy implements Enemy {
         this.currentHealth -= damage;
         if(this.currentHealth <= 0){ // Trigger death, later replace this with somehting else
             sector.removeEntity(this);
+            sector.addEntityToBack(new SmokeParticle(sector, coordinates.x, coordinates.y, bitmap.getWidth()/2, Color.GRAY,30));
+            if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x-20, coordinates.y-10, bitmap.getWidth()/6, Color.GRAY,20));
+            if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x+20, coordinates.y-30, bitmap.getWidth()/4, Color.RED,50));
+            if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x-15, coordinates.y+30, bitmap.getWidth()/5, Color.DKGRAY,30));
+            if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x+15, coordinates.y+10, bitmap.getWidth()/7, Color.DKGRAY,10));
+            if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x-1, coordinates.y+10, bitmap.getWidth()/3, Color.DKGRAY,40));
+
         }
     }
 
