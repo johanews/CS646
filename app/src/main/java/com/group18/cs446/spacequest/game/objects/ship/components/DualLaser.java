@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Player;
 import com.group18.cs446.spacequest.game.objects.ship.Weapon;
 
@@ -13,14 +14,17 @@ public class DualLaser implements Weapon {
     private Bitmap bulletBitmap;
     private int fireRate = 30;
     private long lastShot;
-    private Player owner;
+    private GameEntity owner;
     private int bulletSpeed = 30;
 
-    public DualLaser(Player player, Context context){
-        this.owner = player;
+    public DualLaser(GameEntity owner, Context context){
+        this.owner = owner;
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
     }
-
+    @Override
+    public void refresh(){
+        lastShot = 0;
+    }
     @Override
     public void fire(long gameTick) {
         if(gameTick > lastShot + fireRate){

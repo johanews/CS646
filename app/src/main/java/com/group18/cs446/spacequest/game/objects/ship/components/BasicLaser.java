@@ -24,8 +24,12 @@ public class BasicLaser implements Weapon {
     }
 
     @Override
+    public void refresh(){
+        lastShot = 0;
+    }
+    @Override
     public void fire(long gameTick) {
-        if(gameTick > lastShot + fireRate){
+        if(gameTick > lastShot + fireRate || gameTick < lastShot){
             lastShot = gameTick;
             Point velocity = new Point((int)(bulletSpeed*(-Math.sin(owner.getAngle() * Math.PI / 180))),
                     (int)(bulletSpeed*(-Math.cos(owner.getAngle() * Math.PI / 180))));

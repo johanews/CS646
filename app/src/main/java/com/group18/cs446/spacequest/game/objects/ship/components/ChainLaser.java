@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Player;
 import com.group18.cs446.spacequest.game.objects.ship.Weapon;
 
@@ -17,16 +18,21 @@ public class ChainLaser implements Weapon {
     private int shots;
     private long lastShot;
     private long lastReload;
-    private Player owner;
+    private GameEntity owner;
     private int bulletSpeed = 30;
 
-    public ChainLaser(Player player, Context context){
-        this.owner = player;
+    public ChainLaser(GameEntity owner, Context context){
+        this.owner = owner;
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
         this.lastReload = 0;
         this.shots = shotCapacity;
     }
-
+    @Override
+    public void refresh(){
+        lastShot = 0;
+        shots = shotCapacity;
+        lastReload = 0;
+    }
     @Override
     public void fire(long gameTick) {
         long timeSinceLastReload = gameTick - lastReload;

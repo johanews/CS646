@@ -8,11 +8,12 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.SurfaceHolder;
 
-import com.group18.cs446.spacequest.game.enums.CollisionEvent;
+import com.group18.cs446.spacequest.game.CollisionEvent;
 import com.group18.cs446.spacequest.game.enums.GameState;
 import com.group18.cs446.spacequest.game.objects.hostile.Asteroid;
 import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
 import com.group18.cs446.spacequest.game.objects.hostile.npship.BasicEnemy;
+import com.group18.cs446.spacequest.game.vfx.Filter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Sector {
     long gameTick = 0;
     private List<GameEntity> entities;
     private List<Point> stars;
+    private List<Filter> filters;
     int starDimension = 3000;
     int numStars = 6000;
 
@@ -55,6 +57,7 @@ public class Sector {
         this.paint = new Paint();
         GameEntity exitGate = new ExitGate(context, 0, 0);
         this.entities = new CopyOnWriteArrayList<>();
+        this.filters = new CopyOnWriteArrayList<>();
         addEntityFront(exitGate);
         addEntityFront(player);
         stars = new LinkedList<>();
@@ -64,8 +67,10 @@ public class Sector {
 
         for(int x = -5; x < 10; x+=2){
             for(int y = -5; y < 10; y+=2){
-                Enemy e = new BasicEnemy(new Point(x*600, y*600), context, this);
-                addEntityFront(e);
+                if((Math.random()*(sectorID+5))>4) {
+                    Enemy e = new BasicEnemy(new Point(x * 600, y * 600), context, this);
+                    addEntityFront(e);
+                }
             }
         }
     }
@@ -83,6 +88,12 @@ public class Sector {
     public void addEntityToBack(GameEntity e){ // painted first, in the background (ie smoke effect)
         entities.add(0, e);
     }
+    public void addFilter(Filter filter){
+        filters.add(filter);
+    }
+    public void removeFilter(Filter filter){
+        filters.remove(filter);
+    }
     public List<GameEntity> getEntities(){
         return entities;
     }
@@ -97,10 +108,13 @@ public class Sector {
             if(gameState != GameState.PAUSED){
                 update();
             }
-            if(1000/tickRate - System.currentTimeMillis() - tickStart <= 0){
+            if(1000/tickRate < System.currentTimeMillis() - tickStart){
+                System.out.println("minor");
                 droppedFrames++;
                 if(droppedFrames > threshhold) {
+                    System.out.println("DROP");
                     droppedFrames = 0;
+                } else {
                     continue;
                 }
             } else {
@@ -134,11 +148,14 @@ public class Sector {
     }
     private void update(){
         gameTick++;
+        for(Filter f : filters){
+            f.update(gameTick);
+        }
         for(GameEntity e : entities){
             e.update(gameTick);
         }
         for(GameEntity e : entities){
-            if(e.getCollisionEvent(player) != CollisionEvent.NOTHING && player.intersects(e)){
+            if(e != player && e.getCollisionEvent(player).getEvent() != CollisionEvent.NOTHING && player.intersects(e)){
                 triggerCollisionEvent(player, e);
             }
         }
@@ -151,19 +168,26 @@ public class Sector {
         return player;
     }
 
+    public void triggerDefeat(){
+        if(gameState != GameState.WON) {
+            player.explode(defeatFinalizeTime);
+            previousGameState = gameState;
+            gameState = GameState.LOST;
+        }
+    }
+
     private void triggerCollisionEvent(Player player, GameEntity e){
-        switch (e.getCollisionEvent(player)){
-            case VICTORY:
-                player.flyToTarget(e.getCoordinates(), victoryFinalizeTime);
+        CollisionEvent event = e.getCollisionEvent(player);
+        switch (event.getEvent()){
+            case CollisionEvent.VICTORY:
                 gameState = GameState.WON;
+                player.flyToTarget(e.getCoordinates(), victoryFinalizeTime);
                 break;
-            case DAMAGE: // TODO
-                player.explode(defeatFinalizeTime);
-                gameState = GameState.LOST;
+            case CollisionEvent.DAMAGE:
+                player.takeDamage(event.getValue());
                 break;
-            case DEFEAT:
-                player.explode(defeatFinalizeTime);
-                gameState = GameState.LOST;
+            case CollisionEvent.DEFEAT:
+                triggerDefeat();
                 break;
         }
     }
@@ -199,6 +223,15 @@ public class Sector {
             paint.setColor(Color.CYAN);
             paint.setTextSize(60);
             canvas.drawText("Current Sector: "+sectorID, canvasWidth-600, 70, paint);
+            paint.setColor(Color.RED);
+            canvas.drawText(player.getCurrentHealth()+"/"+player.getMaxHealth(), 70, 70, paint);
+
+            for(Filter filter : filters){
+                filter.paint(canvas);
+            }
+
+            paint.reset();
+
             surfaceHolder.unlockCanvasAndPost(canvas); // unlock and draw the frame
         }
     }
@@ -223,7 +256,7 @@ public class Sector {
     }
     private void control(long start){
         try {
-            long remaining = 1000/tickRate - System.currentTimeMillis() - start;
+            long remaining = (1000/tickRate) -(System.currentTimeMillis() - start);
             if(remaining > 0) Thread.sleep(remaining);
         } catch (InterruptedException e) {
             e.printStackTrace();

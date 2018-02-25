@@ -12,7 +12,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.R;
-import com.group18.cs446.spacequest.game.enums.CollisionEvent;
+import com.group18.cs446.spacequest.game.CollisionEvent;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 
@@ -35,6 +35,8 @@ public class Asteroid implements GameEntity {
     private int durability;
 
     private Random random = new Random();
+
+    private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 100);
 
     public Asteroid(Sector sector, Point center, Context context){
         this.currentSector = sector;
@@ -133,6 +135,6 @@ public class Asteroid implements GameEntity {
 
     @Override
     public CollisionEvent getCollisionEvent(GameEntity e) {
-        return CollisionEvent.DEFEAT;
+        return collisionEvent;
     }
 }

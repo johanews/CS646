@@ -9,11 +9,13 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
+import com.group18.cs446.spacequest.game.CollisionEvent;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.objects.ship.Weapon;
 import com.group18.cs446.spacequest.game.objects.ship.components.BasicLaser;
 import com.group18.cs446.spacequest.game.objects.ship.components.ChainLaser;
+import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
 import java.util.Random;
 
@@ -34,6 +36,11 @@ public class Player implements GameEntity{
     private int timeToDeletion;
     private boolean alive = true;
     private boolean doingAction;
+    private CollisionEvent collisionEvent;
+
+    private boolean tookDamage;
+    private long lastDamage;
+    private long regenCooldown = 300;
 
     //Components
     private Weapon equipedWeapon;
@@ -54,6 +61,8 @@ public class Player implements GameEntity{
         //equipedWeapon = new DualLaser(this, context);
         //equipedWeapon = new ChainLaser(this, context);
         doingAction = false;
+        collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 100);
+        tookDamage = false;
     }
 
     public void doAction(){
@@ -61,6 +70,9 @@ public class Player implements GameEntity{
     }
     public void stopAction(){
         doingAction = false;
+    }
+    public boolean getTookDamage(){
+        return tookDamage;
     }
 
     public void setCurrentSector(Sector s){
@@ -81,9 +93,33 @@ public class Player implements GameEntity{
         alive = false;
     }
 
+    public int getCurrentHealth(){
+        return currentHealth;
+    }
+    public int getMaxHealth(){
+        return maxHealth;
+    }
+
+    @Override
+    public void takeDamage(int damage){
+        if(!controlledByPlayer) return;
+        tookDamage = true;
+        currentSector.addFilter(new DamageFilter(currentSector));
+        this.currentHealth -= damage;
+        if(currentHealth <= 0){
+            currentHealth = 0;
+            currentSector.triggerDefeat();
+        }
+    }
+
     @Override
     public Point getCoordinates() {
         return coordinates;
+    }
+
+    @Override
+    public CollisionEvent getCollisionEvent(GameEntity e){
+        return collisionEvent;
     }
 
     @Override
@@ -105,8 +141,13 @@ public class Player implements GameEntity{
 
     @Override
     public void update(long gameTick) {
-        if (currentHealth > 0 && currentHealth < maxHealth) {
-            currentHealth = (currentHealth + regen > maxHealth) ? maxHealth : currentHealth + regen;
+        if(tookDamage){
+            tookDamage = false;
+            lastDamage = gameTick;
+        } else if(gameTick > lastDamage + regenCooldown) {
+            if (currentHealth > 0 && currentHealth < maxHealth) {
+                currentHealth = (currentHealth + regen > maxHealth) ? maxHealth : currentHealth + regen;
+            }
         }
         if(alive) {
             if(doingAction){
@@ -156,8 +197,19 @@ public class Player implements GameEntity{
             // any updates to happen while dead
             timeToDeletion--;
         }
-        if(gameTick%2 == 0) {
-            SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x, coordinates.y, 70);
+
+        // Add smoke effect
+
+        if(gameTick%2 == 0) { // default trail
+            SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.sin(heading*Math.PI/180)), coordinates.y+(int)(20*Math.cos(heading*Math.PI/180)), 70);
+            currentSector.addEntityToBack(smokeParticle);
+        }
+        if(gameTick%3 == 0 && currentHealth < maxHealth/2){ // extra trail at 50% health
+            SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(20*Math.sin(heading*Math.PI/180)), 20, Color.DKGRAY, 80);
+            currentSector.addEntityToBack(smokeParticle);
+        }
+        if(gameTick%2 == 1 && currentHealth < maxHealth/5){ // extra trail at 20% health
+            SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(-20*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(-20*Math.sin(heading*Math.PI/180)), 10, Color.RED, 100);
             currentSector.addEntityToBack(smokeParticle);
         }
     }
@@ -237,7 +289,11 @@ public class Player implements GameEntity{
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
         controlledByPlayer = true;
-        // Should be the same bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
+        if(equipedWeapon != null){
+            equipedWeapon.refresh();
+        }
+        tookDamage = false;
+        lastDamage = 0;
     }
 
     @Override
