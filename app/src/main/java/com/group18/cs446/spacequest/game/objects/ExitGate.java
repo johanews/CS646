@@ -10,13 +10,14 @@ import android.graphics.Point;
 import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.R;
-import com.group18.cs446.spacequest.game.enums.CollisionEvent;
+import com.group18.cs446.spacequest.game.CollisionEvent;
 
 
 public class ExitGate implements GameEntity{
     private Point coordinates; // Center of the gate
     private Bitmap bitmap;
     private Sector sector;
+    private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.VICTORY);
 
     public ExitGate(Context context, int x, int y){
         coordinates = new Point(x, y);
@@ -38,7 +39,7 @@ public class ExitGate implements GameEntity{
 
     @Override
     public CollisionEvent getCollisionEvent(GameEntity e){
-        return CollisionEvent.VICTORY;
+        return collisionEvent;
     }
 
     @Override

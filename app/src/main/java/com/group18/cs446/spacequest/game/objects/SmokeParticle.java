@@ -12,11 +12,24 @@ public class SmokeParticle implements GameEntity {
     private int totalDuration;
     private int lifetime;
     private Sector sector;
+    private int radius;
+    private int color;
+    public SmokeParticle(Sector sector, int x, int y, int radius, int color, int ticks){
+        this.sector = sector;
+        coordinates = new Point(x, y);
+        totalDuration = ticks;
+        lifetime = 0;
+        this.radius = radius;
+        this.color = color;
+    }
     public SmokeParticle(Sector sector, int x, int y, int ticks){
         this.sector = sector;
         coordinates = new Point(x, y);
         totalDuration = ticks;
         lifetime = 0;
+        this.color = Color.GRAY;
+        this.radius = 15;
+
     }
     @Override
     public Point getCoordinates() {
@@ -44,9 +57,9 @@ public class SmokeParticle implements GameEntity {
     @Override
     public void paint(Canvas canvas, Paint paint, Point topLeftCorner) {
         if(lifetime >= totalDuration) return;
-        paint.setColor(Color.GRAY);
+        paint.setColor(color);
         paint.setAlpha((255*(totalDuration-lifetime))/totalDuration);
-        canvas.drawCircle(coordinates.x-topLeftCorner.x, coordinates.y-topLeftCorner.y, 15, paint);
+        canvas.drawCircle(coordinates.x-topLeftCorner.x, coordinates.y-topLeftCorner.y, radius, paint);
         paint.setAlpha(255);
     }
 

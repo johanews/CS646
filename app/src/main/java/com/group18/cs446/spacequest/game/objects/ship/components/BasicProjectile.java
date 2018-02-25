@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-import com.group18.cs446.spacequest.game.enums.CollisionEvent;
+import com.group18.cs446.spacequest.game.CollisionEvent;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 
@@ -18,12 +18,14 @@ public class BasicProjectile implements GameEntity {
     private Bitmap bitmap;
     private GameEntity source;
     private Sector sector;
+    private CollisionEvent collisionEvent;
     public BasicProjectile(Point coordinates, Point velocity, Bitmap bitmap, GameEntity source, Sector sector){
         this.coordinates = coordinates;
         this.velocity = velocity;
         this.bitmap = bitmap;
         this.source = source;
         this.sector = sector;
+        this.collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 1);
     }
 
     @Override
@@ -49,7 +51,7 @@ public class BasicProjectile implements GameEntity {
                     for(int y = intersection.top; y < intersection.bottom; y++){
                         if(bitmap.getPixel(x - getBounds().left, y-getBounds().top) != Color.TRANSPARENT){
                             if(e.getBitmap().getPixel(x - e.getBounds().left, y - e.getBounds().top) != Color.TRANSPARENT){
-                                e.takeDamage(1);
+                                e.takeDamage(50);
                                 continue entityLoop;
                             }
                         }
@@ -74,14 +76,14 @@ public class BasicProjectile implements GameEntity {
         return new Rect(coordinates.x-bitmap.getWidth()/2, coordinates.y - bitmap.getHeight()/2, coordinates.x+bitmap.getWidth()/2, coordinates.y+bitmap.getWidth()/2);
     }
 
-    @Override
+    /*@Override
     public CollisionEvent getCollisionEvent(GameEntity e) {
         if(e == source){
-            return CollisionEvent.NOTHING;
+            return new CollisionEvent(CollisionEvent.NOTHING);
         } else {
-            return CollisionEvent.DAMAGE;
+            return collisionEvent;
         }
-    }
+    }*/
 
     @Override
     public Sector getCurrentSector() {

@@ -4,22 +4,22 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.R;
-import com.group18.cs446.spacequest.game.enums.CollisionEvent;
+import com.group18.cs446.spacequest.game.CollisionEvent;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
 import com.group18.cs446.spacequest.game.objects.ship.Weapon;
 import com.group18.cs446.spacequest.game.objects.ship.components.BasicLaser;
+import com.group18.cs446.spacequest.game.objects.ship.components.ChainLaser;
+import com.group18.cs446.spacequest.game.objects.ship.components.DualLaser;
 
 public class BasicEnemy implements Enemy {
-    private int maxHealth = 10;
+    private int maxHealth = 300;
     private int currentHealth;
     private Point coordinates;
     private GameEntity target;
@@ -29,14 +29,23 @@ public class BasicEnemy implements Enemy {
     private int angle;
     private int speed = 6;
     private int sightDistance = 2000;
+    private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE,200);
 
     public BasicEnemy(Point spawnPoint, Context context, Sector currentSector){
         this.coordinates = spawnPoint;
         this.currentHealth = maxHealth;
-        this.weapon = new BasicLaser(this, context);
         this.sector = currentSector;
         this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_1);
         this.angle = 0;
+        if(Math.random() < .8){ // 80% basic laser
+            this.weapon = new BasicLaser(this, context);
+        } else {
+            if(Math.random() > 0.5){ // 10% dual laser
+                this.weapon = new DualLaser(this, context);
+            } else { // 10% chainlaser
+                this.weapon = new ChainLaser(this, context);
+            }
+        }
     }
 
     @Override
@@ -64,11 +73,21 @@ public class BasicEnemy implements Enemy {
                 //angle =  (int)((180/Math.PI)*(dy != 0 ? (dx < 0 ? -1 : 1)*Math.atan(dx/dy) : (dx > 0 ? Math.PI/2: 3*Math.PI/2)));
                 angle = ((int)(Math.atan2(dx, dy)*180/Math.PI)+180)%360;
                 int adjustedSpeed = speed;
+                if(distanceToTarget < 400){
+                    //at 400 do normal full ahead (1x)
+                    //at 100 do full backwards (-1x)
+                    //at 250 do neutral (0x)
+                    if(distanceToTarget < 100){
+                        adjustedSpeed*=-1;
+                    } else {
+                        adjustedSpeed = (adjustedSpeed*(distanceToTarget-250))/150;
+                    }
+                }
                 if(distanceToTarget > 1) {
                     coordinates.offset((int) (dx * adjustedSpeed / distanceToTarget), (int) (dy * adjustedSpeed / distanceToTarget));
                 }
             }
-            if(distanceToTarget < 300){
+            if(distanceToTarget < 450){
                 weapon.fire(gameTick);
             }
         }
@@ -103,7 +122,7 @@ public class BasicEnemy implements Enemy {
 
     @Override
     public CollisionEvent getCollisionEvent(GameEntity e) {
-        return CollisionEvent.NOTHING;
+        return collisionEvent;
     }
 
     @Override

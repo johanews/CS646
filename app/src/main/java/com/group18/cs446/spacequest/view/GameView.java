@@ -43,6 +43,7 @@ public class GameView extends SurfaceView implements Runnable {
             currentSector++;
             sector = new Sector(player, getContext(), surfaceHolder, currentSector);
             boolean successfulSector = sector.run();
+            System.out.println("SECTOR END");
             if(successfulSector) { // returns true if successful, false otherwise
                 // Do all the store stuff
                 player.reset();
