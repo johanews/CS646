@@ -195,6 +195,9 @@ public class Sector {
     private void draw(){ // This draw function will be responsible for drawing each frame
         if (surfaceHolder.getSurface().isValid()) { // acquire the canvas
             canvas = surfaceHolder.lockCanvas();
+            if(canvas == null){
+                return;
+            }
             canvasWidth = canvas.getWidth(); // so that we only have to do this once
             canvasHeight = canvas.getHeight();
 

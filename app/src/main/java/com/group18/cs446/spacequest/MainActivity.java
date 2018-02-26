@@ -11,6 +11,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button game_start_button;
 
     @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("MAIN RESUMING");
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
