@@ -235,6 +235,21 @@ public class Sector {
             paint.setColor(Color.CYAN);
             canvas.drawText(player.getCurrentShield() + "/" + player.getMaxShield(), 70, 140, paint);
 
+            if(gameState == GameState.PAUSED){
+                paint.setColor(Color.RED);
+                paint.setTextSize(200);
+                String pausedMessage = "Game Paused";
+                int xPos = canvasWidth/2 - (int)(paint.measureText(pausedMessage)/2);
+                int yPos = (int) (canvasHeight/2 - ((paint.descent() + paint.ascent()) / 2)) ;
+                canvas.drawText(pausedMessage, xPos, yPos, paint);
+                paint.setColor(Color.WHITE);
+                paint.setTextSize(100);
+                pausedMessage = "Tap Screen to Resume";
+                xPos = canvasWidth/2 - (int)(paint.measureText(pausedMessage)/2);
+                yPos = (int) (canvasHeight/2 + 200 - ((paint.descent() + paint.ascent()) / 2)) ;
+                canvas.drawText(pausedMessage, xPos, yPos, paint);
+
+            }
 
             paint.reset();
 
