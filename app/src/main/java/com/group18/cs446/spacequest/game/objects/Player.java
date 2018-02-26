@@ -16,6 +16,7 @@ import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.objects.ship.Weapon;
 import com.group18.cs446.spacequest.game.objects.ship.components.BasicLaser;
 import com.group18.cs446.spacequest.game.objects.ship.components.ChainLaser;
+import com.group18.cs446.spacequest.game.objects.ship.components.DualLaser;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
 import java.util.Random;
@@ -50,21 +51,21 @@ public class Player implements GameEntity{
     public Player(Context context){
 
         coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(3500+random.nextInt(1000)), (random.nextBoolean() ? 1 : -1 )*(3500+random.nextInt(1000)));
-        speed = 15;
+        speed = 18;
         maxHealth = 250;
         currentHealth = maxHealth;
         maxShield = 750;
         currentShield = maxShield;
         regen = 1;
         shieldRegen = 3;
-        turnSpeed = 6;
+        turnSpeed = 7;
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
         bounds = null;
         //equipedWeapon = new BasicLaser(this, context);
-        //equipedWeapon = new DualLaser(this, context);
-        equipedWeapon = new ChainLaser(this, context);
+        equipedWeapon = new DualLaser(this, context);
+        //equipedWeapon = new ChainLaser(this, context);
         doingAction = false;
         collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 100);
         tookDamage = false;
@@ -169,7 +170,7 @@ public class Player implements GameEntity{
                 }
             }
             if(gameTick > lastDamage + shieldRegenCooldown) {
-                if (currentShield > 0 && currentShield < maxShield) {
+                if (currentShield < maxShield) {
                     currentShield = (currentShield + shieldRegen > maxShield) ? maxShield : currentShield + shieldRegen;
                 }
             }
@@ -337,7 +338,7 @@ public class Player implements GameEntity{
             equipedWeapon.refresh();
         }
         tookDamage = false;
-        lastDamage = 0;
+        lastDamage = Long.MIN_VALUE;
     }
 
     @Override

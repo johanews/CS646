@@ -19,13 +19,14 @@ public class ChainLaser implements Weapon {
     private long lastShot;
     private long lastReload;
     private GameEntity owner;
-    private int bulletSpeed = 30;
+    private int bulletSpeed = 25;
 
     public ChainLaser(GameEntity owner, Context context){
         this.owner = owner;
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
         this.lastReload = 0;
         this.shots = shotCapacity;
+        this.bulletSpeed = bulletSpeed + owner.getSpeed();
     }
     @Override
     public void refresh(){

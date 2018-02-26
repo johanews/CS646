@@ -15,7 +15,7 @@ public class BasicLaser implements Weapon {
     private int fireRate = 20;
     private long lastShot;
     private GameEntity owner;
-    private int bulletSpeed = 20;
+    private int bulletSpeed = 25;
 
     public BasicLaser(GameEntity owner, Context context){
         this.owner = owner;

@@ -25,6 +25,7 @@ import java.util.Random;
 public class BasicEnemy implements Enemy {
     private int maxHealth, currentHealth;
     private int speed;
+    private int turnSpeed;
     private int angle;
     private int sightDistance;
     private int fireDistance;
@@ -39,7 +40,8 @@ public class BasicEnemy implements Enemy {
 
     public BasicEnemy(Point spawnPoint, Context context, Sector currentSector){
         this.coordinates = new Point(spawnPoint);
-        this.speed = 15;
+        this.speed = 12;
+        this.turnSpeed = 2;
         this.sightDistance = 3000;
         this.fireDistance = 650;
         this.hoverDistance = 500;
@@ -86,13 +88,30 @@ public class BasicEnemy implements Enemy {
             if(distanceToTarget > sightDistance){
                 target = null;
             } else {
-                angle = ((int)(Math.atan2(dx, dy)*180/Math.PI)+180)%360;
+                int targetAngle = ((int)(Math.atan2(dx, dy)*180/Math.PI)+180)%360;
+                int targetTurn = targetAngle - angle;
+                if(targetTurn > 180){
+                    targetTurn-=360;
+                } else if(targetTurn < -180){
+                    targetTurn+=360;
+                }
+                int turn = 0;
+                if(Math.abs(targetTurn) < turnSpeed) {
+                    turn = targetTurn;
+                } else {
+                    turn = turnSpeed * (targetTurn > 0 ? 1 : -1);
+                }
+                angle += turn;
                 int adjustedSpeed = speed;
                 if(distanceToTarget < hoverDistance){
                     adjustedSpeed = (adjustedSpeed*(2*distanceToTarget-hoverDistance))/hoverDistance;
                 }
-                if(distanceToTarget != 0) {
-                    coordinates.offset((dx * adjustedSpeed / distanceToTarget), (dy * adjustedSpeed / distanceToTarget));
+                if(distanceToTarget != 0) { // Note they fly towards you - not where they are pointing (that is where they shoot)
+
+                    // If always towards target coordinates.offset((dx * adjustedSpeed / distanceToTarget), (dy * adjustedSpeed / distanceToTarget));
+                    // If straight
+                    coordinates.y -= Math.cos(angle * Math.PI / 180) * adjustedSpeed;
+                    coordinates.x -= Math.sin(angle * Math.PI / 180) * adjustedSpeed;
                 }
             }
             if(distanceToTarget < fireDistance){
