@@ -15,12 +15,11 @@ public class DualLaser implements Weapon {
     private int fireRate = 30;
     private long lastShot;
     private GameEntity owner;
-    private int bulletSpeed = 20;
+    private int baseBulletSpeed = 20;
 
     public DualLaser(GameEntity owner, Context context){
         this.owner = owner;
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
-        this.bulletSpeed = bulletSpeed + owner.getSpeed();
     }
     @Override
     public void refresh(){
@@ -28,6 +27,7 @@ public class DualLaser implements Weapon {
     }
     @Override
     public void fire(long gameTick) {
+        int bulletSpeed = baseBulletSpeed + owner.getSpeed();
         if(gameTick > lastShot + fireRate){
             lastShot = gameTick;
             Point velocity = new Point((int)(bulletSpeed*(-Math.sin((owner.getAngle()-5) * Math.PI / 180))),

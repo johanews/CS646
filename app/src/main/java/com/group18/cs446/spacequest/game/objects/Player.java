@@ -13,17 +13,20 @@ import android.os.Build;
 import com.group18.cs446.spacequest.game.CollisionEvent;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.objects.ship.Engine;
 import com.group18.cs446.spacequest.game.objects.ship.Weapon;
+import com.group18.cs446.spacequest.game.objects.ship.components.BasicEngine;
 import com.group18.cs446.spacequest.game.objects.ship.components.BasicLaser;
 import com.group18.cs446.spacequest.game.objects.ship.components.ChainLaser;
 import com.group18.cs446.spacequest.game.objects.ship.components.DualLaser;
+import com.group18.cs446.spacequest.game.objects.ship.components.FastEngine;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
 import java.util.Random;
 
 public class Player implements GameEntity{
     private Point coordinates; // Now represents the center of the character, not the top left
-    private int speed, maxHealth, currentHealth, regen, maxShield, currentShield, shieldRegen, heading, turnSpeed;
+    private int maxHealth, currentHealth, regen, maxShield, currentShield, shieldRegen, heading;
     private Bitmap bitmap;
     private PlayerCommand currentCommand;
     private Rect bounds;
@@ -47,25 +50,27 @@ public class Player implements GameEntity{
 
     //Components
     private Weapon equipedWeapon;
+    private Engine equipedEngine;
 
     public Player(Context context){
 
         coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(3500+random.nextInt(1000)), (random.nextBoolean() ? 1 : -1 )*(3500+random.nextInt(1000)));
-        speed = 18;
         maxHealth = 250;
         currentHealth = maxHealth;
         maxShield = 750;
         currentShield = maxShield;
         regen = 1;
         shieldRegen = 3;
-        turnSpeed = 7;
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
         bounds = null;
+//        equipedEngine = new BasicEngine();
+        equipedEngine = new FastEngine();
         //equipedWeapon = new BasicLaser(this, context);
-        equipedWeapon = new DualLaser(this, context);
-        //equipedWeapon = new ChainLaser(this, context);
+        //equipedWeapon = new DualLaser(this, context);
+        equipedWeapon = new ChainLaser(this, context);
+
         doingAction = false;
         collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 100);
         tookDamage = false;
@@ -181,34 +186,42 @@ public class Player implements GameEntity{
                     equipedWeapon.fire(gameTick);
                 }
             }
+            if(equipedEngine != null){
+                equipedEngine.update(gameTick);
+            }
+            if(currentCommand == PlayerCommand.BOTH){
+                if(equipedEngine != null){
+                    equipedEngine.doSpecial(gameTick);
+                }
+            }
             if (controlledByPlayer) {
                 switch (currentCommand) {
                     case RIGHT:
-                        heading = (heading + 360 - turnSpeed) % 360;
+                        heading = (heading + 360 - equipedEngine.getTurnSpeed()) % 360;
                         break;
                     case LEFT:
-                        heading = (heading + 360 + turnSpeed) % 360;
+                        heading = (heading + 360 + equipedEngine.getTurnSpeed()) % 360;
                         break;
                     case BOTH:
                     case NONE:
                         // Nothing needs to be done
                         break;
                 }
-                coordinates.y -= Math.cos(heading * Math.PI / 180) * speed;
-                coordinates.x -= Math.sin(heading * Math.PI / 180) * speed;
+                coordinates.y -= Math.cos(heading * Math.PI / 180) * getSpeed();
+                coordinates.x -= Math.sin(heading * Math.PI / 180) * getSpeed();
             } else {
                 if (updatesToTarget > 0) {
                     double normalized = Math.sqrt((coordinates.y - target.y) * (coordinates.y - target.y)
                             + (coordinates.x - target.x) * (coordinates.x - target.x));
-                    if (Math.abs(coordinates.y - target.y) < speed) {
+                    if (Math.abs(coordinates.y - target.y) < equipedEngine.getSpeed()) {
                         coordinates.y = target.y;
                     } else {
-                        coordinates.y -= ((coordinates.y - target.y) / normalized) * speed;
+                        coordinates.y -= ((coordinates.y - target.y) / normalized) * getSpeed();
                     }
-                    if (Math.abs(coordinates.x - target.x) < speed) {
+                    if (Math.abs(coordinates.x - target.x) < equipedEngine.getSpeed()) {
                         coordinates.x = target.x;
                     } else {
-                        coordinates.x -= ((coordinates.x - target.x) / normalized) * speed;
+                        coordinates.x -= ((coordinates.x - target.x) / normalized) * getSpeed();
                     }
                     if (heading > 180) {
                         heading--;
@@ -226,11 +239,10 @@ public class Player implements GameEntity{
 
         // Add smoke effect
 
-        if(gameTick%2 == 0) { // default trail
-            SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.sin(heading*Math.PI/180)), coordinates.y+(int)(20*Math.cos(heading*Math.PI/180)), 70);
-            currentSector.addEntityToBack(smokeParticle);
-        }
-        if(gameTick%3 == 0 && currentHealth < maxHealth){ // extra trail when damaged
+        // default trail
+        SmokeParticle basicSmokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.sin(heading*Math.PI/180)), coordinates.y+(int)(20*Math.cos(heading*Math.PI/180)), 70);
+        currentSector.addEntityToBack(basicSmokeParticle);
+        if(gameTick%2 == 0 && currentHealth < maxHealth){ // extra trail when damaged
             SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(20*Math.sin(heading*Math.PI/180)), 20, Color.DKGRAY, 80);
             currentSector.addEntityToBack(smokeParticle);
         }
@@ -238,12 +250,16 @@ public class Player implements GameEntity{
             SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(-20*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(-20*Math.sin(heading*Math.PI/180)), 10, Color.RED, 100);
             currentSector.addEntityToBack(smokeParticle);
         }
+        if(currentHealth < maxHealth/4){ // extra trail at 25% health
+            SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(15*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(15*Math.sin(heading*Math.PI/180)), 10, Color.RED, 100);
+            currentSector.addEntityToBack(smokeParticle);
+        }
     }
 
     public int getAngle(){
         return heading;
     }
-    public int getSpeed() {return speed; }
+    public int getSpeed() {return equipedEngine.getSpeed(); }
 
     @Override
     public Bitmap getBitmap() {
@@ -336,6 +352,9 @@ public class Player implements GameEntity{
         controlledByPlayer = true;
         if(equipedWeapon != null){
             equipedWeapon.refresh();
+        }
+        if(equipedEngine != null){
+            equipedEngine.refresh();
         }
         tookDamage = false;
         lastDamage = Long.MIN_VALUE;

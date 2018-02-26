@@ -40,8 +40,8 @@ public class BasicEnemy implements Enemy {
 
     public BasicEnemy(Point spawnPoint, Context context, Sector currentSector){
         this.coordinates = new Point(spawnPoint);
-        this.speed = 12;
-        this.turnSpeed = 2;
+        this.speed = 15;
+        this.turnSpeed = 3;
         this.sightDistance = 3000;
         this.fireDistance = 650;
         this.hoverDistance = 500;
@@ -49,18 +49,29 @@ public class BasicEnemy implements Enemy {
         this.sector = currentSector;
         this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_1);
         this.angle = 0;
-        if(random.nextInt(10) < 8){ // 80% basic laser
+        if(random.nextInt(40) == 0){ // Rare speedy low armour
+            this.weapon = new BasicLaser(this, context);
+            this.sightDistance = 4000;
+            this.turnSpeed = 5;
+            this.speed = 32;
+            this.fireDistance = 900;
+            this.hoverDistance = 900;
+            this.maxHealth = 10;
+        }
+        else if(random.nextInt(10) < 8){ // 80% basic laser
             this.weapon = new BasicLaser(this, context);
         } else {
             if(random.nextBoolean()){ // 10% dual laser
                 this.weapon = new DualLaser(this, context);
-                this.speed = 10;
+                this.speed = 34;
+                this.hoverDistance = 700;
+                this.fireDistance = 700;
             } else { // 10% chainlaser
                 this.weapon = new ChainLaser(this, context);
                 this.fireDistance = 900;
                 this.hoverDistance = 600;
                 this.maxHealth = 50;
-                this.speed = 10;
+                this.speed = 13;
             }
         }
         this.currentHealth = maxHealth;

@@ -22,7 +22,7 @@ import java.util.Random;
 public class Asteroid implements GameEntity {
     private static final int MIN_DISTANCE = 1500;
     private static final int MAX_DISTANCE = 3000;
-    private Bitmap bitmap;
+    private static Bitmap bitmap;
     private Point coordinates = new Point();
     private Point speed = new Point();
     private Sector currentSector;
@@ -37,7 +37,7 @@ public class Asteroid implements GameEntity {
     public Asteroid(Sector sector, Point center, Context context){
         this.maxDurability = 150;
         this.currentSector = sector;
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid_1);
+        if(bitmap == null) bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid_1);
         double spawnAngle = random.nextDouble() * 2 * Math.PI;
         double spawnDistance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
         coordinates.set((int)(center.x+Math.cos(spawnAngle)*spawnDistance),
