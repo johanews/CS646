@@ -16,12 +16,31 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
 
     @Override
     protected void onPause() {
+        System.out.println("PAUSING");
         super.onPause();
         gameView.pause();
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.out.println("STOPPING");
+        gameView.stop();
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        System.out.println("RESTARTING");
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        System.out.println("STARTING");
+        gameView.start();
     }
 
     @Override
     protected void onResume() {
+        System.out.println("RESUMING");
         super.onResume();
         gameView.resume();
     }

@@ -25,16 +25,18 @@ public class GameView extends SurfaceView implements Runnable {
     private int canvasWidth, canvasHeight;
     private long gameTick;
 
+    private int currentSector;
+
     public GameView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         player = new Player(context); // new player
         surfaceHolder = getHolder();
         setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
+        currentSector = 0;
     }
 
     @Override
     public void run() {
-        int currentSector = 0;
         while(running) {
             currentSector++;
             sector = new Sector(player, getContext(), surfaceHolder, currentSector);
@@ -100,16 +102,24 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void pause(){
-        running = false;
-        try {
-            if(sector != null) sector.pause();
-            gameThread.join();
-        } catch (InterruptedException e) {
+        if(sector != null) sector.pause();
+    }
+    public void start(){
+        running = true;
+        if(gameThread == null || !gameThread.isAlive()) {
+            gameThread = new Thread(this);
+            gameThread.start();
         }
     }
     public void resume(){
-        running = true;
-        gameThread = new Thread(this);
-        gameThread.start();
+        //if(sector != null) sector.unpause();
+    }
+    public void stop(){
+        /*running = false;
+        try {
+            gameThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
     }
 }
