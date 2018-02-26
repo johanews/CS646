@@ -15,11 +15,12 @@ public class DualLaser implements Weapon {
     private int fireRate = 30;
     private long lastShot;
     private GameEntity owner;
-    private int bulletSpeed = 30;
+    private int bulletSpeed = 20;
 
     public DualLaser(GameEntity owner, Context context){
         this.owner = owner;
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
+        this.bulletSpeed = bulletSpeed + owner.getSpeed();
     }
     @Override
     public void refresh(){
