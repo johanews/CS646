@@ -2,11 +2,13 @@ package com.group18.cs446.spacequest.game.objects.ship.components;
 
 import com.group18.cs446.spacequest.game.objects.ship.Engine;
 
-public class BasicEngine implements Engine {
-    private int speed = 17;
-    private int maxSpeed = 20;
-    private int minSpeed = 17;
-    private int turnSpeed = 7;
+public class FastEngine implements Engine {
+    private int speed = 25;
+    private int maxSpeed = 40;
+    private int minSpeed = 20;
+    private int maxTurnSpeed = 10;
+    private int minTurnSpeed = 3;
+    private int turnSpeed = maxTurnSpeed;
     @Override
     public int getTurnSpeed() {
         return turnSpeed;
@@ -19,8 +21,11 @@ public class BasicEngine implements Engine {
 
     @Override
     public void update(long gameTick) {
-        if(speed > minSpeed && gameTick%10 == 0){
+        if(speed > minSpeed && gameTick%3 == 0){
             speed--;
+        }
+        if(turnSpeed < maxTurnSpeed && gameTick%3 == 0){
+            turnSpeed++;
         }
     }
 
@@ -28,6 +33,9 @@ public class BasicEngine implements Engine {
     public void doSpecial(long gameTick) {
         if(speed < maxSpeed){
             speed++;
+        }
+        if(turnSpeed > minTurnSpeed){
+            turnSpeed--;
         }
     }
 

@@ -19,6 +19,7 @@ import com.group18.cs446.spacequest.game.objects.ship.components.BasicEngine;
 import com.group18.cs446.spacequest.game.objects.ship.components.BasicLaser;
 import com.group18.cs446.spacequest.game.objects.ship.components.ChainLaser;
 import com.group18.cs446.spacequest.game.objects.ship.components.DualLaser;
+import com.group18.cs446.spacequest.game.objects.ship.components.FastEngine;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
 import java.util.Random;
@@ -64,10 +65,11 @@ public class Player implements GameEntity{
         currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
         bounds = null;
-        equipedEngine = new BasicEngine();
+//        equipedEngine = new BasicEngine();
+        equipedEngine = new FastEngine();
         //equipedWeapon = new BasicLaser(this, context);
-        equipedWeapon = new DualLaser(this, context);
-        //equipedWeapon = new ChainLaser(this, context);
+        //equipedWeapon = new DualLaser(this, context);
+        equipedWeapon = new ChainLaser(this, context);
 
         doingAction = false;
         collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 100);
@@ -184,6 +186,14 @@ public class Player implements GameEntity{
                     equipedWeapon.fire(gameTick);
                 }
             }
+            if(equipedEngine != null){
+                equipedEngine.update(gameTick);
+            }
+            if(currentCommand == PlayerCommand.BOTH){
+                if(equipedEngine != null){
+                    equipedEngine.doSpecial(gameTick);
+                }
+            }
             if (controlledByPlayer) {
                 switch (currentCommand) {
                     case RIGHT:
@@ -229,16 +239,19 @@ public class Player implements GameEntity{
 
         // Add smoke effect
 
-        if(gameTick%2 == 0) { // default trail
-            SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.sin(heading*Math.PI/180)), coordinates.y+(int)(20*Math.cos(heading*Math.PI/180)), 70);
-            currentSector.addEntityToBack(smokeParticle);
-        }
-        if(gameTick%3 == 0 && currentHealth < maxHealth){ // extra trail when damaged
+        // default trail
+        SmokeParticle basicSmokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.sin(heading*Math.PI/180)), coordinates.y+(int)(20*Math.cos(heading*Math.PI/180)), 70);
+        currentSector.addEntityToBack(basicSmokeParticle);
+        if(gameTick%2 == 0 && currentHealth < maxHealth){ // extra trail when damaged
             SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(20*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(20*Math.sin(heading*Math.PI/180)), 20, Color.DKGRAY, 80);
             currentSector.addEntityToBack(smokeParticle);
         }
         if(currentHealth < maxHealth/2){ // extra trail at 50% health
             SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(-20*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(-20*Math.sin(heading*Math.PI/180)), 10, Color.RED, 100);
+            currentSector.addEntityToBack(smokeParticle);
+        }
+        if(currentHealth < maxHealth/4){ // extra trail at 25% health
+            SmokeParticle smokeParticle = new SmokeParticle(currentSector, coordinates.x+(int)(15*Math.cos(heading*Math.PI/180)), coordinates.y-(int)(15*Math.sin(heading*Math.PI/180)), 10, Color.RED, 100);
             currentSector.addEntityToBack(smokeParticle);
         }
     }

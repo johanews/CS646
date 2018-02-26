@@ -23,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Sector {
     // Properties
     static final int tickRate = 30;
-    private int victoryFinalizeTime = 200;
+    private int victoryFinalizeTime = 120;
     private int defeatFinalizeTime = 50;
     private int sectorID;
 
@@ -76,8 +76,10 @@ public class Sector {
     }
 
     public void pause(){
-        previousGameState = gameState;
-        gameState = GameState.PAUSED;
+        if(gameState != GameState.PAUSED) {
+            previousGameState = gameState;
+            gameState = GameState.PAUSED;
+        }
     }
     public void unpause(){
         if(gameState == GameState.PAUSED) {
@@ -248,7 +250,19 @@ public class Sector {
                 xPos = canvasWidth/2 - (int)(paint.measureText(pausedMessage)/2);
                 yPos = (int) (canvasHeight/2 + 200 - ((paint.descent() + paint.ascent()) / 2)) ;
                 canvas.drawText(pausedMessage, xPos, yPos, paint);
-
+            } else if(gameState == GameState.WON){
+                paint.setColor(Color.GREEN);
+                paint.setTextSize(200);
+                String victoryMessage = "Sector Cleared";
+                int xPos = canvasWidth/2 - (int)(paint.measureText(victoryMessage)/2);
+                int yPos = (int) (canvasHeight/2 - ((paint.descent() + paint.ascent()) / 2)) ;
+                canvas.drawText(victoryMessage, xPos, yPos, paint);
+                paint.setColor(Color.WHITE);
+                paint.setTextSize(100);
+                victoryMessage = "Jumping to next Sector";
+                xPos = canvasWidth/2 - (int)(paint.measureText(victoryMessage)/2);
+                yPos = (int) (canvasHeight/2 + 200 - ((paint.descent() + paint.ascent()) / 2)) ;
+                canvas.drawText(victoryMessage, xPos, yPos, paint);
             }
 
             paint.reset();
