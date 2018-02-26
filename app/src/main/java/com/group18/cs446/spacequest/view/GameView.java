@@ -1,107 +1,108 @@
 package com.group18.cs446.spacequest.view;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.group18.cs446.spacequest.Constants;
+import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.game.objects.Player;
-
-/**
- * Created by Owen on 2018-02-08.
- */
+import com.group18.cs446.spacequest.game.objects.Sector;
 
 public class GameView extends SurfaceView implements Runnable {
 
     private boolean running = false;
-    private Player player;
+    private Player player; // The player that is consistent between sectors
+    private Sector sector; // The current sector
     private Thread gameThread = null;
     private int tickRate;
 
-    private Paint paint;
-    private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
-    public GameView(Context context, int screenX, int screenY) {
-        super(context);
-        tickRate = 30;
+    private int canvasWidth, canvasHeight;
+    private long gameTick;
 
-        player = new Player(context);
-
+    public GameView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+        player = new Player(context); // new player
         surfaceHolder = getHolder();
-        paint = new Paint();
-
+        setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
     }
 
     @Override
     public void run() {
-        while (running) {
-            long tickStart = System.currentTimeMillis();
-            update();
-            draw();
-            control(tickStart);
+        int currentSector = 0;
+        while(running) {
+            currentSector++;
+            sector = new Sector(player, getContext(), surfaceHolder, currentSector);
+            boolean successfulSector = sector.run();
+            System.out.println("SECTOR END");
+            if(successfulSector) { // returns true if successful, false otherwise
+                // Do all the store stuff
+                player.reset();
+
+            } else {
+                // Update Highscores
+                player = new Player(getContext());
+                currentSector = 0;
+            }
         }
     }
 
-    private void update(){
-        player.update();
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        canvasWidth = w;
+        canvasHeight = h;
     }
 
-    private void draw(){
-        if (surfaceHolder.getSurface().isValid()) {
-            canvas = surfaceHolder.lockCanvas();
-
-            Point topLeftCorner = new Point(player.getCoordinates().x-canvas.getWidth()/2,
-                    player.getCoordinates().y-canvas.getHeight()/2);
-
-
-
-            // Draw background
-            canvas.drawColor(Color.BLACK);
-            paint.setColor(Color.WHITE);
-
-            //drawing all stars
-            for (int i = 0; i < 100 && i*200-topLeftCorner.x < canvas.getWidth(); i++) {
-                for (int j = 0; j < 100&& j*200-topLeftCorner.y < canvas.getHeight(); j++) {
-                    paint.setStrokeWidth(10);
-                    canvas.drawPoint(i*200-topLeftCorner.x, j*200-topLeftCorner.y, paint);
+    public boolean handleButtonEvent(int buttonId, MotionEvent e){
+        if(sector != null){
+            sector.unpause();
+        }
+        int maskedAction = e.getActionMasked();
+        if(buttonId == R.id.go_left || buttonId == R.id.go_right) {
+            switch (maskedAction) {
+                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_POINTER_DOWN: {
+                    player.addCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
+                    break;
+                }
+                case MotionEvent.ACTION_MOVE: {
+                    player.addCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
+                    break;
+                }
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_POINTER_UP:
+                case MotionEvent.ACTION_CANCEL: {
+                    player.removeCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
+                    break;
                 }
             }
-
-
-            //Alternatively, pass this to Player to paint themselves here
-            canvas.save();
-            canvas.rotate(-player.getAngle(), player.getCoordinates().x-topLeftCorner.x, player.getCoordinates().y - topLeftCorner.y);
-            canvas.drawBitmap(
-                    player.getBitmap(),
-                    player.getCoordinates().x - topLeftCorner.x - player.getBitmap().getWidth()/2,
-                    player.getCoordinates().y - topLeftCorner.y - player.getBitmap().getHeight()/2,
-                    paint);
-            canvas.restore();
-
-            paint.setColor(Color.RED);
-            paint.setStrokeWidth(10);
-            canvas.drawPoint(canvas.getWidth()/2, canvas.getHeight()/2, paint);
-
-            surfaceHolder.unlockCanvasAndPost(canvas);
+        } else if(buttonId == R.id.activate_ability){
+            switch (maskedAction) {
+                case MotionEvent.ACTION_DOWN:
+                    player.doAction();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    player.stopAction();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    break;
+            }
+        } else { // Unknown button
+            return false;
         }
-    }
-
-    private void control(long start){
-        try {
-            long remaining = 1000/tickRate - System.currentTimeMillis() - start;
-            if(remaining > 0) gameThread.sleep(remaining);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        return true;
     }
 
     public void pause(){
         running = false;
         try {
+            if(sector != null) sector.pause();
             gameThread.join();
         } catch (InterruptedException e) {
         }
@@ -112,17 +113,3 @@ public class GameView extends SurfaceView implements Runnable {
         gameThread.start();
     }
 }
-
-/*
-        playing = false;
-        try {
-            gameThread.join();
-        } catch (InterruptedException e) {
-        }
-    }
-
-    public void resume() {
-        playing = true;
-        gameThread = new Thread(this);
-        gameThread.start();
- */
