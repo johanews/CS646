@@ -19,6 +19,8 @@ public class GameView extends SurfaceView implements Runnable {
     private Sector sector; // The current sector
     private Thread gameThread = null;
     private int tickRate;
+    private Boolean right = false;
+    private Boolean left = false;
 
     private SurfaceHolder surfaceHolder;
 
@@ -68,6 +70,11 @@ public class GameView extends SurfaceView implements Runnable {
             switch (maskedAction) {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_POINTER_DOWN: {
+                    if(buttonId == R.id.go_left)
+                        left = true;
+                    else right = true;
+                    if(right && left)
+                        player.doAction();
                     player.addCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
                     break;
                 }
@@ -77,8 +84,12 @@ public class GameView extends SurfaceView implements Runnable {
                 }
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_POINTER_UP:
+                    player.stopAction();
                 case MotionEvent.ACTION_CANCEL: {
                     player.removeCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
+                    if(buttonId == R.id.go_left)
+                        left = false;
+                    else right = false;
                     break;
                 }
             }
