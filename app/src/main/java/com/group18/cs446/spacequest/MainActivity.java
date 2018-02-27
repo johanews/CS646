@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this, ShopActivity.class));
             }
         });
+        shopButton.setVisibility(View.INVISIBLE);
 
         setting_button = findViewById(R.id.setting_button);
         setting_button.setOnClickListener(new View.OnClickListener() {
