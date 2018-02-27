@@ -36,6 +36,8 @@ public class ShopActivity extends AppCompatActivity {
     ImageView Engine2;
     ImageView Engine3;
 
+    ImageView backButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,16 @@ public class ShopActivity extends AppCompatActivity {
         setShieldVisible(false);
         setEngineVisible(false);
         setWeaponVisible(true);
+
+        backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+
     }
 
     public void setWeaponVisible(boolean b) {
@@ -104,21 +116,17 @@ public class ShopActivity extends AppCompatActivity {
             weapon1.setVisibility(View.VISIBLE);
             weapon1Text.setVisibility(View.VISIBLE);
             weapon1CurrencyImage.setVisibility(View.VISIBLE);
-
             weapon2.setVisibility(View.VISIBLE);
             weapon2Text.setVisibility(View.VISIBLE);
             weapon2CurrencyImage.setVisibility(View.VISIBLE);
-
             purchaseButton.setVisibility(View.VISIBLE);
         } else {
             weapon1.setVisibility(View.INVISIBLE);
             weapon1Text.setVisibility(View.INVISIBLE);
             weapon1CurrencyImage.setVisibility(View.INVISIBLE);
-
             weapon2.setVisibility(View.INVISIBLE);
             weapon2Text.setVisibility(View.INVISIBLE);
             weapon2CurrencyImage.setVisibility(View.INVISIBLE);
-
             purchaseButton.setVisibility(View.INVISIBLE);
         }
     }

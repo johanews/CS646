@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    ImageView game_start_button;
-    Button shop_button;
+    ImageView gameStartButton;
+    ImageView shopButton;
+    ImageView setting_button;
 
     @Override
     public void onResume() {
@@ -23,20 +23,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        shop_button = findViewById(R.id.shop_button);
-//        shop_button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(this, ShopActivity.class));
-//            }
-//        });
-
-        game_start_button = findViewById(R.id.game_start_image);
-        game_start_button.setOnClickListener(this);
+        gameStartButton = findViewById(R.id.game_start_image);
+        gameStartButton.setOnClickListener(this);
         View root = findViewById(android.R.id.content);
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
 
+        shopButton = findViewById(R.id.shop_button);
+        shopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ShopActivity.class));
+            }
+        });
 
+//        setting_button = findViewById(R.id.setting_button);
+//        setting_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+//            }
+//        });
 
     }
 
