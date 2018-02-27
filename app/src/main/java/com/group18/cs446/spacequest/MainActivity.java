@@ -36,19 +36,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-//        setting_button = findViewById(R.id.setting_button);
-//        setting_button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(MainActivity.this, SettingActivity.class));
-//            }
-//        });
+        setting_button = findViewById(R.id.setting_button);
+        setting_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+            }
+        });
+
+
 
     }
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(this, ShopActivity.class));
+        startActivity(new Intent(this, GamePlayActivity.class));
     }
 
 }

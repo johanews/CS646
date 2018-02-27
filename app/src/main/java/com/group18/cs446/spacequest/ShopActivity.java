@@ -100,7 +100,7 @@ public class ShopActivity extends AppCompatActivity {
         setEngineVisible(false);
         setWeaponVisible(true);
 
-        backButton = findViewById(R.id.back_button);
+        backButton = findViewById(R.id.back_button_setting);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
