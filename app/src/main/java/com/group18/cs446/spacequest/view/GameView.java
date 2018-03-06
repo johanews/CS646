@@ -9,7 +9,7 @@ import android.view.SurfaceView;
 import com.group18.cs446.spacequest.Constants;
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
-import com.group18.cs446.spacequest.game.objects.Player;
+import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.objects.Sector;
 
 public class GameView extends SurfaceView implements Runnable {

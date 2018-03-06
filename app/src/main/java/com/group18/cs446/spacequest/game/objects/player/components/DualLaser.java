@@ -1,4 +1,4 @@
-package com.group18.cs446.spacequest.game.objects.ship.components;
+package com.group18.cs446.spacequest.game.objects.player.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,8 +7,7 @@ import android.graphics.Point;
 
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
-import com.group18.cs446.spacequest.game.objects.Player;
-import com.group18.cs446.spacequest.game.objects.ship.Weapon;
+import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class DualLaser implements Weapon {
     private Bitmap bulletBitmap;

@@ -1,4 +1,4 @@
-package com.group18.cs446.spacequest.game.objects.ship.components;
+package com.group18.cs446.spacequest.game.objects.player.components;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,7 +7,9 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-import com.group18.cs446.spacequest.game.CollisionEvent;
+import com.group18.cs446.spacequest.game.collision.CollisionEvent;
+import com.group18.cs446.spacequest.game.collision.Damage;
+import com.group18.cs446.spacequest.game.collision.DamageType;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 
@@ -18,6 +20,7 @@ public class BasicProjectile implements GameEntity {
     private Bitmap bitmap;
     private GameEntity source;
     private Sector sector;
+    private Damage damage;
     private CollisionEvent collisionEvent;
     public BasicProjectile(Point coordinates, Point velocity, Bitmap bitmap, GameEntity source, Sector sector){
         this.coordinates = coordinates;
@@ -25,7 +28,8 @@ public class BasicProjectile implements GameEntity {
         this.bitmap = bitmap;
         this.source = source;
         this.sector = sector;
-        this.collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 50);
+        this.damage = new Damage(DamageType.LASER, 50);
+        this.collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, damage);
     }
 
     @Override
@@ -51,7 +55,7 @@ public class BasicProjectile implements GameEntity {
                     for(int y = intersection.top; y < intersection.bottom; y++){
                         if(bitmap.getPixel(x - getBounds().left, y-getBounds().top) != Color.TRANSPARENT){
                             if(e.getBitmap().getPixel(x - e.getBounds().left, y - e.getBounds().top) != Color.TRANSPARENT){
-                                e.takeDamage(collisionEvent.getValue());
+                                e.takeDamage(damage);
                                 continue entityLoop;
                             }
                         }

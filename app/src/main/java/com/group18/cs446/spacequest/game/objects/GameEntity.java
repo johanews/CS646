@@ -6,7 +6,8 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-import com.group18.cs446.spacequest.game.CollisionEvent;
+import com.group18.cs446.spacequest.game.collision.CollisionEvent;
+import com.group18.cs446.spacequest.game.collision.Damage;
 
 
 public interface GameEntity {
@@ -24,7 +25,7 @@ public interface GameEntity {
     default CollisionEvent getCollisionEvent(GameEntity e){
         return new CollisionEvent(CollisionEvent.NOTHING);
     }
-    default void takeDamage(int damage){}
+    default void takeDamage(Damage damage){}
     default int getAngle(){
         return 0;
     }

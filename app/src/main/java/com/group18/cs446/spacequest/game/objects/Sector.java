@@ -8,11 +8,12 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.SurfaceHolder;
 
-import com.group18.cs446.spacequest.game.CollisionEvent;
+import com.group18.cs446.spacequest.game.collision.CollisionEvent;
 import com.group18.cs446.spacequest.game.enums.GameState;
 import com.group18.cs446.spacequest.game.objects.hostile.Asteroid;
 import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
 import com.group18.cs446.spacequest.game.objects.hostile.npship.BasicEnemy;
+import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.vfx.Filter;
 
 import java.util.LinkedList;
@@ -156,11 +157,6 @@ public class Sector {
         for(GameEntity e : entities){
             e.update(gameTick);
         }
-        for(GameEntity e : entities){
-            if(e != player && e.getCollisionEvent(player).getEvent() != CollisionEvent.NOTHING && player.intersects(e)){
-                triggerCollisionEvent(player, e);
-            }
-        }
         if(gameTick%10 == 0){ // TODO put enemy entity spawning in a factory
             addEntityFront(new Asteroid(this, player.getCoordinates(), context));
         }
@@ -168,30 +164,6 @@ public class Sector {
 
     public Player getPlayer(){
         return player;
-    }
-
-    public void triggerDefeat(){
-        if(gameState != GameState.WON) {
-            player.explode(defeatFinalizeTime);
-            previousGameState = gameState;
-            gameState = GameState.LOST;
-        }
-    }
-
-    private void triggerCollisionEvent(Player player, GameEntity e){
-        CollisionEvent event = e.getCollisionEvent(player);
-        switch (event.getEvent()){
-            case CollisionEvent.VICTORY:
-                gameState = GameState.WON;
-                player.flyToTarget(e.getCoordinates(), victoryFinalizeTime);
-                break;
-            case CollisionEvent.DAMAGE:
-                player.takeDamage(event.getValue());
-                break;
-            case CollisionEvent.DEFEAT:
-                triggerDefeat();
-                break;
-        }
     }
 
     private void draw(){ // This draw function will be responsible for drawing each frame
@@ -205,12 +177,6 @@ public class Sector {
 
             Point topLeftCorner = new Point(player.getCoordinates().x-canvasWidth/2,
                     player.getCoordinates().y-canvasHeight/2); // the point which will be the top left corner
-            // ie, if (100, 100) is the top left corner, an entity at (100, 200) would be on the left screen 100 down,
-            // and an entity at (0, 0) would be off the screen (
-
-
-
-            // Draw background
             canvas.drawColor(Color.BLACK);
 
             // Draw the stars
@@ -234,8 +200,10 @@ public class Sector {
             canvas.drawText("Current Sector: "+sectorID, canvasWidth-600, 70, paint);
             paint.setColor(Color.RED);
             canvas.drawText(player.getCurrentHealth()+"/"+player.getMaxHealth(), 70, 70, paint);
-            paint.setColor(Color.CYAN);
-            canvas.drawText(player.getCurrentShield() + "/" + player.getMaxShield(), 70, 140, paint);
+            if(player.getMaxShield() > 0) {
+                paint.setColor(Color.CYAN);
+                canvas.drawText(player.getCurrentShield() + "/" + player.getMaxShield(), 70, 140, paint);
+            }
 
             if(gameState == GameState.PAUSED){
                 paint.setColor(Color.RED);
@@ -296,5 +264,22 @@ public class Sector {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void triggerVictory() {
+        previousGameState = gameState;
+        gameState = GameState.WON;
+    }
+
+    public void triggerDefeat(){
+        if(gameState != GameState.WON) {
+            player.explode(defeatFinalizeTime);
+            previousGameState = gameState;
+            gameState = GameState.LOST;
+        }
+    }
+
+    public int getVictoryFinalizeTime() {
+        return victoryFinalizeTime;
     }
 }

@@ -1,4 +1,4 @@
-package com.group18.cs446.spacequest.game.objects.ship;
+package com.group18.cs446.spacequest.game.objects.player;
 
 public interface Engine {
     int getTurnSpeed();
