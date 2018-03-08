@@ -1,98 +1,74 @@
-<android.support.constraint.ConstraintLayout
+<?xml version="1.0" encoding="utf-8"?>
+
+<GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.group18.cs446.spacequest.selected_items">
 
+    <fragment
+        android:id="@+id/weapon_fragment"
+        android:name="com.group18.cs446.spacequest.used_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="1" />
+
     <TextView
         android:id="@+id/selected_weapon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/selected_weapon"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_column="0"
+        android:layout_row="0"
+        android:text="@string/selected_weapon" />
 
     <fragment
-        android:id="@+id/weapon_fragment"
+        android:id="@+id/shield_fragment"
         android:name="com.group18.cs446.spacequest.used_item"
-        android:layout_width="345dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/selected_weapon"
-        app:layout_constraintTop_toBottomOf="@+id/selected_weapon" />
+        android:layout_column="1"
+        android:layout_row="1" />
 
     <TextView
         android:id="@+id/selected_shield"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/selected_shield"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weapon_fragment" />
+        android:layout_column="1"
+        android:layout_row="0"
+        android:text="@string/selected_shield" />
 
     <fragment
-        android:id="@+id/shield_fragment"
+        android:id="@+id/engine_fragment"
         android:name="com.group18.cs446.spacequest.used_item"
-        android:layout_width="345dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/selected_shield"
-        app:layout_constraintTop_toBottomOf="@+id/selected_shield" />
+        android:layout_column="0"
+        android:layout_row="3" />
 
     <TextView
         android:id="@+id/selected_engine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/selected_engine"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shield_fragment" />
+        android:layout_column="0"
+        android:layout_row="2"
+        android:text="@string/selected_engine" />
 
     <fragment
-        android:id="@+id/engine_fragment"
+        android:id="@+id/h_fragment"
         android:name="com.group18.cs446.spacequest.used_item"
-        android:layout_width="345dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/selected_engine"
-        app:layout_constraintTop_toBottomOf="@+id/selected_engine" />
+        android:layout_column="1"
+        android:layout_row="3" />
 
     <TextView
         android:id="@+id/selected_h"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/selected_h"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/engine_fragment" />
+        android:layout_column="1"
+        android:layout_row="2"
+        android:text="@string/selected_h" />
 
-    <fragment
-        android:id="@+id/h_fragment"
-        android:name="com.group18.cs446.spacequest.used_item"
-        android:layout_width="345dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/selected_h"
-        app:layout_constraintTop_toBottomOf="@+id/selected_h" />
-
-</android.support.constraint.ConstraintLayout>
+</GridLayout>
