@@ -10,6 +10,8 @@ import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class BasicLaser implements Weapon {
+
+    private String name = "Basic Laser";
     private Bitmap bulletBitmap;
     private int fireRate = 20;
     private long lastShot;
@@ -40,5 +42,10 @@ public class BasicLaser implements Weapon {
                     owner.getCurrentSector());
             owner.getCurrentSector().addEntityToBack(projectile);
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

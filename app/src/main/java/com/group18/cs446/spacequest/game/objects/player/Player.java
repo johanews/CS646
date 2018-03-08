@@ -92,6 +92,10 @@ public class Player implements GameEntity {
         return currentSector;
     }
 
+    public String getWeapon() {
+        return equipedWeapon.getName();
+    }
+
     public void flyToTarget(Point p, int time){
         controlledByPlayer = false;
         target = p;

@@ -3,4 +3,12 @@
     <string name="start_button">Start Game</string>
     <string name="upgrade_button">Upgrade Ship</string>
     <string name="shop_button">Shop</string>
+    <string name="description">Description</string>
+    <string name="buy_button">Buy</string>
+    <string name="selected_weapon">Weapon</string>
+    <string name="goto_map">Map</string>
+    <string name="selected_shield">Shield</string>
+    <string name="selected_h">H</string>
+    <string name="selected_engine">Engine</string>
+    <string name="sell_button">"Sell"</string>
 </resources>

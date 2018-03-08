@@ -35,6 +35,10 @@ public class GameView extends SurfaceView implements Runnable {
         currentSector = 0;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     @Override
     public void run() {
         while(running) {

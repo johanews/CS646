@@ -10,6 +10,8 @@ import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class ChainLaser implements Weapon {
+
+    private String name = "Chain Laser";
     private Bitmap bulletBitmap;
     private int fireRate = 3;
     private int shotCapacity = 6;
@@ -52,5 +54,10 @@ public class ChainLaser implements Weapon {
             owner.getCurrentSector().addEntityToBack(projectile);
             shots--;
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

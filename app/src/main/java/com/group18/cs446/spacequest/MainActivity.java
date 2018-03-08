@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         gameStartButton = findViewById(R.id.game_start_image);
         gameStartButton.setOnClickListener(this);
+
         View root = findViewById(android.R.id.content);
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
 
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this, ShopActivity.class));
             }
         });
-        shopButton.setVisibility(View.INVISIBLE);
 
         setting_button = findViewById(R.id.setting_button);
         setting_button.setOnClickListener(new View.OnClickListener() {
@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this, SettingActivity.class));
             }
         });
-
-
 
     }
 
