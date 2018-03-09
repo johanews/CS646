@@ -6,11 +6,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.view.GameView;
 
 public class GamePlayActivity extends AppCompatActivity implements View.OnTouchListener {
 
     private GameView gameView;
+    private PlayerInfo playerInfo;
 
     private Boolean right = false;
     private Boolean left = false;
@@ -53,8 +55,11 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
 
         super.onCreate(savedInstanceState);
 
+        playerInfo = (PlayerInfo) getIntent().getSerializableExtra("PlayerInfo");
+
         setContentView(R.layout.play_activity);
         gameView = findViewById(R.id.game_view);
+        gameView.init(playerInfo, this);
         Button right = findViewById(R.id.go_right);
         Button left = findViewById(R.id.go_left);
         Button action = findViewById(R.id.activate_ability);

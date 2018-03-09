@@ -3,14 +3,17 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorDarkBlue">
 
     <Button
         android:id="@+id/map_button"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/comfortaa"
         android:text="@string/goto_map"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,16 +21,17 @@
 
     <fragment
         android:id="@+id/sector_items_fragment"
-        android:name="com.group18.cs446.spacequest.sector_items"
+        android:name="com.group18.cs446.spacequest.SectorItems"
         android:layout_width="350dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/sector_items" />
 
     <fragment
         android:id="@+id/selected_items_fragment"
-        android:name="com.group18.cs446.spacequest.selected_items"
+        android:name="com.group18.cs446.spacequest.SelectedItems"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/map_button"
@@ -35,6 +39,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/sector_items_fragment"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout="@layout/items_selected" />
 
 </android.support.constraint.ConstraintLayout>

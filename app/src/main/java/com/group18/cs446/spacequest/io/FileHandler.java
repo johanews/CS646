@@ -2,7 +2,7 @@ package com.group18.cs446.spacequest.io;
 
 import android.content.Context;
 
-import com.group18.cs446.spacequest.game.objects.Player;
+import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,7 +14,7 @@ public class FileHandler {
 
     private static final String PLAYER_FILE_NAME = "player_data";
 
-    public static boolean savePlayer(Player player, Context context) {
+    public static boolean savePlayer(PlayerInfo player, Context context) {
         try {
             FileOutputStream fos = context.openFileOutput(PLAYER_FILE_NAME, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -29,12 +29,12 @@ public class FileHandler {
         return true;
     }
 
-    public static Player loadPlayer(Context context) {
-        Player player = null;
+    public static PlayerInfo loadPlayer(Context context) {
+        PlayerInfo player = null;
         try {
             FileInputStream fis = context.openFileInput(PLAYER_FILE_NAME);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            player = (Player) ois.readObject();
+            player = (PlayerInfo) ois.readObject();
             ois.close();
             fis.close();
         } catch (IOException | ClassNotFoundException e) {

@@ -12,7 +12,9 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.R;
-import com.group18.cs446.spacequest.game.CollisionEvent;
+import com.group18.cs446.spacequest.game.collision.CollisionEvent;
+import com.group18.cs446.spacequest.game.collision.Damage;
+import com.group18.cs446.spacequest.game.collision.DamageType;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
@@ -30,7 +32,7 @@ public class Asteroid implements GameEntity {
     private float angle;
     private int maxDurability;
     private int durability;
-    private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, 100);
+    private Damage damage = new Damage(DamageType.PHYSICAL, 100);
 
     private Random random = new Random();
 
@@ -53,11 +55,18 @@ public class Asteroid implements GameEntity {
         return coordinates;
     }
 
+
+    @Override
+    public CollisionEvent getCollisionEvent(GameEntity entity){
+        return new CollisionEvent(CollisionEvent.DAMAGE, damage);
+    }
     @Override
     public void update(long gameTick){
         coordinates.x += speed.x;
         coordinates.y += speed.y;
         angle = (angle+arcSpeed)%360;
+
+        // If > max distance, despawn
         int deltaX = currentSector.getPlayer().getCoordinates().x - coordinates.x;
         int deltaY = currentSector.getPlayer().getCoordinates().y - coordinates.y;
         if((deltaX*deltaX)+(deltaY*deltaY) > MAX_DISTANCE*MAX_DISTANCE){
@@ -66,8 +75,17 @@ public class Asteroid implements GameEntity {
     }
 
     @Override
-    public void takeDamage(int damage){
-        durability -= damage;
+    public void takeDamage(Damage damage){
+        int multiplier = 100;
+        switch (damage.getType()){ // we can change this up as we add more damage types
+            case LASER:
+            case PHYSICAL:
+                multiplier = 100;
+                break;
+            default:
+                break;
+        }
+        durability -= (damage.getAmount() * multiplier)/100;
         if(durability <= 0){
             durability = 0;
             currentSector.addEntityToBack(new SmokeParticle(currentSector, coordinates.x, coordinates.y, bitmap.getWidth()/2, Color.DKGRAY, 10));
@@ -129,10 +147,5 @@ public class Asteroid implements GameEntity {
     public Rect getBounds(){
         return new Rect(coordinates.x-bitmap.getWidth()/2, coordinates.y-bitmap.getHeight()/2,
                 coordinates.x+bitmap.getWidth()/2, coordinates.y+bitmap.getHeight()/2);
-    }
-
-    @Override
-    public CollisionEvent getCollisionEvent(GameEntity e) {
-        return collisionEvent;
     }
 }
