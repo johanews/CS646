@@ -4,11 +4,17 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+
+import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    Button game_start_button;
+    ImageView gameStartButton;
+    ImageView shopButton;
+    ImageView setting_button;
+
+    PlayerInfo playerInfo;
 
     @Override
     public void onResume() {
@@ -21,14 +27,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        game_start_button = findViewById(R.id.game_start_button);
-        game_start_button.setOnClickListener(this);
+        playerInfo = new PlayerInfo();
+
+        gameStartButton = findViewById(R.id.game_start_image);
+        gameStartButton.setOnClickListener(this);
+
         View root = findViewById(android.R.id.content);
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
+
+        shopButton = findViewById(R.id.shop_button);
+        shopButton.setOnClickListener((View v) -> startActivity(
+                new Intent(MainActivity.this, ShopActivity.class)));
+
+        setting_button = findViewById(R.id.setting_button);
+        setting_button.setOnClickListener((View v) -> startActivity(
+                new Intent(MainActivity.this, SettingActivity.class)));
     }
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(this, GamePlayActivity.class));
+        Intent intent = new Intent(this,ShopActivity.class);
+        intent.putExtra("PlayerInfo", playerInfo);
+        startActivity(intent);
+        finish();
     }
+
 }
