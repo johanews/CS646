@@ -1,6 +1,5 @@
 package com.group18.cs446.spacequest;
 
-
 import android.view.View;
 
 public class Constants {
