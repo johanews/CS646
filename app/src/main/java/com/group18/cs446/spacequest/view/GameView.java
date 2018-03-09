@@ -11,6 +11,7 @@ import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.game.objects.Player;
 import com.group18.cs446.spacequest.game.objects.Sector;
+import com.group18.cs446.spacequest.io.FileHandler;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -46,8 +47,8 @@ public class GameView extends SurfaceView implements Runnable {
             System.out.println("SECTOR END");
             if(successfulSector) { // returns true if successful, false otherwise
                 // Do all the store stuff
+                FileHandler.savePlayer(player, getContext());
                 player.reset();
-
             } else {
                 // Update Highscores
                 player = new Player(getContext());
