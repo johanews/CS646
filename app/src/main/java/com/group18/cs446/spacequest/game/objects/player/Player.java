@@ -51,6 +51,7 @@ public class Player implements GameEntity, Serializable {
     private Engine equipedEngine;
     private Hull equipedHull;
     private Shield equipedShield;
+    private int money;
 
     public Player(Context context) {
 
@@ -365,5 +366,9 @@ public class Player implements GameEntity, Serializable {
                 currentSector.triggerDefeat();
                 break;
         }
+    }
+
+    public int getMoney() {
+        return money;
     }
 }

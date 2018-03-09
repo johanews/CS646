@@ -95,5 +95,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(this, GamePlayActivity.class);
         intent.putExtra("PlayerInfo", playerInfo);
         startActivity(intent);
+        finish();
     }
 }
