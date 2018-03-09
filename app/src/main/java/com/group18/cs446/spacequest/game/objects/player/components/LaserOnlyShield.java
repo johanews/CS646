@@ -1,5 +1,6 @@
 package com.group18.cs446.spacequest.game.objects.player.components;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,6 +20,7 @@ public class LaserOnlyShield implements Shield {
     private long lastDamageTick;
     private boolean tookDamageThisTick;
     private Player owner;
+    private Bitmap image;
 
     public LaserOnlyShield(Player owner){
         this.owner = owner;
@@ -28,6 +30,16 @@ public class LaserOnlyShield implements Shield {
         this.regenCooldown = 120;
         this.lastDamageTick = 0;
         this.tookDamageThisTick = false;
+    }
+
+    @Override
+    public String getVersion() {
+        return "Laser Only Shield";
+    }
+
+    @Override
+    public Bitmap getImage() {
+        return image;
     }
 
     @Override

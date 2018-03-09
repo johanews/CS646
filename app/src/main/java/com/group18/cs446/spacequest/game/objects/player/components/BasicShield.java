@@ -1,5 +1,6 @@
 package com.group18.cs446.spacequest.game.objects.player.components;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,6 +20,7 @@ public class BasicShield implements Shield {
     private long lastDamageTick;
     private boolean tookDamageThisTick;
     private Player owner;
+    private Bitmap image;
 
     public BasicShield(Player owner){
         this.owner = owner;
@@ -28,6 +30,16 @@ public class BasicShield implements Shield {
         this.regenCooldown = 150;
         this.lastDamageTick = 0;
         this.tookDamageThisTick = false;
+    }
+
+    @Override
+    public String getVersion() {
+        return "Basic Shield";
+    }
+
+    @Override
+    public Bitmap getImage() {
+        return image;
     }
 
     @Override

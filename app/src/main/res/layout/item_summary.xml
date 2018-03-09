@@ -6,13 +6,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.group18.cs446.spacequest.used_item">
-
+    tools:context="com.group18.cs446.spacequest.ItemSummary">
 
     <ImageView
         android:id="@+id/item_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toTopOf="@+id/item_title"
@@ -24,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:fontFamily="@font/comfortaa"
         android:text="@string/description"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"

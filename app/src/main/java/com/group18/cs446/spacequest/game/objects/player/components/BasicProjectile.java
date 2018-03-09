@@ -14,6 +14,7 @@ import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 
 public class BasicProjectile implements GameEntity {
+
     private static final int despawnDistance = 2000;
     private Point coordinates;
     private Point velocity;
@@ -22,6 +23,7 @@ public class BasicProjectile implements GameEntity {
     private Sector sector;
     private Damage damage;
     private CollisionEvent collisionEvent;
+
     public BasicProjectile(Point coordinates, Point velocity, Bitmap bitmap, GameEntity source, Sector sector){
         this.coordinates = coordinates;
         this.velocity = velocity;

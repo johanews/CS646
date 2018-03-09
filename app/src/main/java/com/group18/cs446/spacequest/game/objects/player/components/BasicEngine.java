@@ -1,21 +1,36 @@
 package com.group18.cs446.spacequest.game.objects.player.components;
 
+import android.graphics.Bitmap;
+
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.player.Engine;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 
 public class BasicEngine implements Engine {
+
     private Player owner;
+    private Bitmap image;
     private int speed = 17;
     private int maxSpeed = 20;
     private int minSpeed = 17;
     private int turnSpeed = 7;
 
     public BasicEngine(Player owner){
+        this.owner = owner;
         this.maxSpeed = 20;
         this.minSpeed = 17;
         this.speed = minSpeed;
         this.turnSpeed = 7;
+    }
+
+    @Override
+    public String getVersion() {
+        return "Basic Engine";
+    }
+
+    @Override
+    public Bitmap getImage() {
+        return image;
     }
 
     @Override

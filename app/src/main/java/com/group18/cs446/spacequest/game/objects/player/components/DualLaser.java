@@ -11,8 +11,8 @@ import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class DualLaser implements Weapon {
 
-    private String name = "Dual Laser";
     private Bitmap bulletBitmap;
+    private Bitmap image;
     private int fireRate = 30;
     private long lastShot;
     private GameEntity owner;
@@ -22,10 +22,22 @@ public class DualLaser implements Weapon {
         this.owner = owner;
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
     }
+
+    @Override
+    public String getVersion() {
+        return "Dual Laser";
+    }
+
+    @Override
+    public Bitmap getImage() {
+        return image;
+    }
+
     @Override
     public void refresh(){
         lastShot = 0;
     }
+
     @Override
     public void fire(long gameTick) {
         int bulletSpeed = baseBulletSpeed + owner.getSpeed();
@@ -52,8 +64,4 @@ public class DualLaser implements Weapon {
         }
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
 }

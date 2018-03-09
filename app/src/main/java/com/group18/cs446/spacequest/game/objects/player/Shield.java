@@ -1,5 +1,6 @@
 package com.group18.cs446.spacequest.game.objects.player;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -13,4 +14,6 @@ public interface Shield {
     int getCurrentShield();
     int getMaxShield();
     void paint(Canvas canvas, Paint paint, Point topLeftCorner);
+    String getVersion();
+    Bitmap getImage();
 }

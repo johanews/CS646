@@ -1,11 +1,15 @@
 package com.group18.cs446.spacequest.game.objects.player.components;
 
+import android.graphics.Bitmap;
+
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.player.Engine;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 
 public class FastEngine implements Engine {
+
     private Player owner;
+    private Bitmap image;
     private int maxSpeed = 40;
     private int minSpeed = 17;
     private int speed = minSpeed;
@@ -16,6 +20,17 @@ public class FastEngine implements Engine {
     public FastEngine(Player owner){
         this.owner = owner;
     }
+
+    @Override
+    public String getVersion() {
+        return "Fast Engine";
+    }
+
+    @Override
+    public Bitmap getImage() {
+        return image;
+    }
+
     @Override
     public int getTurnSpeed() {
         return turnSpeed;

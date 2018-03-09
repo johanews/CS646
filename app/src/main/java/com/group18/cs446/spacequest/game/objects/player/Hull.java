@@ -1,5 +1,7 @@
 package com.group18.cs446.spacequest.game.objects.player;
 
+import android.graphics.Bitmap;
+
 import com.group18.cs446.spacequest.game.collision.Damage;
 
 public interface Hull {
@@ -8,4 +10,6 @@ public interface Hull {
     void takeDamage(Damage damage);
     int getCurrentHealth();
     int getMaxHealth();
+    String getVersion();
+    Bitmap getImage();
 }

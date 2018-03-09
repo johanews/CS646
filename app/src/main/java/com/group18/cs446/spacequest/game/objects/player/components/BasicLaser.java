@@ -11,8 +11,8 @@ import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class BasicLaser implements Weapon {
 
-    private String name = "Basic Laser";
     private Bitmap bulletBitmap;
+    private Bitmap image;
     private int fireRate = 20;
     private long lastShot;
     private GameEntity owner;
@@ -24,9 +24,20 @@ public class BasicLaser implements Weapon {
     }
 
     @Override
+    public String getVersion() {
+        return "Basic Laser";
+    }
+
+    @Override
+    public Bitmap getImage() {
+        return image;
+    }
+
+    @Override
     public void refresh(){
         lastShot = 0;
     }
+
     @Override
     public void fire(long gameTick) {
         int bulletSpeed = baseBulletSpeed + owner.getSpeed();
@@ -44,8 +55,4 @@ public class BasicLaser implements Weapon {
         }
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
 }

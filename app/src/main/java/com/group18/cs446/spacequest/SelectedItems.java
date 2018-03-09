@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 
 public class SelectedItems extends Fragment {
 
-    FragmentManager fragmentManager;
-
-    ItemSummary weaponFragment;
-    ItemSummary engineFragment;
+    private ItemSummary weaponFragment;
+    private ItemSummary engineFragment;
+    private ItemSummary shieldFragment;
+    private ItemSummary hullFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -21,10 +21,12 @@ public class SelectedItems extends Fragment {
 
         View view = inflater.inflate(R.layout.items_selected, container, false);
 
-        fragmentManager = getChildFragmentManager();
+        FragmentManager fragmentManager = getChildFragmentManager();
 
         weaponFragment = (ItemSummary) fragmentManager.findFragmentById(R.id.current_weapon);
         engineFragment = (ItemSummary) fragmentManager.findFragmentById(R.id.current_engine);
+        shieldFragment = (ItemSummary) fragmentManager.findFragmentById(R.id.current_shield);
+        hullFragment   = (ItemSummary) fragmentManager.findFragmentById(R.id.current_hull);
 
         return view;
     }
@@ -35,6 +37,14 @@ public class SelectedItems extends Fragment {
 
     public ItemSummary getEngineFragment() {
         return engineFragment;
+    }
+
+    public ItemSummary getShieldFragment() {
+        return shieldFragment;
+    }
+
+    public ItemSummary getHullFragment() {
+        return hullFragment;
     }
 
 }

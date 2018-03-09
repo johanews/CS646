@@ -31,7 +31,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/current_h"
+        app:layout_constraintBottom_toTopOf="@+id/current_hull"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/current_weapon"
         app:layout_constraintTop_toTopOf="parent"
@@ -47,13 +47,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/current_h"
+        app:layout_constraintEnd_toStartOf="@+id/current_hull"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/current_weapon"
         tools:layout="@layout/item_summary" />
 
     <fragment
-        android:id="@+id/current_h"
+        android:id="@+id/current_hull"
         android:name="com.group18.cs446.spacequest.ItemSummary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

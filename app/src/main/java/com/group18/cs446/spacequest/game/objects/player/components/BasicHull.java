@@ -1,22 +1,24 @@
 package com.group18.cs446.spacequest.game.objects.player.components;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 
 import com.group18.cs446.spacequest.game.collision.Damage;
-import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.player.Hull;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
 public class BasicHull implements Hull {
+
     private int maxHealth, currentHealth;
     private int regenAmount;
     private int regenCooldown; // time to regen from last damage
     private long lastDamageTick;
     private boolean tookDamageThisTick;
     private Player owner;
+    private Bitmap image;
     private Point[] smokeLocations = new Point[4];
 
     public BasicHull(Player owner){
@@ -32,7 +34,16 @@ public class BasicHull implements Hull {
         this.smokeLocations[1] = new Point(-20, -20);
         this.smokeLocations[2] = new Point(15, -15);
         this.smokeLocations[3] = new Point(-15, -15);
+    }
 
+    @Override
+    public String getVersion() {
+        return "Basic Hull";
+    }
+
+    @Override
+    public Bitmap getImage() {
+        return image;
     }
 
     @Override

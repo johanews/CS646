@@ -30,26 +30,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
 
         shopButton = findViewById(R.id.shop_button);
-        shopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, ShopActivity.class));
-            }
-        });
+        shopButton.setOnClickListener((View v) -> startActivity(
+                new Intent(MainActivity.this, ShopActivity.class)));
 
         setting_button = findViewById(R.id.setting_button);
-        setting_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, SettingActivity.class));
-            }
-        });
-
+        setting_button.setOnClickListener((View v) -> startActivity(
+                new Intent(MainActivity.this, SettingActivity.class)));
     }
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(this, GamePlayActivity.class));
+        Intent intent = new Intent(this,GamePlayActivity.class);
+        startActivity(intent);
     }
 
 }

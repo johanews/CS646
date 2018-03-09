@@ -11,8 +11,8 @@ import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class ChainLaser implements Weapon {
 
-    private String name = "Chain Laser";
     private Bitmap bulletBitmap;
+    private Bitmap image;
     private int fireRate = 3;
     private int shotCapacity = 6;
     private int ticksPerReload = 20;
@@ -28,6 +28,17 @@ public class ChainLaser implements Weapon {
         this.lastReload = 0;
         this.shots = shotCapacity;
     }
+
+    @Override
+    public String getVersion() {
+        return "Chain Laser";
+    }
+
+    @Override
+    public Bitmap getImage() {
+        return image;
+    }
+
     @Override
     public void refresh(){
         lastShot = 0;
@@ -56,8 +67,4 @@ public class ChainLaser implements Weapon {
         }
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
 }
