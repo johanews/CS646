@@ -10,15 +10,17 @@ import android.graphics.Point;
 import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.R;
-import com.group18.cs446.spacequest.game.CollisionEvent;
+import com.group18.cs446.spacequest.game.collision.CollisionEvent;
+import com.group18.cs446.spacequest.game.collision.Damage;
+import com.group18.cs446.spacequest.game.collision.DamageType;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
-import com.group18.cs446.spacequest.game.objects.ship.Weapon;
-import com.group18.cs446.spacequest.game.objects.ship.components.BasicLaser;
-import com.group18.cs446.spacequest.game.objects.ship.components.ChainLaser;
-import com.group18.cs446.spacequest.game.objects.ship.components.DualLaser;
+import com.group18.cs446.spacequest.game.objects.player.Weapon;
+import com.group18.cs446.spacequest.game.objects.player.components.BasicLaser;
+import com.group18.cs446.spacequest.game.objects.player.components.ChainLaser;
+import com.group18.cs446.spacequest.game.objects.player.components.DualLaser;
 
 import java.util.Random;
 
@@ -36,7 +38,8 @@ public class BasicEnemy implements Enemy {
     private Sector sector;
     private Bitmap bitmap;
     private Random random = new Random();
-    private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE,200);
+    private Damage collisionDamage = new Damage(DamageType.PHYSICAL, 100);
+    private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, collisionDamage);
 
     public BasicEnemy(Point spawnPoint, Context context, Sector currentSector){
         this.coordinates = new Point(spawnPoint);
@@ -53,7 +56,7 @@ public class BasicEnemy implements Enemy {
             this.weapon = new BasicLaser(this, context);
             this.sightDistance = 4000;
             this.turnSpeed = 5;
-            this.speed = 32;
+            this.speed = 25;
             this.fireDistance = 900;
             this.hoverDistance = 900;
             this.maxHealth = 10;
@@ -63,7 +66,7 @@ public class BasicEnemy implements Enemy {
         } else {
             if(random.nextBoolean()){ // 10% dual laser
                 this.weapon = new DualLaser(this, context);
-                this.speed = 34;
+                this.speed = 20;
                 this.hoverDistance = 700;
                 this.fireDistance = 700;
             } else { // 10% chainlaser
@@ -167,8 +170,17 @@ public class BasicEnemy implements Enemy {
     }
 
     @Override
-    public void takeDamage(int damage) {
-        this.currentHealth -= damage;
+    public void takeDamage(Damage damage) {
+        int damageAmount = damage.getAmount();
+        switch (damage.getType()){
+            case PHYSICAL:
+                damageAmount *= 0.8;
+                break;
+            case LASER:
+            default:
+                break;
+        }
+        this.currentHealth -= damageAmount;
         if(this.currentHealth <= 0){ // Trigger death, later replace this with somehting else
             sector.removeEntity(this);
             sector.addEntityToBack(new SmokeParticle(sector, coordinates.x, coordinates.y, bitmap.getWidth()/2, Color.GRAY,30));

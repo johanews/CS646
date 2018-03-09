@@ -1,16 +1,22 @@
 package com.group18.cs446.spacequest.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.group18.cs446.spacequest.Constants;
+import com.group18.cs446.spacequest.GamePlayActivity;
+import com.group18.cs446.spacequest.MainActivity;
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.ShopActivity;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
-import com.group18.cs446.spacequest.game.objects.Player;
+import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.objects.Sector;
+import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -25,32 +31,45 @@ public class GameView extends SurfaceView implements Runnable {
     private int canvasWidth, canvasHeight;
     private long gameTick;
 
-    private int currentSector;
+    private PlayerInfo playerInfo;
+    private Activity gameplayActivity;
 
     public GameView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         player = new Player(context); // new player
         surfaceHolder = getHolder();
         setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
-        currentSector = 0;
+    }
+
+    public void init(PlayerInfo playerInfo, Activity gameplayActivity){
+        this.playerInfo = new PlayerInfo(playerInfo);
+        this.gameplayActivity = gameplayActivity;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     @Override
     public void run() {
-        while(running) {
-            currentSector++;
-            sector = new Sector(player, getContext(), surfaceHolder, currentSector);
-            boolean successfulSector = sector.run();
-            System.out.println("SECTOR END");
-            if(successfulSector) { // returns true if successful, false otherwise
-                // Do all the store stuff
-                player.reset();
-
-            } else {
-                // Update Highscores
-                player = new Player(getContext());
-                currentSector = 0;
-            }
+        sector = new Sector(player, getContext(), surfaceHolder, playerInfo.getCurrentSector());
+        boolean successfulSector = sector.run();
+        System.out.println("SECTOR END");
+        if(successfulSector) { // returns true if successful, false otherwise
+           // Do all the store stuff
+            player.reset();
+            playerInfo.setMoney(player.getMoney());
+            playerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
+            Intent intent = new Intent(gameplayActivity, ShopActivity.class);
+            intent.putExtra("PlayerInfo", playerInfo);
+            gameplayActivity.startActivity(intent);
+            gameplayActivity.finish();
+         } else {
+            // Update Highscores
+            playerInfo.setCurrentSector(-1);
+            Intent intent = new Intent(gameplayActivity, MainActivity.class);
+            gameplayActivity.startActivity(intent);
+            gameplayActivity.finish();
         }
     }
 
