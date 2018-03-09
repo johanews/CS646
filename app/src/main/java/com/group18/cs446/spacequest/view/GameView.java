@@ -58,13 +58,15 @@ public class GameView extends SurfaceView implements Runnable {
         boolean successfulSector = sector.run();
         System.out.println("SECTOR END");
         if(successfulSector) { // returns true if successful, false otherwise
-            // Save player to file
-            FileHandler.savePlayer(playerInfo, getContext());
-
-           // Do all the store stuff
+            // Do all the store stuff
             player.reset();
             playerInfo.setMoney(player.getMoney());
             playerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
+
+            if (!FileHandler.savePlayer(playerInfo, getContext())){
+                System.err.println("Failed to save player info");
+            }
+
             Intent intent = new Intent(gameplayActivity, ShopActivity.class);
             intent.putExtra("PlayerInfo", playerInfo);
             gameplayActivity.startActivity(intent);

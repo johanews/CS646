@@ -25,7 +25,7 @@ public class FileHandler {
             e.printStackTrace();
             return false;
         }
-        System.out.println("Player saved!");
+
         return true;
     }
 

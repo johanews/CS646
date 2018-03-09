@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
+import com.group18.cs446.spacequest.io.FileHandler;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -27,7 +28,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        playerInfo = new PlayerInfo();
+        playerInfo = FileHandler.loadPlayer(getApplicationContext());
+        if (playerInfo == null) {
+            playerInfo = new PlayerInfo();
+        }
 
         gameStartButton = findViewById(R.id.game_start_image);
         gameStartButton.setOnClickListener(this);
