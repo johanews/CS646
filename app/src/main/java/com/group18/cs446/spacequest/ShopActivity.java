@@ -1,21 +1,26 @@
 package com.group18.cs446.spacequest;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import com.group18.cs446.spacequest.game.objects.player.Engine;
 import com.group18.cs446.spacequest.game.objects.player.Hull;
 import com.group18.cs446.spacequest.game.objects.player.Player;
+import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.game.objects.player.Shield;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
-public class ShopActivity extends AppCompatActivity {
-
-    Player player;
+public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
 
     SelectedItems selectedItems;
+    PlayerInfo playerInfo;
+
+    Button play_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,11 @@ public class ShopActivity extends AppCompatActivity {
 
         selectedItems = (SelectedItems) getSupportFragmentManager().
                         findFragmentById(R.id.selected_items_fragment);
+
+        play_button = findViewById(R.id.map_button);
+        play_button.setOnClickListener(this);
+
+        playerInfo = (PlayerInfo) getIntent().getSerializableExtra("PlayerInfo");
 
         getWeapon();
         getEngine();
@@ -80,4 +90,10 @@ public class ShopActivity extends AppCompatActivity {
         // selectedItems.getHullFragment().setTitle(hull.getVersion());
     }
 
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(this, GamePlayActivity.class);
+        intent.putExtra("PlayerInfo", playerInfo);
+        startActivity(intent);
+    }
 }
