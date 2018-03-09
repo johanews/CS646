@@ -28,6 +28,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shop_layout);
 
+        View root = findViewById(android.R.id.content);
+        root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
+
         selectedItems = (SelectedItems) getSupportFragmentManager().
                         findFragmentById(R.id.selected_items_fragment);
 
