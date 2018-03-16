@@ -15,6 +15,7 @@ public interface GameEntity {
     void update(long gameTick);
     void paint(Canvas canvas, Paint paint, Point topLeftCorner);
     Bitmap getBitmap();
+
     default boolean contains(Point p){
         return false;
     }

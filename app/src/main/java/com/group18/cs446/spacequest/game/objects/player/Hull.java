@@ -4,12 +4,10 @@ import android.graphics.Bitmap;
 
 import com.group18.cs446.spacequest.game.collision.Damage;
 
-public interface Hull {
+public interface Hull extends ShipComponent{
     void update(long gameTick);
     void refresh();
     void takeDamage(Damage damage);
     int getCurrentHealth();
     int getMaxHealth();
-    String getVersion();
-    Bitmap getImage();
 }

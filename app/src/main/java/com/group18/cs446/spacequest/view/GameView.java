@@ -1,16 +1,22 @@
 package com.group18.cs446.spacequest.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.group18.cs446.spacequest.Constants;
+import com.group18.cs446.spacequest.MainActivity;
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.ShopActivity;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
-import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.objects.Sector;
+import com.group18.cs446.spacequest.game.objects.player.Player;
+import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
+import com.group18.cs446.spacequest.io.FileHandler;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -19,20 +25,27 @@ public class GameView extends SurfaceView implements Runnable {
     private Sector sector; // The current sector
     private Thread gameThread = null;
     private int tickRate;
+    private Boolean right = false;
+    private Boolean left = false;
 
     private SurfaceHolder surfaceHolder;
 
     private int canvasWidth, canvasHeight;
     private long gameTick;
 
-    private int currentSector;
+    private PlayerInfo playerInfo;
+    private Activity gameplayActivity;
 
     public GameView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        player = new Player(context); // new player
         surfaceHolder = getHolder();
         setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
-        currentSector = 0;
+    }
+
+    public void init(PlayerInfo playerInfo, Activity gameplayActivity){
+        this.playerInfo = new PlayerInfo(playerInfo);
+        this.gameplayActivity = gameplayActivity;
+        this.player = new Player(getContext(), playerInfo); // new player
     }
 
     public Player getPlayer() {
@@ -41,20 +54,30 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
-        while(running) {
-            currentSector++;
-            sector = new Sector(player, getContext(), surfaceHolder, currentSector);
-            boolean successfulSector = sector.run();
-            System.out.println("SECTOR END");
-            if(successfulSector) { // returns true if successful, false otherwise
-                // Do all the store stuff
-                player.reset();
+        sector = new Sector(player, getContext(), surfaceHolder, playerInfo.getCurrentSector());
+        boolean successfulSector = sector.run();
+        System.out.println("SECTOR END");
+        if(successfulSector) { // returns true if successful, false otherwise
+            // Do all the store stuff
+            PlayerInfo newPlayerInfo = player.createPlayerInfo();
+            newPlayerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
 
-            } else {
-                // Update Highscores
-                player = new Player(getContext());
-                currentSector = 0;
+            if (!FileHandler.savePlayer(newPlayerInfo, getContext())){
+                System.err.println("Failed to save player info");
             }
+
+            Intent intent = new Intent(gameplayActivity, ShopActivity.class);
+            intent.putExtra("PlayerInfo", newPlayerInfo);
+            gameplayActivity.startActivity(intent);
+            gameplayActivity.finish();
+         } else {
+            // Update Highscores
+            PlayerInfo newPlayerInfo = player.createPlayerInfo();
+            newPlayerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
+            newPlayerInfo.setCurrentSector(-1);
+            Intent intent = new Intent(gameplayActivity, MainActivity.class); // TODO social media activity
+            gameplayActivity.startActivity(intent);
+            gameplayActivity.finish();
         }
     }
 
@@ -73,6 +96,11 @@ public class GameView extends SurfaceView implements Runnable {
         if(buttonId == R.id.go_left || buttonId == R.id.go_right) {
             switch (maskedAction) {
                 case MotionEvent.ACTION_DOWN:
+                    if(buttonId == R.id.go_left)
+                        left = true;
+                    else right = true;
+                    if(right && left)
+                        player.doAction();
                 case MotionEvent.ACTION_POINTER_DOWN: {
                     player.addCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
                     break;
@@ -82,6 +110,10 @@ public class GameView extends SurfaceView implements Runnable {
                     break;
                 }
                 case MotionEvent.ACTION_UP:
+                    if(buttonId == R.id.go_left)
+                        left = false;
+                    else right = false;
+                    player.stopAction();
                 case MotionEvent.ACTION_POINTER_UP:
                 case MotionEvent.ACTION_CANCEL: {
                     player.removeCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
