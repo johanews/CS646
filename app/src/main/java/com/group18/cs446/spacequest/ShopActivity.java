@@ -8,7 +8,9 @@ import android.widget.Button;
 
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Engine;
+import com.group18.cs446.spacequest.game.objects.player.Hull;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
+import com.group18.cs446.spacequest.game.objects.player.Shield;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,7 +43,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         getEngine();
         getShield();
         getHull();
-
     }
 
     public void getWeapon() {
@@ -64,8 +65,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getShield() {
 
-        int type = playerInfo.getWeapon();
-        Weapon shield = (Weapon) factory.getShipComponent(type);
+        int type = playerInfo.getShield();
+        Shield shield = (Shield) factory.getShipComponent(type);
 
         selectedItems.getShieldFragment().setImage(shield.getBitmap());
         selectedItems.getShieldFragment().setTitle(shield.getName());
@@ -73,11 +74,18 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getHull() {
 
-        int type = playerInfo.getWeapon();
-        Weapon hull = (Weapon) factory.getShipComponent(type);
+        int type = playerInfo.getHull();
+        Hull hull = (Hull) factory.getShipComponent(type);
 
         selectedItems.getHullFragment().setImage(hull.getBitmap());
         selectedItems.getHullFragment().setTitle(hull.getName());
+    }
+
+    public void refresh() {
+        getWeapon();
+        getEngine();
+        getShield();
+        getHull();
     }
 
     @Override

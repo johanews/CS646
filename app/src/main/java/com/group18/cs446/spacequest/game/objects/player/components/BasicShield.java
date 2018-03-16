@@ -16,7 +16,7 @@ import com.group18.cs446.spacequest.game.objects.player.Shield;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
 public class BasicShield implements Shield {
-    private static final String NAME = "Basic Laser";
+    private static final String NAME = "Basic Shield";
     private static final String DESCRIPTION = "Basic Laser Description";
     private static final int PRICE = 30;
 
