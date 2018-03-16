@@ -12,6 +12,7 @@ import com.group18.cs446.spacequest.game.objects.player.components.FastEngine;
 import com.group18.cs446.spacequest.game.objects.player.components.LaserOnlyShield;
 
 public class ComponentFactory {
+
     public static final int BASIC_ENGINE = 1;
     public static final int FAST_ENGINE = 2;
     public static final int BASIC_HULL = 100;
@@ -22,11 +23,15 @@ public class ComponentFactory {
     public static final int LASER_ONLY_SHIELD = 301;
 
     private Context context;
+
     public ComponentFactory(Context context){
         this.context = context;
     }
-    public ShipComponent getShipComponent(int id){
+
+    public ShipComponent getShipComponent(int id) {
+
         switch(id){
+
             case BASIC_ENGINE:
                 return new BasicEngine(context);
             case FAST_ENGINE: // FastEngine

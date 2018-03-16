@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,38 +15,26 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="SPACE"
+        android:text="@string/Space"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#FFFFFF"
         android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintBottom_toTopOf="@+id/game_name2"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.100000024" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ImageView
         android:id="@+id/setting_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/game_name2"
-        android:layout_below="@+id/shop_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_alignEnd="@+id/game_name2"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="32dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_start_image"
         app:srcCompat="@drawable/setting_button" />
-
-    <ImageView
-        android:id="@+id/shop_button"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_below="@+id/game_start_image"
-        android:layout_centerHorizontal="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/shop_button" />
 
     <TextView
         android:id="@+id/game_name2"
@@ -54,17 +42,24 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/game_name"
         android:layout_centerHorizontal="true"
-        android:text="QUEST"
+        android:layout_marginBottom="32dp"
+        android:text="@string/Quest"
         android:textColor="#FFFFFF"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/game_start_image"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ImageView
         android:id="@+id/game_start_image"
         android:layout_width="150dp"
         android:layout_height="60dp"
-        android:layout_below="@+id/game_name2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
+        android:layout_centerVertical="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/play_button" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
