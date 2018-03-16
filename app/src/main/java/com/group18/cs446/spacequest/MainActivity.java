@@ -11,7 +11,6 @@ import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     ImageView gameStartButton;
-    ImageView shopButton;
     ImageView setting_button;
 
     PlayerInfo playerInfo;
@@ -35,10 +34,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View root = findViewById(android.R.id.content);
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
 
-        shopButton = findViewById(R.id.shop_button);
-        shopButton.setOnClickListener((View v) -> startActivity(
-                new Intent(MainActivity.this, ShopActivity.class)));
-
         setting_button = findViewById(R.id.setting_button);
         setting_button.setOnClickListener((View v) -> startActivity(
                 new Intent(MainActivity.this, SettingActivity.class)));
@@ -46,8 +41,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+
         Intent intent = new Intent(this,ShopActivity.class);
         intent.putExtra("PlayerInfo", playerInfo);
+
         startActivity(intent);
         finish();
     }

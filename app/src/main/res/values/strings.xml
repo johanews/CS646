@@ -11,4 +11,6 @@
     <string name="selected_hull">Hull</string>
     <string name="selected_engine">Engine</string>
     <string name="sell_button">"Sell"</string>
+    <string name="Space">SPACE</string>
+    <string name="Quest">QUEST</string>
 </resources>

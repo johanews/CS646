@@ -13,11 +13,6 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
         backButtonSetting = findViewById(R.id.back_button_setting);
-        backButtonSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        backButtonSetting.setOnClickListener((View v) -> finish());
     }
 }

@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     tools:context="com.group18.cs446.spacequest.GamePlayActivity">
 
-    <com.group18.cs446.spacequest.view.GameView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.group18.cs446.spacequest.view.GameView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/game_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

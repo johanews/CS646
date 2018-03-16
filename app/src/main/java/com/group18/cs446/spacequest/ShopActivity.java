@@ -1,5 +1,6 @@
 package com.group18.cs446.spacequest;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,6 +29,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shop_layout);
 
+        View root = findViewById(android.R.id.content);
+        root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
+
         selectedItems = (SelectedItems) getSupportFragmentManager().
                         findFragmentById(R.id.selected_items_fragment);
 
@@ -44,57 +48,48 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getWeapon() {
 
-        // Weapon weapon = player.getWeapon();
+        // int type = player.getWeapon();
+        // Weapon weapon = EquipmentFactory().getWeapon(type);
 
-        Bitmap test = BitmapFactory.decodeResource(getResources(),R.drawable.weapon);
-
-        selectedItems.getWeaponFragment().setImage(test);
-        selectedItems.getWeaponFragment().setTitle("Basic Laser");
         // selectedItems.getWeaponFragment().setImage(weapon.getImage());
-        // selectedItems.getWeaponFragment().setTitle(weapon.getVersion());
+        // selectedItems.getWeaponFragment().setTitle(weapon.getName());
     }
 
     public void getEngine() {
 
-        // Engine engine = player.getEngine();
+        // int type = player.getWeapon();
+        // Weapon weapon = EquipmentFactory().getWeapon(type);
 
-        Bitmap test = BitmapFactory.decodeResource(getResources(),R.drawable.engine);
-
-        selectedItems.getEngineFragment().setImage(test);
-        selectedItems.getEngineFragment().setTitle("Basic Engine");
-        // selectedItems.getEngineFragment().setImage(engine.getImage());
-        // selectedItems.getEngineFragment().setTitle(engine.getVersion());
+        // selectedItems.getWeaponFragment().setImage(weapon.getImage());
+        // selectedItems.getWeaponFragment().setTitle(weapon.getName());
     }
 
     public void getShield() {
 
-        // Shield shield = player.getShield();
+        // int type = player.getWeapon();
+        // Weapon weapon = EquipmentFactory().getWeapon(type);
 
-        Bitmap test = BitmapFactory.decodeResource(getResources(),R.drawable.shield);
-
-        selectedItems.getShieldFragment().setImage(test);
-        selectedItems.getShieldFragment().setTitle("Basic Shield");
-        // selectedItems.getShieldFragment().setImage(shield.getImage());
-        // selectedItems.getShieldFragment().setTitle(shield.getVersion());
+        // selectedItems.getWeaponFragment().setImage(weapon.getImage());
+        // selectedItems.getWeaponFragment().setTitle(weapon.getName());
     }
 
     public void getHull() {
 
-        // Hull hull = player.getHull();
+        // int type = player.getWeapon();
+        // Weapon weapon = EquipmentFactory().getWeapon(type);
 
-        Bitmap test = BitmapFactory.decodeResource(getResources(),R.drawable.hull);
-
-        selectedItems.getHullFragment().setImage(test);
-        selectedItems.getHullFragment().setTitle("Basic Hull");
-        // selectedItems.getHullFragment().setImage(hull.getImage());
-        // selectedItems.getHullFragment().setTitle(hull.getVersion());
+        // selectedItems.getWeaponFragment().setImage(weapon.getImage());
+        // selectedItems.getWeaponFragment().setTitle(weapon.getName());
     }
 
     @Override
     public void onClick(View v) {
+
         Intent intent = new Intent(this, GamePlayActivity.class);
         intent.putExtra("PlayerInfo", playerInfo);
+
         startActivity(intent);
         finish();
     }
+
 }
