@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.io.FileHandler;
+import com.group18.cs446.spacequest.social.FacebookActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         shopButton = findViewById(R.id.shop_button);
         shopButton.setOnClickListener((View v) -> startActivity(
-                new Intent(MainActivity.this, ShopActivity.class)));
+                new Intent(MainActivity.this, FacebookActivity.class)));
 
         setting_button = findViewById(R.id.setting_button);
         setting_button.setOnClickListener((View v) -> startActivity(
