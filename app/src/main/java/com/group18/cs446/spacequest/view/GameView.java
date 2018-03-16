@@ -38,7 +38,6 @@ public class GameView extends SurfaceView implements Runnable {
 
     public GameView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        player = new Player(context); // new player
         surfaceHolder = getHolder();
         setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
     }
@@ -46,6 +45,7 @@ public class GameView extends SurfaceView implements Runnable {
     public void init(PlayerInfo playerInfo, Activity gameplayActivity){
         this.playerInfo = new PlayerInfo(playerInfo);
         this.gameplayActivity = gameplayActivity;
+        this.player = new Player(getContext(), playerInfo); // new player
     }
 
     public Player getPlayer() {
@@ -59,22 +59,23 @@ public class GameView extends SurfaceView implements Runnable {
         System.out.println("SECTOR END");
         if(successfulSector) { // returns true if successful, false otherwise
             // Do all the store stuff
-            player.reset();
-            playerInfo.setMoney(player.getMoney());
-            playerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
+            PlayerInfo newPlayerInfo = player.createPlayerInfo();
+            newPlayerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
 
-            if (!FileHandler.savePlayer(playerInfo, getContext())){
+            if (!FileHandler.savePlayer(newPlayerInfo, getContext())){
                 System.err.println("Failed to save player info");
             }
 
             Intent intent = new Intent(gameplayActivity, ShopActivity.class);
-            intent.putExtra("PlayerInfo", playerInfo);
+            intent.putExtra("PlayerInfo", newPlayerInfo);
             gameplayActivity.startActivity(intent);
             gameplayActivity.finish();
          } else {
             // Update Highscores
-            playerInfo.setCurrentSector(-1);
-            Intent intent = new Intent(gameplayActivity, MainActivity.class);
+            PlayerInfo newPlayerInfo = player.createPlayerInfo();
+            newPlayerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
+            newPlayerInfo.setCurrentSector(-1);
+            Intent intent = new Intent(gameplayActivity, MainActivity.class); // TODO social media activity
             gameplayActivity.startActivity(intent);
             gameplayActivity.finish();
         }

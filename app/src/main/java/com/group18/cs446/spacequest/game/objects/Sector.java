@@ -13,6 +13,7 @@ import com.group18.cs446.spacequest.game.enums.GameState;
 import com.group18.cs446.spacequest.game.objects.hostile.Asteroid;
 import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
 import com.group18.cs446.spacequest.game.objects.hostile.npship.BasicEnemy;
+import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.vfx.Filter;
 
@@ -46,9 +47,11 @@ public class Sector {
     private int canvasWidth, canvasHeight;
 
     private Context context;
+    private ComponentFactory componentFactory;
 
 
     public Sector(Player player, Context context, SurfaceHolder surfaceHolder, int sectorID){
+        this.componentFactory = new ComponentFactory(context);
         this.gameState = GameState.PAUSED;
         this.context = context;
         this.player = player;
@@ -69,7 +72,7 @@ public class Sector {
         for(int x = -5; x <= 5; x+=2){
             for(int y = -5; y <= 5; y+=2){
                 if((Math.random()*(sectorID+5))>5) {
-                    Enemy e = new BasicEnemy(new Point(x * 600, y * 600), context, this);
+                    Enemy e = new BasicEnemy(new Point(x * 600, y * 600), context, componentFactory, this);
                     addEntityFront(e);
                 }
             }
@@ -204,6 +207,8 @@ public class Sector {
                 paint.setColor(Color.CYAN);
                 canvas.drawText(player.getCurrentShield() + "/" + player.getMaxShield(), 70, 140, paint);
             }
+            paint.setColor(Color.YELLOW);
+            canvas.drawText("MONEY: " + player.getMoney(), canvasWidth-600, 140, paint);
 
             if(gameState == GameState.PAUSED){
                 paint.setColor(Color.RED);

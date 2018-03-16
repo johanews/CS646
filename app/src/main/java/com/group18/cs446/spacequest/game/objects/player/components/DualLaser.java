@@ -7,9 +7,13 @@ import android.graphics.Point;
 
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
+import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class DualLaser implements Weapon {
+    private static final String NAME = "Dual Laser";
+    private static final String DESCRIPTION = "Dual Laser Description";
+    private static final int PRICE = 125;
 
     private Bitmap bulletBitmap;
     private Bitmap image;
@@ -18,19 +22,8 @@ public class DualLaser implements Weapon {
     private GameEntity owner;
     private int baseBulletSpeed = 20;
 
-    public DualLaser(GameEntity owner, Context context){
-        this.owner = owner;
+    public DualLaser(Context context){
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
-    }
-
-    @Override
-    public String getVersion() {
-        return "Dual Laser";
-    }
-
-    @Override
-    public Bitmap getImage() {
-        return image;
     }
 
     @Override
@@ -64,4 +57,33 @@ public class DualLaser implements Weapon {
         }
     }
 
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    @Override
+    public Bitmap getBitmap() {
+        return this.image;
+    }
+
+    @Override
+    public void registerOwner(GameEntity e) {
+        this.owner = e;
+    }
+
+    @Override
+    public int ID() {
+        return ComponentFactory.DUAL_LASER;
+    }
+
+    @Override
+    public int getPrice() {
+        return PRICE;
+    }
 }

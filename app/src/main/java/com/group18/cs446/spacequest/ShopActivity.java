@@ -38,7 +38,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         play_button.setOnClickListener(this);
 
         playerInfo = (PlayerInfo) getIntent().getSerializableExtra("PlayerInfo");
-
+        System.out.println("PLAYER INFO IN SHOP:" + playerInfo.getCurrentSector() + ": $" + playerInfo.getMoney());
         getWeapon();
         getEngine();
         getShield();
