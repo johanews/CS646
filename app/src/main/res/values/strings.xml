@@ -11,4 +11,7 @@
     <string name="selected_hull">Hull</string>
     <string name="selected_engine">Engine</string>
     <string name="sell_button">"Sell"</string>
+    <string name="facebook_app_id">1797176933916947</string>
+    <string name="fb_login_protocol_scheme">fb1797176933916947</string>
+
 </resources>
