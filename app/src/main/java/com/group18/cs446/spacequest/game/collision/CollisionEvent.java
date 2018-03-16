@@ -5,11 +5,15 @@ public class CollisionEvent {
     public static final int DEFEAT = 1;
     public static final int DAMAGE = 2;
     public static final int NOTHING = 3;
+    public static final int GET_MONEY = 4;
 
     private int event;
     private int value;
     private Damage damage;
 
+    public void setValue(int value){
+        this.value = value;
+    }
     public CollisionEvent(int event, int value){
         this.event = event;
         this.value = value;

@@ -1,48 +1,46 @@
 package com.group18.cs446.spacequest.game.objects.player;
 
-import com.group18.cs446.spacequest.game.objects.player.components.BasicLaser;
-
 import java.io.Serializable;
 
 public class PlayerInfo implements Serializable {
 
-    private Weapon weapon;
-    private Engine engine;
-    private Shield shiled;
-    private Hull hull;
+    private int weapon;
+    private int engine;
+    private int shield;
+    private int hull;
 
     private int currentSector;
     private int money;
 
-    public Weapon getWeapon() {
+    public int getWeapon() {
         return weapon;
     }
 
-    public void setWeapon(Weapon weapon) {
+    public void setWeapon(int weapon) {
         this.weapon = weapon;
     }
 
-    public Engine getEngine() {
+    public int getEngine() {
         return engine;
     }
 
-    public void setEngine(Engine engine) {
+    public void setEngine(int engine) {
         this.engine = engine;
     }
 
-    public Shield getShiled() {
-        return shiled;
+    public int getShield() {
+        return shield;
     }
 
-    public void setShiled(Shield shiled) {
-        this.shiled = shiled;
+    public void setShield(int shield) {
+        this.shield = shield;
     }
 
-    public Hull getHull() {
+    public int getHull() {
         return hull;
     }
 
-    public void setHull(Hull hull) {
+    public void setHull(int hull) {
         this.hull = hull;
     }
 
@@ -69,7 +67,7 @@ public class PlayerInfo implements Serializable {
     public PlayerInfo(PlayerInfo playerInfo){
         this.weapon = playerInfo.weapon;
         this.engine = playerInfo.engine;
-        this.shiled = playerInfo.shiled;
+        this.shield = playerInfo.shield;
         this.hull = playerInfo.hull;
         this.currentSector = playerInfo.currentSector;
         this.money = playerInfo.money;

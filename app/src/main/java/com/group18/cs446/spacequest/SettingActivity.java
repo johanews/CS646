@@ -12,6 +12,9 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        View root = findViewById(android.R.id.content);
+        root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
+
         backButtonSetting = findViewById(R.id.back_button_setting);
         backButtonSetting.setOnClickListener((View v) -> finish());
     }

@@ -1,9 +1,7 @@
 package com.group18.cs446.spacequest;
 
-import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -11,17 +9,22 @@ import android.widget.Button;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.view.GameView;
 
-public class GamePlayActivity extends AppCompatActivity implements View.OnTouchListener{
+public class GamePlayActivity extends AppCompatActivity implements View.OnTouchListener {
 
     private GameView gameView;
     private PlayerInfo playerInfo;
+
+    private Boolean right = false;
+    private Boolean left = false;
 
     @Override
     protected void onPause() {
         System.out.println("PAUSING");
         super.onPause();
         gameView.pause();
+
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -46,10 +49,14 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
         super.onResume();
         gameView.resume();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         playerInfo = (PlayerInfo) getIntent().getSerializableExtra("PlayerInfo");
+
         setContentView(R.layout.play_activity);
         gameView = findViewById(R.id.game_view);
         gameView.init(playerInfo, this);

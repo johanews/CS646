@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
+import com.group18.cs446.spacequest.io.FileHandler;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageView gameStartButton;
     ImageView setting_button;
@@ -26,7 +28,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        playerInfo = new PlayerInfo();
+        playerInfo = FileHandler.loadPlayer(getApplicationContext());
+        if (playerInfo == null) {
+            playerInfo = new PlayerInfo();
+            playerInfo.setWeapon(ComponentFactory.BASIC_LASER);
+            playerInfo.setShield(ComponentFactory.BASIC_SHIELD);
+            playerInfo.setHull(ComponentFactory.BASIC_HULL);
+            playerInfo.setEngine(ComponentFactory.BASIC_ENGINE);
+            playerInfo.setMoney(0);
+        }
 
         gameStartButton = findViewById(R.id.game_start_image);
         gameStartButton.setOnClickListener(this);
@@ -48,5 +58,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
         finish();
     }
-
 }
