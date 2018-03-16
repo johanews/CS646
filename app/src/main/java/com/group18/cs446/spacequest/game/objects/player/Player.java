@@ -59,7 +59,7 @@ public class Player implements GameEntity, Serializable {
         coordinates = new Point((int)(Math.cos(randomStartingAngle) * randomStartingDistance),
                 (int)(Math.sin(randomStartingAngle)*randomStartingDistance));
         heading = 0; // Direction in degrees
-        currentCommand = PlayerCommand.NONE;f
+        currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
         ComponentFactory componentFactory = new ComponentFactory(context);
         bounds = null;
