@@ -60,7 +60,6 @@ public class shopItemElement extends LinearLayout {
             }
         });
 
-
         normalDialog.show();
     }
 }

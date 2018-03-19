@@ -28,6 +28,7 @@ public class SectorItems extends Fragment {
     String [] weaponNAMES = {"NAME1", "NAME2", "NAME3", "NAME4"};
     String [] weaponDESCRIPTIONS = {"weaponDESCRIPTION1", "weaponDESCRIPTION2", "weaponDESCRIPTION3", "weaponDESCRIPTION4"};
     String [] weaponPRICE = {"1000", "2000", "3000", "4000"};
+    //int [] weaponID = getWeaponComponent();
 
     // shieldList
     int [] shieldIMAGES = {};
@@ -205,7 +206,6 @@ public class SectorItems extends Fragment {
 
             }
         });
-
         normalDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
