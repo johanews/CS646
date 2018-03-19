@@ -1,9 +1,12 @@
 package com.group18.cs446.spacequest;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,6 +120,14 @@ public class SectorItems extends Fragment {
             ImageView imageView = view.findViewById(R.id.description_image);
             TextView descriptionText = view.findViewById(R.id.description_text);
             TextView priceText = view.findViewById(R.id.price_text);
+            Button testButton = view.findViewById(R.id.buy_button);
+            testButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //priceText.setText("pressed");
+                    showNormalDialog();
+                }
+            });
 
             descriptionText.setText(weaponDESCRIPTIONS[i]);
             priceText.setText(weaponPRICE[i]);
@@ -178,6 +189,32 @@ public class SectorItems extends Fragment {
             return view;
         }
     } // engineList
+
+
+
+    private void showNormalDialog() {
+        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getContext());
+
+        normalDialog.setTitle("im a dialog");
+        normalDialog.setMessage("u sure u want to buy?");
+
+        normalDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // update playerinfo
+
+            }
+        });
+
+        normalDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // dont do anything
+            }
+        });
+
+        normalDialog.show();
+    }
 
 
 }
