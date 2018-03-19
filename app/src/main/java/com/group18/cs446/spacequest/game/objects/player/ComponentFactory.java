@@ -52,4 +52,24 @@ public class ComponentFactory {
                 return null;
         }
     }
+
+    public int[] getWeaponIDs() {
+        int[] weapons = {200, 201, 20};
+        return weapons;
+    }
+
+    public int[] getEngineIDs() {
+        int[] engines = {1, 2};
+        return engines;
+    }
+
+    public int[] getShieldIDs() {
+        int[] shields = {300, 301};
+        return shields;
+    }
+
+    public int[] getHullIDs() {
+        int[] hulls = {100};
+        return hulls;
+    }
 }
