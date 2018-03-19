@@ -16,16 +16,13 @@ import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicEngine;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicHull;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicLaser;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicShield;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
 import java.io.Serializable;
 import java.util.Random;
 
 public class Player implements GameEntity, Serializable {
+
     private Point coordinates; // Now represents the center of the character, not the top left
     private int heading;
     private Bitmap bitmap;
@@ -99,19 +96,19 @@ public class Player implements GameEntity, Serializable {
     }
 
     public Weapon getWeapon() {
-        return (Weapon)equipedWeapon;
+        return (Weapon) equipedWeapon;
     }
 
     public Engine getEngine() {
-        return (Engine)equipedEngine;
+        return (Engine) equipedEngine;
     }
 
     public Shield getShield() {
-        return (Shield)equipedShield;
+        return (Shield) equipedShield;
     }
 
     public Hull getHull() {
-        return (Hull)equipedHull;
+        return (Hull) equipedHull;
     }
 
     public void flyToTarget(Point p, int time){

@@ -21,9 +21,6 @@ import com.group18.cs446.spacequest.game.objects.loot.MoneyDrop;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.ShipComponent;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicLaser;
-import com.group18.cs446.spacequest.game.objects.player.components.ChainLaser;
-import com.group18.cs446.spacequest.game.objects.player.components.DualLaser;
 
 import java.util.Random;
 
