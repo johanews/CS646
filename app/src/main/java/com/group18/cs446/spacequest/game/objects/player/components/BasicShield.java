@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.os.Build;
 
 import com.group18.cs446.spacequest.game.collision.Damage;
+import com.group18.cs446.spacequest.game.enums.Shields;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Player;
@@ -156,8 +157,8 @@ public class BasicShield implements Shield {
     }
 
     @Override
-    public int ID() {
-        return ComponentFactory.BASIC_SHIELD;
+    public Shields ID() {
+        return Shields.BASIC_SHIELD;
     }
 
     @Override

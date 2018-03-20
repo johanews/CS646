@@ -16,10 +16,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.group18.cs446.spacequest.game.enums.Engines;
+import com.group18.cs446.spacequest.game.enums.Hulls;
+import com.group18.cs446.spacequest.game.enums.Shields;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
-import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
-import com.group18.cs446.spacequest.game.objects.player.ShipComponent;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicLaser;
 
 public class SectorItems extends Fragment {
     View mView;
@@ -32,7 +33,7 @@ public class SectorItems extends Fragment {
     ComponentFactory itemComponent = new ComponentFactory();
 
     // weaponList
-    int [] weaponIDs = itemComponent.getWeaponIDs();
+    Weapons[] weaponIDs = itemComponent.getWeaponIDs();
 
     int [] weaponIMAGES = {R.drawable.item_basic_laser_image, R.drawable.item_chain_laser_image, R.drawable.item_dual_laser_image};
     String [] weaponNAMES = {"Basic Laser", "Chain Laser", "Dual Laser"};
@@ -40,7 +41,7 @@ public class SectorItems extends Fragment {
     String [] weaponPRICE = {"30", "150", "125"};
 
     // shieldList
-    int [] shieldIDs = itemComponent.getShieldIDs();
+    Shields[] shieldIDs = itemComponent.getShieldIDs();
 
     int [] shieldIMAGES = {R.drawable.item_basic_shield_image, R.drawable.item_laser_only_shield_image};
     String [] shieldNAMES = {"Basic Shield", "Laser Only Shield"};
@@ -48,7 +49,7 @@ public class SectorItems extends Fragment {
     String [] shieldPRICE = {"30", "80"};
 
     // engineList
-    int [] engineIDs = itemComponent.getEngineIDs();
+    Engines[] engineIDs = itemComponent.getEngineIDs();
 
     int [] engineIMAGES = {R.drawable.item_basic_engine_image, R.drawable.item_fast_engine_image};
     String [] engineNAMES = {"Basic Engine", "Fast Engine"};
@@ -57,7 +58,7 @@ public class SectorItems extends Fragment {
     // change all visible/invisible stuff
 
     // hullList
-    int [] hullIDs = itemComponent.getHullIDs();
+    Hulls[] hullIDs = itemComponent.getHullIDs();
 
     int [] hullIMAGES = {R.drawable.item_basic_hull_image};
     String [] hullNAMES = {"Basic Hull"};
@@ -313,7 +314,7 @@ public class SectorItems extends Fragment {
 
 
     // dialog part, costumization needed
-    private void showNormalDialog(String name, int itemID, String category) {
+    private void showNormalDialog(String name, Enum itemID, String category) {
 
         final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getContext());
 
@@ -324,13 +325,13 @@ public class SectorItems extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (category.equals("weapon")) {
-                    ((ShopActivity)getActivity()).getPlayerInfo().setWeapon(itemID);
+                    ((ShopActivity)getActivity()).getPlayerInfo().setWeapon((Weapons) itemID);
                 } else if (category.equals("shield")) {
-                    ((ShopActivity)getActivity()).getPlayerInfo().setShield(itemID);
+                    ((ShopActivity)getActivity()).getPlayerInfo().setShield((Shields) itemID);
                 } else if (category.equals("engine")) {
-                    ((ShopActivity)getActivity()).getPlayerInfo().setEngine(itemID);
+                    ((ShopActivity)getActivity()).getPlayerInfo().setEngine((Engines) itemID);
                 } else if (category.equals("hull")) {
-                    ((ShopActivity)getActivity()).getPlayerInfo().setHull(itemID);
+                    ((ShopActivity)getActivity()).getPlayerInfo().setHull((Hulls) itemID);
                 } else {}
                 ((ShopActivity)getActivity()).refresh();
                 // deduct money here

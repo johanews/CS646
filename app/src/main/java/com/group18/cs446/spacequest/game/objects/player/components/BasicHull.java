@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 
 import com.group18.cs446.spacequest.game.collision.Damage;
+import com.group18.cs446.spacequest.game.enums.Hulls;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
@@ -132,8 +133,8 @@ public class BasicHull implements Hull {
     }
 
     @Override
-    public int ID() {
-        return ComponentFactory.BASIC_HULL;
+    public Hulls ID() {
+        return Hulls.BASIC_HULL;
     }
 
     @Override

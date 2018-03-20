@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
+import com.group18.cs446.spacequest.game.enums.Engines;
+import com.group18.cs446.spacequest.game.enums.Hulls;
+import com.group18.cs446.spacequest.game.enums.Shields;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.io.FileHandler;
 
@@ -31,10 +34,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         playerInfo = FileHandler.loadPlayer(getApplicationContext());
         if (playerInfo == null) {
             playerInfo = new PlayerInfo();
-            playerInfo.setWeapon(ComponentFactory.BASIC_LASER);
-            playerInfo.setShield(ComponentFactory.BASIC_SHIELD);
-            playerInfo.setHull(ComponentFactory.BASIC_HULL);
-            playerInfo.setEngine(ComponentFactory.BASIC_ENGINE);
+            playerInfo.setWeapon(Weapons.BASIC_LASER);
+            playerInfo.setShield(Shields.BASIC_SHIELD);
+            playerInfo.setHull(Hulls.BASIC_HULL);
+            playerInfo.setEngine(Engines.BASIC_ENGINE);
             playerInfo.setMoney(0);
         }
 

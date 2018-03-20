@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
@@ -81,8 +82,8 @@ public class ChainLaser implements Weapon {
     }
 
     @Override
-    public int ID() {
-        return ComponentFactory.CHAIN_LASER;
+    public Weapons ID() {
+        return Weapons.CHAIN_LASER;
     }
 
     @Override

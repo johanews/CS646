@@ -12,8 +12,12 @@ import android.graphics.Rect;
 import com.group18.cs446.spacequest.game.collision.CollisionEvent;
 import com.group18.cs446.spacequest.game.collision.Damage;
 import com.group18.cs446.spacequest.game.collision.DamageType;
+import com.group18.cs446.spacequest.game.enums.Engines;
+import com.group18.cs446.spacequest.game.enums.Hulls;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.Shields;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
@@ -44,10 +48,10 @@ public class Player implements GameEntity, Serializable {
     private boolean tookDamage;
 
     //Components
-    private ShipComponent equipedWeapon;
-    private ShipComponent equipedEngine;
-    private ShipComponent equipedHull;
-    private ShipComponent equipedShield;
+    private Weapon equipedWeapon;
+    private Engine equipedEngine;
+    private Hull equipedHull;
+    private Shield equipedShield;
     private int money;
 
     public Player(Context context, PlayerInfo playerInfo) {
@@ -61,13 +65,13 @@ public class Player implements GameEntity, Serializable {
         ComponentFactory componentFactory = new ComponentFactory();
         bounds = null;
 
-        equipedEngine = componentFactory.getShipComponent(playerInfo.getEngine(), context);
+        equipedEngine = componentFactory.getEngineComponent(playerInfo.getEngine(), context);
         equipedEngine.registerOwner(this);
-        equipedWeapon = componentFactory.getShipComponent(playerInfo.getWeapon(), context);
+        equipedWeapon = componentFactory.getWeaponComponent(playerInfo.getWeapon(), context);
         equipedWeapon.registerOwner(this);
-        equipedShield = componentFactory.getShipComponent(playerInfo.getShield(), context);
+        equipedShield = componentFactory.getShieldComponent(playerInfo.getShield(), context);
         equipedShield.registerOwner(this);
-        equipedHull = componentFactory.getShipComponent(playerInfo.getHull(), context);
+        equipedHull = componentFactory.getHullComponent(playerInfo.getHull(), context);
         equipedHull.registerOwner(this);
         money = playerInfo.getMoney();
 
@@ -386,10 +390,10 @@ public class Player implements GameEntity, Serializable {
     public PlayerInfo createPlayerInfo() {
         PlayerInfo pinfo = new PlayerInfo();
         pinfo.setMoney(money);
-        pinfo.setEngine(equipedEngine.ID());
-        pinfo.setHull(equipedHull.ID());
-        pinfo.setShield(equipedShield.ID());
-        pinfo.setWeapon(equipedWeapon.ID());
+        pinfo.setEngine((Engines) equipedEngine.ID());
+        pinfo.setHull((Hulls) equipedHull.ID());
+        pinfo.setShield((Shields) equipedShield.ID());
+        pinfo.setWeapon((Weapons) equipedWeapon.ID());
         return pinfo;
     }
 }

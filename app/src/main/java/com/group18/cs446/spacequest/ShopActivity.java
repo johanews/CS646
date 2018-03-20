@@ -7,6 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.group18.cs446.spacequest.game.enums.Engines;
+import com.group18.cs446.spacequest.game.enums.Hulls;
+import com.group18.cs446.spacequest.game.enums.Shields;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Engine;
 import com.group18.cs446.spacequest.game.objects.player.Hull;
@@ -59,8 +63,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getWeapon() {
 
-        int type = playerInfo.getWeapon();
-        Weapon weapon = (Weapon) factory.getShipComponent(type, getBaseContext());
+        Weapons type = playerInfo.getWeapon();
+        Weapon weapon = factory.getWeaponComponent(type,getBaseContext());
 
         selectedItems.getWeaponFragment().setImage(weapon.getBitmap());
         selectedItems.getWeaponFragment().setTitle(weapon.getName());
@@ -68,8 +72,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getEngine() {
 
-        int type = playerInfo.getEngine();
-        Engine engine = (Engine) factory.getShipComponent(type, getBaseContext());
+        Engines type = playerInfo.getEngine();
+        Engine engine = factory.getEngineComponent(type, getBaseContext());
 
         selectedItems.getEngineFragment().setImage(engine.getBitmap());
         selectedItems.getEngineFragment().setTitle(engine.getName());
@@ -77,8 +81,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getShield() {
 
-        int type = playerInfo.getShield();
-        Shield shield = (Shield) factory.getShipComponent(type, getBaseContext());
+        Shields type = playerInfo.getShield();
+        Shield shield = factory.getShieldComponent(type, getBaseContext());
 
         selectedItems.getShieldFragment().setImage(shield.getBitmap());
         selectedItems.getShieldFragment().setTitle(shield.getName());
@@ -86,8 +90,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getHull() {
 
-        int type = playerInfo.getHull();
-        Hull hull = (Hull) factory.getShipComponent(type, getBaseContext());
+        Hulls type = playerInfo.getHull();
+        Hull hull = factory.getHullComponent(type, getBaseContext());
 
         selectedItems.getHullFragment().setImage(hull.getBitmap());
         selectedItems.getHullFragment().setTitle(hull.getName());
