@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
+import com.group18.cs446.spacequest.game.objects.player.ShipComponent;
+
 public class SectorItems extends Fragment {
     View mView;
 
@@ -23,12 +26,14 @@ public class SectorItems extends Fragment {
     ImageView shieldIconButton;
     ImageView engineIconButton;
 
+    ComponentFactory myTestComponent = new ComponentFactory(getContext());
+
     // weaponList
     int [] weaponIMAGES = {};
     String [] weaponNAMES = {"NAME1", "NAME2", "NAME3", "NAME4"};
     String [] weaponDESCRIPTIONS = {"weaponDESCRIPTION1", "weaponDESCRIPTION2", "weaponDESCRIPTION3", "weaponDESCRIPTION4"};
     String [] weaponPRICE = {"1000", "2000", "3000", "4000"};
-    //int [] weaponID = getWeaponComponent();
+    //int [] test = myTestComponent.getWeaponIDs();
 
     // shieldList
     int [] shieldIMAGES = {};
@@ -46,6 +51,22 @@ public class SectorItems extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.sector_items, container, false);
+
+
+        // int[] test
+//        for (int i = 0; i < test.length;++i) {
+//            ShipComponent myShip = myTestComponent.getShipComponent(test[i]);
+//            myShip.getDescription();
+//            myShip.getBitmap();
+//            myShip.getPrice();
+//            myShip.getName();
+//            // add getImageID method
+//            // use map data structure (clear)
+//            // go through list very time we buy somthing
+//            // create money textView
+//
+//        }
+        // int [] test
 
         // weapon list
         ListView weaponList = mView.findViewById(R.id.weapon_list);
