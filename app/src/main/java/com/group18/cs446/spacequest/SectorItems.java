@@ -188,7 +188,7 @@ public class SectorItems extends Fragment {
             testButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showNormalDialog(weaponNAMES[i], weaponIDs[i], "weapon");
+                    showNormalDialog(weaponNAMES[i], weaponIDs[i], "weapon", Integer.parseInt(weaponPRICE[i]));
                 }
             });
 
@@ -224,7 +224,7 @@ public class SectorItems extends Fragment {
             testButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showNormalDialog(shieldNAMES[i], shieldIDs[i], "shield");
+                    showNormalDialog(shieldNAMES[i], shieldIDs[i], "shield", Integer.parseInt(shieldPRICE[i]));
                 }
             });
 
@@ -261,7 +261,7 @@ public class SectorItems extends Fragment {
             testButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showNormalDialog(engineNAMES[i], engineIDs[i], "engine");
+                    showNormalDialog(engineNAMES[i], engineIDs[i], "engine", Integer.parseInt(enginePRICE[i]));
                 }
             });
 
@@ -298,7 +298,7 @@ public class SectorItems extends Fragment {
             testButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showNormalDialog(hullNAMES[i], hullIDs[i], "hull");
+                    showNormalDialog(hullNAMES[i], hullIDs[i], "hull", Integer.parseInt(hullPRICE[i]));
                 }
             });
 
@@ -313,34 +313,48 @@ public class SectorItems extends Fragment {
 
 
     // dialog part, costumization needed
-    private void showNormalDialog(String name, int itemID, String category) {
+    private void showNormalDialog(String name, int itemID, String category, int itemPrice) {
+
+        int currentMoney = ((ShopActivity)getActivity()).getPlayerInfo().getMoney();
 
         final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getContext());
 
-        //normalDialog.setIcon();
-        normalDialog.setTitle("Im a dialog");
-        normalDialog.setMessage("Do you want to buy " + name + "?");
-        normalDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (category.equals("weapon")) {
-                    ((ShopActivity)getActivity()).getPlayerInfo().setWeapon(itemID);
-                } else if (category.equals("shield")) {
-                    ((ShopActivity)getActivity()).getPlayerInfo().setShield(itemID);
-                } else if (category.equals("engine")) {
-                    ((ShopActivity)getActivity()).getPlayerInfo().setEngine(itemID);
-                } else if (category.equals("hull")) {
-                    ((ShopActivity)getActivity()).getPlayerInfo().setHull(itemID);
-                } else {}
-                ((ShopActivity)getActivity()).refresh();
-                // deduct money here
-            }
-        });
-        normalDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
+        if (itemPrice > currentMoney) {
+            //normalDialog.setIcon();
+            normalDialog.setTitle("Im a dialog");
+            normalDialog.setMessage("You don't have enough money");
+            normalDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {}
+            });
+        } else {
+            //normalDialog.setIcon();
+            normalDialog.setTitle("Im a dialog");
+            normalDialog.setMessage("Do you want to buy " + name + "?");
+            normalDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if (category.equals("weapon")) {
+                        ((ShopActivity) getActivity()).getPlayerInfo().setWeapon(itemID);
+                    } else if (category.equals("shield")) {
+                        ((ShopActivity) getActivity()).getPlayerInfo().setShield(itemID);
+                    } else if (category.equals("engine")) {
+                        ((ShopActivity) getActivity()).getPlayerInfo().setEngine(itemID);
+                    } else if (category.equals("hull")) {
+                        ((ShopActivity) getActivity()).getPlayerInfo().setHull(itemID);
+                    } else {
+                    }
+                    ((ShopActivity) getActivity()).refresh();
+                    // deduct money here
+                }
+            });
+            normalDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+        }
+
         normalDialog.show();
     }
 
