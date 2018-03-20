@@ -31,6 +31,7 @@ public class ChainLaser implements Weapon {
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
         this.lastReload = 0;
         this.shots = shotCapacity;
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_chain_laser_image);
     }
 
     @Override

@@ -29,6 +29,7 @@ public class BasicEngine implements Engine {
         this.minSpeed = 17;
         this.speed = minSpeed;
         this.turnSpeed = 7;
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_basic_engine_image);
     }
 
     @Override

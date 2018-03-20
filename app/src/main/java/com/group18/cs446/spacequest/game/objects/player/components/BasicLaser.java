@@ -25,6 +25,7 @@ public class BasicLaser implements Weapon {
 
     public BasicLaser(Context context){
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_basic_laser_image);
     }
 
     @Override

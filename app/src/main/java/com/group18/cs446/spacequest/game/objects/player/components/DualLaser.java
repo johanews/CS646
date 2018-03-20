@@ -25,6 +25,7 @@ public class DualLaser implements Weapon {
 
     public DualLaser(Context context){
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_dual_laser_image);
     }
 
     @Override

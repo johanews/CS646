@@ -2,9 +2,11 @@ package com.group18.cs446.spacequest.game.objects.player.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 
+import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.collision.Damage;
 import com.group18.cs446.spacequest.game.enums.Hulls;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
@@ -40,6 +42,7 @@ public class BasicHull implements Hull {
         this.smokeLocations[1] = new Point(-20, -20);
         this.smokeLocations[2] = new Point(15, -15);
         this.smokeLocations[3] = new Point(-15, -15);
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_basic_hull_image);
     }
 
     @Override
