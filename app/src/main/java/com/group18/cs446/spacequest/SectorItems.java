@@ -29,7 +29,7 @@ public class SectorItems extends Fragment {
     ImageView engineIconButton;
     ImageView hullIconButton;
 
-    ComponentFactory itemComponent = new ComponentFactory(getContext());
+    ComponentFactory itemComponent = new ComponentFactory();
 
     // weaponList
     int [] weaponIDs = itemComponent.getWeaponIDs();
@@ -68,6 +68,11 @@ public class SectorItems extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.sector_items, container, false);
+
+
+
+
+
         // get info from player info part
         // weapon part
 //             ShipComponent test =itemComponent.getShipComponent(200);
@@ -309,7 +314,9 @@ public class SectorItems extends Fragment {
 
     // dialog part, costumization needed
     private void showNormalDialog(String name, int itemID, String category) {
+
         final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getContext());
+
         //normalDialog.setIcon();
         normalDialog.setTitle("Im a dialog");
         normalDialog.setMessage("Do you want to buy " + name + "?");
@@ -317,13 +324,13 @@ public class SectorItems extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (category.equals("weapon")) {
-                    ((ShopActivity)getActivity()).playerInfo.setWeapon(itemID);
+                    ((ShopActivity)getActivity()).getPlayerInfo().setWeapon(itemID);
                 } else if (category.equals("shield")) {
-                    ((ShopActivity)getActivity()).playerInfo.setShield(itemID);
+                    ((ShopActivity)getActivity()).getPlayerInfo().setShield(itemID);
                 } else if (category.equals("engine")) {
-                    ((ShopActivity)getActivity()).playerInfo.setEngine(itemID);
+                    ((ShopActivity)getActivity()).getPlayerInfo().setEngine(itemID);
                 } else if (category.equals("hull")) {
-                    ((ShopActivity)getActivity()).playerInfo.setHull(itemID);
+                    ((ShopActivity)getActivity()).getPlayerInfo().setHull(itemID);
                 } else {}
                 ((ShopActivity)getActivity()).refresh();
                 // deduct money here

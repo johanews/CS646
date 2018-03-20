@@ -56,7 +56,7 @@ public class BasicEnemy implements Enemy {
         this.angle = 0;
         ShipComponent newWeapon;
         if(random.nextInt(40) == 0){ // Rare speedy low armour
-            newWeapon = componentFactory.getShipComponent(ComponentFactory.BASIC_LASER);
+            newWeapon = componentFactory.getShipComponent(ComponentFactory.BASIC_LASER, context);
             this.sightDistance = 4000;
             this.turnSpeed = 5;
             this.speed = 18;
@@ -65,15 +65,15 @@ public class BasicEnemy implements Enemy {
             this.maxHealth = 10;
         }
         else if(random.nextInt(10) < 8){ // 80% basic laser
-            newWeapon = componentFactory.getShipComponent(ComponentFactory.BASIC_LASER);
+            newWeapon = componentFactory.getShipComponent(ComponentFactory.BASIC_LASER, context);
         } else {
             if(random.nextBoolean()){ // 10% dual laser
-                newWeapon = componentFactory.getShipComponent(ComponentFactory.DUAL_LASER);
+                newWeapon = componentFactory.getShipComponent(ComponentFactory.DUAL_LASER, context);
                 this.speed = 20;
                 this.hoverDistance = 700;
                 this.fireDistance = 700;
             } else { // 10% chainlaser
-                newWeapon = componentFactory.getShipComponent(ComponentFactory.CHAIN_LASER);
+                newWeapon = componentFactory.getShipComponent(ComponentFactory.CHAIN_LASER, context);
                 this.fireDistance = 900;
                 this.hoverDistance = 600;
                 this.maxHealth = 50;

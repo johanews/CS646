@@ -51,7 +51,7 @@ public class Sector {
 
 
     public Sector(Player player, Context context, SurfaceHolder surfaceHolder, int sectorID){
-        this.componentFactory = new ComponentFactory(context);
+        this.componentFactory = new ComponentFactory();
         this.gameState = GameState.PAUSED;
         this.context = context;
         this.player = player;

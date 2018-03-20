@@ -58,16 +58,16 @@ public class Player implements GameEntity, Serializable {
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
-        ComponentFactory componentFactory = new ComponentFactory(context);
+        ComponentFactory componentFactory = new ComponentFactory();
         bounds = null;
 
-        equipedEngine = componentFactory.getShipComponent(playerInfo.getEngine());
+        equipedEngine = componentFactory.getShipComponent(playerInfo.getEngine(), context);
         equipedEngine.registerOwner(this);
-        equipedWeapon = componentFactory.getShipComponent(playerInfo.getWeapon());
+        equipedWeapon = componentFactory.getShipComponent(playerInfo.getWeapon(), context);
         equipedWeapon.registerOwner(this);
-        equipedShield = componentFactory.getShipComponent(playerInfo.getShield());
+        equipedShield = componentFactory.getShipComponent(playerInfo.getShield(), context);
         equipedShield.registerOwner(this);
-        equipedHull = componentFactory.getShipComponent(playerInfo.getHull());
+        equipedHull = componentFactory.getShipComponent(playerInfo.getHull(), context);
         equipedHull.registerOwner(this);
         money = playerInfo.getMoney();
 

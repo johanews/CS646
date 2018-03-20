@@ -11,10 +11,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/**
- * Created by KevinMacbook on 2018-03-19.
- */
-
 public class shopItemElement extends LinearLayout {
 
     Button purchaseButton;
@@ -34,8 +30,6 @@ public class shopItemElement extends LinearLayout {
                 showNormalDialog(context);
             }
         });
-
-
 
     }
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Engine;
@@ -16,7 +17,8 @@ import com.group18.cs446.spacequest.game.objects.player.Weapon;
 public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
 
     SelectedItems selectedItems;
-    public PlayerInfo playerInfo;
+    TextView moneyField;
+    private PlayerInfo playerInfo;
     ComponentFactory factory;
     Button play_button;
 
@@ -29,26 +31,36 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         View root = findViewById(android.R.id.content);
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
 
-        factory = new ComponentFactory(getBaseContext());
+        factory = new ComponentFactory();
 
         selectedItems = (SelectedItems) getSupportFragmentManager().
                         findFragmentById(R.id.selected_items_fragment);
+
+        moneyField = findViewById(R.id.money_field);
 
         play_button = findViewById(R.id.map_button);
         play_button.setOnClickListener(this);
 
         playerInfo = (PlayerInfo) getIntent().getSerializableExtra("PlayerInfo");
 
-        getWeapon();
-        getEngine();
-        getShield();
-        getHull();
+        refresh();
+    }
+
+    public PlayerInfo getPlayerInfo() {
+        return playerInfo;
+    }
+
+    public void getMoney() {
+
+        int money = playerInfo.getMoney();
+        String text = getString(R.string.money) + ": " + money;
+        moneyField.setText(text);
     }
 
     public void getWeapon() {
 
         int type = playerInfo.getWeapon();
-        Weapon weapon = (Weapon) factory.getShipComponent(type);
+        Weapon weapon = (Weapon) factory.getShipComponent(type, getBaseContext());
 
         selectedItems.getWeaponFragment().setImage(weapon.getBitmap());
         selectedItems.getWeaponFragment().setTitle(weapon.getName());
@@ -57,7 +69,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     public void getEngine() {
 
         int type = playerInfo.getEngine();
-        Engine engine = (Engine) factory.getShipComponent(type);
+        Engine engine = (Engine) factory.getShipComponent(type, getBaseContext());
 
         selectedItems.getEngineFragment().setImage(engine.getBitmap());
         selectedItems.getEngineFragment().setTitle(engine.getName());
@@ -66,7 +78,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     public void getShield() {
 
         int type = playerInfo.getShield();
-        Shield shield = (Shield) factory.getShipComponent(type);
+        Shield shield = (Shield) factory.getShipComponent(type, getBaseContext());
 
         selectedItems.getShieldFragment().setImage(shield.getBitmap());
         selectedItems.getShieldFragment().setTitle(shield.getName());
@@ -75,13 +87,14 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     public void getHull() {
 
         int type = playerInfo.getHull();
-        Hull hull = (Hull) factory.getShipComponent(type);
+        Hull hull = (Hull) factory.getShipComponent(type, getBaseContext());
 
         selectedItems.getHullFragment().setImage(hull.getBitmap());
         selectedItems.getHullFragment().setTitle(hull.getName());
     }
 
     public void refresh() {
+        getMoney();
         getWeapon();
         getEngine();
         getShield();
