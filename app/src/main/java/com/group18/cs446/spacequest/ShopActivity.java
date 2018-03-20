@@ -16,7 +16,7 @@ import com.group18.cs446.spacequest.game.objects.player.Weapon;
 public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
 
     SelectedItems selectedItems;
-    PlayerInfo playerInfo;
+    public PlayerInfo playerInfo;
     ComponentFactory factory;
     Button play_button;
 

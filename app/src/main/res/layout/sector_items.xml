@@ -50,12 +50,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.181" />
 
+    <ListView
+        android:id="@+id/hull_list"
+        android:layout_width="match_parent"
+        android:layout_height="306dp"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="30.0sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.181" />
+
     <ImageView
         android:id="@+id/weapon_icon_button"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="10dp"
         android:src="@drawable/weapon_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +82,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="20dp"
         android:src="@drawable/shield_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/weapon_icon_button"
@@ -77,10 +93,21 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="20dp"
         android:src="@drawable/engine_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/shield_icon_button"
+        app:layout_constraintTop_toBottomOf="@+id/engine_list" />
+
+    <ImageView
+        android:id="@+id/hull_icon_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/hull_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/engine_icon_button"
         app:layout_constraintTop_toBottomOf="@+id/engine_list" />
 
 </android.support.constraint.ConstraintLayout>
