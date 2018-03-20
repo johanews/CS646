@@ -6,7 +6,7 @@
     <string name="description">Description</string>
     <string name="buy_button">Buy</string>
     <string name="selected_weapon">Weapon</string>
-    <string name="goto_map">Let\'s Go!</string>
+    <string name="goto_map">Go!</string>
     <string name="selected_shield">Shield</string>
     <string name="selected_hull">Hull</string>
     <string name="selected_engine">Engine</string>

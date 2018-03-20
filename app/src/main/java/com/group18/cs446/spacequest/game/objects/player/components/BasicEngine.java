@@ -2,7 +2,9 @@ package com.group18.cs446.spacequest.game.objects.player.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;

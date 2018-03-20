@@ -48,7 +48,7 @@ public class ComponentFactory {
     }
 
     public int[] getWeaponIDs() {
-        int[] weapons = {200, 201, 20};
+        int[] weapons = {200, 201, 202};
         return weapons;
     }
 
