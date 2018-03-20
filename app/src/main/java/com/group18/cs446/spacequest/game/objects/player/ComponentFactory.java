@@ -22,13 +22,7 @@ public class ComponentFactory {
     public static final int BASIC_SHIELD = 300;
     public static final int LASER_ONLY_SHIELD = 301;
 
-    private Context context;
-
-    public ComponentFactory(Context context){
-        this.context = context;
-    }
-
-    public ShipComponent getShipComponent(int id) {
+    public ShipComponent getShipComponent(int id, Context context) {
 
         switch(id){
 

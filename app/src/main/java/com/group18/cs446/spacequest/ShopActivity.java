@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Engine;
@@ -16,6 +17,7 @@ import com.group18.cs446.spacequest.game.objects.player.Weapon;
 public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
 
     SelectedItems selectedItems;
+    TextView moneyField;
     PlayerInfo playerInfo;
     ComponentFactory factory;
     Button play_button;
@@ -34,15 +36,21 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         selectedItems = (SelectedItems) getSupportFragmentManager().
                         findFragmentById(R.id.selected_items_fragment);
 
+        moneyField = findViewById(R.id.money_field);
+
         play_button = findViewById(R.id.map_button);
         play_button.setOnClickListener(this);
 
         playerInfo = (PlayerInfo) getIntent().getSerializableExtra("PlayerInfo");
 
-        getWeapon();
-        getEngine();
-        getShield();
-        getHull();
+        refresh();
+    }
+
+    public void getMoney() {
+
+        int money = playerInfo.getMoney();
+        String text = getString(R.string.money) + ": " + money;
+        moneyField.setText(text);
     }
 
     public void getWeapon() {
@@ -82,6 +90,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void refresh() {
+        getMoney();
         getWeapon();
         getEngine();
         getShield();
