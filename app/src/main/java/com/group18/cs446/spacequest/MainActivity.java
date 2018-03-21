@@ -17,7 +17,6 @@ import com.group18.cs446.spacequest.io.SoundManager;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageView gameStartButton;
-    ImageView setting_button;
 
     PlayerInfo playerInfo;
 
@@ -48,10 +47,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         View root = findViewById(android.R.id.content);
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
-
-        setting_button = findViewById(R.id.setting_button);
-        setting_button.setOnClickListener((View v) -> startActivity(
-                new Intent(MainActivity.this, SettingActivity.class)));
     }
 
     @Override
