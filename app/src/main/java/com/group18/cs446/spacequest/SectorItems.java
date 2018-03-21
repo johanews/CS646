@@ -1,5 +1,6 @@
 package com.group18.cs446.spacequest;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -21,6 +22,10 @@ import com.group18.cs446.spacequest.game.enums.Hulls;
 import com.group18.cs446.spacequest.game.enums.Shields;
 import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
+import com.group18.cs446.spacequest.game.objects.player.Engine;
+import com.group18.cs446.spacequest.game.objects.player.Hull;
+import com.group18.cs446.spacequest.game.objects.player.Shield;
+import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class SectorItems extends Fragment {
     View mView;
@@ -30,64 +35,80 @@ public class SectorItems extends Fragment {
     ImageView engineIconButton;
     ImageView hullIconButton;
 
-    ComponentFactory itemComponent = new ComponentFactory();
+    ComponentFactory cf = new ComponentFactory();
 
     // weaponList
-    Weapons[] weaponIDs = itemComponent.getWeaponIDs();
 
     int [] weaponIMAGES = {R.drawable.item_basic_laser_image, R.drawable.item_chain_laser_image, R.drawable.item_dual_laser_image};
-    String [] weaponNAMES = {"Basic Laser", "Chain Laser", "Dual Laser"};
-    String [] weaponDESCRIPTIONS = {"Basic Laser Description", "Chain Laser Description", "Dual Laser Description"};
-    String [] weaponPRICE = {"30", "150", "125"};
+
+    Weapons[] weaponIDs = cf.getWeaponIDs();
+    String [] weaponNAMES = new String[weaponIDs.length];
+    String [] weaponDESCRIPTIONS = new String[weaponIDs.length];;
+    String [] weaponPRICE = new String[weaponIDs.length];
 
     // shieldList
-    Shields[] shieldIDs = itemComponent.getShieldIDs();
 
     int [] shieldIMAGES = {R.drawable.item_basic_shield_image, R.drawable.item_laser_only_shield_image};
-    String [] shieldNAMES = {"Basic Shield", "Laser Only Shield"};
-    String [] shieldDESCRIPTIONS = {"Basic Shield Description", "Great against lasers, does nothing agains physical damage"};
-    String [] shieldPRICE = {"30", "80"};
+
+    Shields[] shieldIDs = cf.getShieldIDs();
+    String [] shieldNAMES = new String[shieldIDs.length];
+    String [] shieldDESCRIPTIONS = new String[shieldIDs.length];
+    String [] shieldPRICE = new String[shieldIDs.length];
 
     // engineList
-    Engines[] engineIDs = itemComponent.getEngineIDs();
 
     int [] engineIMAGES = {R.drawable.item_basic_engine_image, R.drawable.item_fast_engine_image};
-    String [] engineNAMES = {"Basic Engine", "Fast Engine"};
-    String [] engineDESCRIPTIONS = {"Basic Engine Description", "Fast Engine Description"};
-    String [] enginePRICE = {"30", "200"};
-    // change all visible/invisible stuff
 
-    // hullList
-    Hulls[] hullIDs = itemComponent.getHullIDs();
+    Engines[] engineIDs = cf.getEngineIDs();
+    String [] engineNAMES = new String[engineIDs.length];
+    String [] engineDESCRIPTIONS = new String[engineIDs.length];
+    String [] enginePRICE = new String[engineIDs.length];
 
     int [] hullIMAGES = {R.drawable.item_basic_hull_image};
-    String [] hullNAMES = {"Basic Hull"};
-    String [] hullDESCRIPTIONS = {"Basic Hull Description"};
-    String [] hullPRICE = {"30"};
+
+    Hulls[] hullIDs = cf.getHullIDs();
+    String [] hullNAMES = new String[hullIDs.length];
+    String [] hullDESCRIPTIONS = new String[hullIDs.length];
+    String [] hullPRICE = new String[hullIDs.length];
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         mView = inflater.inflate(R.layout.sector_items, container, false);
 
 
+        for(int i = 0; i < weaponIDs.length; i++) {
 
+            Weapon weapon = cf.getWeaponComponent(weaponIDs[i], getContext());
+            weaponNAMES[i] = weapon.getName();
+            weaponDESCRIPTIONS[i] = weapon.getDescription();
+            weaponPRICE[i] = Integer.toString(weapon.getPrice());
+        }
 
+        for(int i = 0; i < shieldIDs.length; i++) {
 
-        // get info from player info part
-        // weapon part
-//             ShipComponent test =itemComponent.getShipComponent(200);
-//            int i = 10;
-//            int n = 20;
-//            String test = tempWeapon.getName();
-//            weaponNAMES[0] = tempWeapon.getName();
-//            weaponDESCRIPTIONS[0] = tempWeapon.getDescription();
-//            weaponPRICE[0] = Integer.toString(tempWeapon.getPrice());
-        // add getImageID method
-        // use map data structure (clear)
-        // go through list very time we buy somthing
-        // create money textView
-        // get info from player info part
+            Shield shield = cf.getShieldComponent(shieldIDs[i], getContext());
+            shieldNAMES[i] = shield.getName();
+            shieldDESCRIPTIONS[i] = shield.getDescription();
+            shieldPRICE[i] = Integer.toString(shield.getPrice());
+        }
+
+        for(int i = 0; i < hullIDs.length; i++) {
+
+            Hull hull = cf.getHullComponent(hullIDs[i], getContext());
+            hullNAMES[i] = hull.getName();
+            hullDESCRIPTIONS[i] = hull.getDescription();
+            hullPRICE[i] = Integer.toString(hull.getPrice());
+        }
+
+        for(int i = 0; i < engineIDs.length; i++) {
+
+            Engine engine = cf.getEngineComponent(engineIDs[i], getContext());
+            engineNAMES[i] = engine.getName();
+            engineDESCRIPTIONS[i] = engine.getDescription();
+            enginePRICE[i] = Integer.toString(engine.getPrice());
+        }
 
         // weapon list
         ListView weaponList = mView.findViewById(R.id.weapon_list);
