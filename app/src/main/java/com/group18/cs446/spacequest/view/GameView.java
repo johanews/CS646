@@ -9,9 +9,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.group18.cs446.spacequest.Constants;
-import com.group18.cs446.spacequest.MainActivity;
 import com.group18.cs446.spacequest.R;
-import com.group18.cs446.spacequest.ShopActivity;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.player.Player;
@@ -68,7 +66,7 @@ public class GameView extends SurfaceView implements Runnable {
             }
 
             Intent intent = new Intent(gameplayActivity, FacebookActivity.class);
-            intent.putExtra("PlayerInfo", playerInfo);
+            intent.putExtra("PlayerInfo", newPlayerInfo);
             intent.putExtra("nextActivity", "shop");
             gameplayActivity.startActivity(intent);
             gameplayActivity.finish();
@@ -81,7 +79,7 @@ public class GameView extends SurfaceView implements Runnable {
             newPlayerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
             newPlayerInfo.setCurrentSector(-1);
             Intent intent = new Intent(gameplayActivity, FacebookActivity.class);
-            intent.putExtra("PlayerInfo", playerInfo);
+            intent.putExtra("PlayerInfo", newPlayerInfo);
             intent.putExtra("nextActivity", "main");
             gameplayActivity.startActivity(intent);
             gameplayActivity.finish();
