@@ -13,7 +13,8 @@ import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.collision.CollisionEvent;
 
 
-public class ExitGate implements GameEntity{
+public class ExitGate implements GameEntity {
+
     private Point coordinates; // Center of the gate
     private Bitmap bitmap;
     private Sector sector;

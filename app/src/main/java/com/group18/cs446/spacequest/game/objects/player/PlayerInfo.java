@@ -1,46 +1,51 @@
 package com.group18.cs446.spacequest.game.objects.player;
 
+import com.group18.cs446.spacequest.game.enums.Engines;
+import com.group18.cs446.spacequest.game.enums.Hulls;
+import com.group18.cs446.spacequest.game.enums.Shields;
+import com.group18.cs446.spacequest.game.enums.Weapons;
+
 import java.io.Serializable;
 
 public class PlayerInfo implements Serializable {
 
-    private int weapon;
-    private int engine;
-    private int shield;
-    private int hull;
+    private Weapons weapon;
+    private Engines engine;
+    private Shields shield;
+    private Hulls hull;
 
     private int currentSector;
     private int money;
 
-    public int getWeapon() {
+    public Weapons getWeapon() {
         return weapon;
     }
 
-    public void setWeapon(int weapon) {
+    public void setWeapon(Weapons weapon) {
         this.weapon = weapon;
     }
 
-    public int getEngine() {
+    public Engines getEngine() {
         return engine;
     }
 
-    public void setEngine(int engine) {
+    public void setEngine(Engines engine) {
         this.engine = engine;
     }
 
-    public int getShield() {
+    public Shields getShield() {
         return shield;
     }
 
-    public void setShield(int shield) {
+    public void setShield(Shields shield) {
         this.shield = shield;
     }
 
-    public int getHull() {
+    public Hulls getHull() {
         return hull;
     }
 
-    public void setHull(int hull) {
+    public void setHull(Hulls hull) {
         this.hull = hull;
     }
 

@@ -12,14 +12,14 @@ import android.graphics.Rect;
 import com.group18.cs446.spacequest.game.collision.CollisionEvent;
 import com.group18.cs446.spacequest.game.collision.Damage;
 import com.group18.cs446.spacequest.game.collision.DamageType;
+import com.group18.cs446.spacequest.game.enums.Engines;
+import com.group18.cs446.spacequest.game.enums.Hulls;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.Shields;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicEngine;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicHull;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicLaser;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicShield;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 import com.group18.cs446.spacequest.game.vfx.HUDComponent;
 
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Player implements GameEntity, Serializable {
+
     private Point coordinates; // Now represents the center of the character, not the top left
     private int heading;
     private Bitmap bitmap;
@@ -50,13 +51,13 @@ public class Player implements GameEntity, Serializable {
     private boolean tookDamage;
 
     //Components
-    private ShipComponent equipedWeapon;
-    private ShipComponent equipedEngine;
-    private ShipComponent equipedHull;
-    private ShipComponent equipedShield;
+    private Weapon equipedWeapon;
+    private Engine equipedEngine;
+    private Hull equipedHull;
+    private Shield equipedShield;
+    private int money;
 
     private List<HUDComponent> registeredHUDs = new LinkedList();
-    private int money;
 
     public Player(Context context, PlayerInfo playerInfo) {
         double randomStartingAngle = random.nextDouble()*2*Math.PI;
@@ -66,16 +67,16 @@ public class Player implements GameEntity, Serializable {
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
-        ComponentFactory componentFactory = new ComponentFactory(context);
+        ComponentFactory componentFactory = new ComponentFactory();
         bounds = null;
 
-        equipedEngine = componentFactory.getShipComponent(playerInfo.getEngine());
+        equipedEngine = componentFactory.getEngineComponent(playerInfo.getEngine(), context);
         equipedEngine.registerOwner(this);
-        equipedWeapon = componentFactory.getShipComponent(playerInfo.getWeapon());
+        equipedWeapon = componentFactory.getWeaponComponent(playerInfo.getWeapon(), context);
         equipedWeapon.registerOwner(this);
-        equipedShield = componentFactory.getShipComponent(playerInfo.getShield());
+        equipedShield = componentFactory.getShieldComponent(playerInfo.getShield(), context);
         equipedShield.registerOwner(this);
-        equipedHull = componentFactory.getShipComponent(playerInfo.getHull());
+        equipedHull = componentFactory.getHullComponent(playerInfo.getHull(), context);
         equipedHull.registerOwner(this);
         money = playerInfo.getMoney();
 
@@ -104,19 +105,19 @@ public class Player implements GameEntity, Serializable {
     }
 
     public Weapon getWeapon() {
-        return (Weapon)equipedWeapon;
+        return equipedWeapon;
     }
 
     public Engine getEngine() {
-        return (Engine)equipedEngine;
+        return equipedEngine;
     }
 
     public Shield getShield() {
-        return (Shield)equipedShield;
+        return equipedShield;
     }
 
     public Hull getHull() {
-        return (Hull)equipedHull;
+        return equipedHull;
     }
 
     public void flyToTarget(Point p, int time){
@@ -383,10 +384,10 @@ public class Player implements GameEntity, Serializable {
     public PlayerInfo createPlayerInfo() {
         PlayerInfo pinfo = new PlayerInfo();
         pinfo.setMoney(money);
-        pinfo.setEngine(equipedEngine.ID());
-        pinfo.setHull(equipedHull.ID());
-        pinfo.setShield(equipedShield.ID());
-        pinfo.setWeapon(equipedWeapon.ID());
+        pinfo.setEngine((Engines) equipedEngine.ID());
+        pinfo.setHull((Hulls) equipedHull.ID());
+        pinfo.setShield((Shields) equipedShield.ID());
+        pinfo.setWeapon((Weapons) equipedWeapon.ID());
         return pinfo;
     }
 

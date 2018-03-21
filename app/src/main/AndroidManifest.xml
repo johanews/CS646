@@ -25,7 +25,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="sensorLandscape" />
 
-        <activity android:name=".ShopActivity" />
+        <activity android:name=".ShopActivity"
+            android:screenOrientation="sensorLandscape"/>
         <activity android:name=".SettingActivity" />
 
         <meta-data

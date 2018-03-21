@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
+import com.group18.cs446.spacequest.game.enums.Engines;
+import com.group18.cs446.spacequest.game.enums.Hulls;
+import com.group18.cs446.spacequest.game.enums.Shields;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.io.FileHandler;
 import com.group18.cs446.spacequest.io.SoundManager;
@@ -14,7 +17,6 @@ import com.group18.cs446.spacequest.io.SoundManager;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageView gameStartButton;
-    ImageView shopButton;
     ImageView setting_button;
 
     PlayerInfo playerInfo;
@@ -34,10 +36,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         playerInfo = FileHandler.loadPlayer(getApplicationContext());
         if (playerInfo == null) {
             playerInfo = new PlayerInfo();
-            playerInfo.setWeapon(ComponentFactory.BASIC_LASER);
-            playerInfo.setShield(ComponentFactory.BASIC_SHIELD);
-            playerInfo.setHull(ComponentFactory.BASIC_HULL);
-            playerInfo.setEngine(ComponentFactory.BASIC_ENGINE);
+            playerInfo.setWeapon(Weapons.BASIC_LASER);
+            playerInfo.setShield(Shields.BASIC_SHIELD);
+            playerInfo.setHull(Hulls.BASIC_HULL);
+            playerInfo.setEngine(Engines.BASIC_ENGINE);
             playerInfo.setMoney(0);
         }
 
@@ -47,10 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View root = findViewById(android.R.id.content);
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
 
-        shopButton = findViewById(R.id.shop_button);
-        shopButton.setOnClickListener((View v) -> startActivity(
-                new Intent(MainActivity.this, ShopActivity.class)));
-
         setting_button = findViewById(R.id.setting_button);
         setting_button.setOnClickListener((View v) -> startActivity(
                 new Intent(MainActivity.this, SettingActivity.class)));
@@ -58,8 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+
         Intent intent = new Intent(this,ShopActivity.class);
         intent.putExtra("PlayerInfo", playerInfo);
+
         startActivity(intent);
         finish();
     }

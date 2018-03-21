@@ -16,11 +16,6 @@ public class SettingActivity extends AppCompatActivity {
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
 
         backButtonSetting = findViewById(R.id.back_button_setting);
-        backButtonSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        backButtonSetting.setOnClickListener((View v) -> finish());
     }
 }
