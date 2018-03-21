@@ -17,15 +17,12 @@ public class BasicEngine implements Engine {
     private GameEntity owner;
     private Bitmap image;
     private int speed = 17;
-    private int maxSpeed = 20;
+    private int maxSpeed = 24;
     private int minSpeed = 17;
     private int turnSpeed = 7;
 
     public BasicEngine(Context context){
-        this.maxSpeed = 20;
-        this.minSpeed = 17;
         this.speed = minSpeed;
-        this.turnSpeed = 7;
     }
 
     @Override

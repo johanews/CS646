@@ -94,8 +94,8 @@ public class Asteroid implements GameEntity {
             currentSector.addEntityToBack(new SmokeParticle(currentSector, coordinates.x, coordinates.y, bitmap.getWidth()/2, Color.DKGRAY, 10));
             currentSector.removeEntity(this);
             // TODO balance
-            MoneyDrop moneyDrop = new MoneyDrop(currentSector, coordinates, context, 5);
-            currentSector.addEntityFront(moneyDrop);
+            //MoneyDrop moneyDrop = new MoneyDrop(currentSector, coordinates, context, 5);
+            //currentSector.addEntityFront(moneyDrop);
         }
     }
 

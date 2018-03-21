@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.io.FileHandler;
+import com.group18.cs446.spacequest.io.SoundManager;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SoundManager.startSongLoop(SoundManager.MENU_MUSIC, getBaseContext());
 
         playerInfo = FileHandler.loadPlayer(getApplicationContext());
         if (playerInfo == null) {

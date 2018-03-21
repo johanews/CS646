@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
+import com.group18.cs446.spacequest.io.SoundManager;
 import com.group18.cs446.spacequest.view.GameView;
 
 public class GamePlayActivity extends AppCompatActivity implements View.OnTouchListener {
@@ -29,7 +30,6 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
     protected void onStop() {
         super.onStop();
         System.out.println("STOPPING");
-        gameView.stop();
     }
     @Override
     protected void onRestart() {
@@ -41,13 +41,13 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
         super.onStart();
         System.out.println("STARTING");
         gameView.start();
+        SoundManager.startSongLoop(SoundManager.GAME_MUSIC_1, getBaseContext());
     }
 
     @Override
     protected void onResume() {
         System.out.println("RESUMING");
         super.onResume();
-        gameView.resume();
     }
 
     @Override

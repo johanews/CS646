@@ -54,7 +54,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
-        sector = new Sector(player, getContext(), surfaceHolder, playerInfo.getCurrentSector());
+        sector = new Sector(player, getContext(), surfaceHolder, playerInfo.getCurrentSector(), gameplayActivity);
         boolean successfulSector = sector.run();
         System.out.println("SECTOR END");
         if(successfulSector) { // returns true if successful, false otherwise
@@ -71,7 +71,10 @@ public class GameView extends SurfaceView implements Runnable {
             gameplayActivity.startActivity(intent);
             gameplayActivity.finish();
          } else {
-            // Update Highscores
+            // Update Highscores and wipe save
+            if (!FileHandler.wipeSave(getContext())){
+                System.err.println("Failed to wipeplayer info");
+            }
             PlayerInfo newPlayerInfo = player.createPlayerInfo();
             newPlayerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
             newPlayerInfo.setCurrentSector(-1);
@@ -96,11 +99,6 @@ public class GameView extends SurfaceView implements Runnable {
         if(buttonId == R.id.go_left || buttonId == R.id.go_right) {
             switch (maskedAction) {
                 case MotionEvent.ACTION_DOWN:
-                    if(buttonId == R.id.go_left)
-                        left = true;
-                    else right = true;
-                    if(right && left)
-                        player.doAction();
                 case MotionEvent.ACTION_POINTER_DOWN: {
                     player.addCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
                     break;
@@ -110,10 +108,6 @@ public class GameView extends SurfaceView implements Runnable {
                     break;
                 }
                 case MotionEvent.ACTION_UP:
-                    if(buttonId == R.id.go_left)
-                        left = false;
-                    else right = false;
-                    player.stopAction();
                 case MotionEvent.ACTION_POINTER_UP:
                 case MotionEvent.ACTION_CANCEL: {
                     player.removeCommand((buttonId == R.id.go_left) ? PlayerCommand.LEFT : PlayerCommand.RIGHT);
@@ -146,16 +140,5 @@ public class GameView extends SurfaceView implements Runnable {
             gameThread = new Thread(this);
             gameThread.start();
         }
-    }
-    public void resume(){
-        //if(sector != null) sector.unpause();
-    }
-    public void stop(){
-        /*running = false;
-        try {
-            gameThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
     }
 }

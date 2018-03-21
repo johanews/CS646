@@ -17,6 +17,7 @@ import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
+import com.group18.cs446.spacequest.game.objects.hostile.EnemySpawner;
 import com.group18.cs446.spacequest.game.objects.loot.MoneyDrop;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.ShipComponent;
@@ -44,6 +45,7 @@ public class BasicEnemy implements Enemy {
     private Damage collisionDamage = new Damage(DamageType.PHYSICAL, 100);
     private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, collisionDamage);
     private Context context;
+    private EnemySpawner spawner;
 
     public BasicEnemy(Point spawnPoint, Context context, ComponentFactory componentFactory, Sector currentSector){
         this.context = context;
@@ -199,9 +201,13 @@ public class BasicEnemy implements Enemy {
             if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x+15, coordinates.y+10, bitmap.getWidth()/7, Color.DKGRAY,10));
             if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x-1, coordinates.y+10, bitmap.getWidth()/3, Color.DKGRAY,40));
 
-            // TODO balance
+            // Drop Money
             MoneyDrop moneyDrop = new MoneyDrop(sector, coordinates, context, 15);
             sector.addEntityFront(moneyDrop);
+            // Notify Spawner
+            if(spawner != null) {
+                spawner.reportDeath(this);
+            }
         }
     }
 
@@ -223,5 +229,10 @@ public class BasicEnemy implements Enemy {
     @Override
     public void setTarget(GameEntity e) {
         this.target = e;
+    }
+
+    @Override
+    public void registerSpawner(EnemySpawner enemySpawner) {
+        this.spawner = enemySpawner;
     }
 }

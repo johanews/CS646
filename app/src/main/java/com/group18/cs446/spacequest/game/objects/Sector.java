@@ -1,6 +1,7 @@
 package com.group18.cs446.spacequest.game.objects;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,14 +9,18 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.SurfaceHolder;
 
-import com.group18.cs446.spacequest.game.collision.CollisionEvent;
 import com.group18.cs446.spacequest.game.enums.GameState;
 import com.group18.cs446.spacequest.game.objects.hostile.Asteroid;
 import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
+import com.group18.cs446.spacequest.game.objects.hostile.EnemySpawner;
 import com.group18.cs446.spacequest.game.objects.hostile.npship.BasicEnemy;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.vfx.Filter;
+import com.group18.cs446.spacequest.game.vfx.HUDComponent;
+import com.group18.cs446.spacequest.game.vfx.HUDText;
+import com.group18.cs446.spacequest.game.vfx.HealthBar;
+import com.group18.cs446.spacequest.game.vfx.ShieldBar;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -35,10 +40,12 @@ public class Sector {
     private GameState previousGameState = GameState.RUNNING;
     long gameTick = 0;
     private List<GameEntity> entities;
+    private List<HUDComponent> hud;
     private List<Point> stars;
     private List<Filter> filters;
     int starDimension = 3000;
     int numStars = 6000;
+    private EnemySpawner enemySpawner;
 
     // Graphics Members
     private Paint paint;
@@ -48,9 +55,10 @@ public class Sector {
 
     private Context context;
     private ComponentFactory componentFactory;
+    private Activity activity;
 
-
-    public Sector(Player player, Context context, SurfaceHolder surfaceHolder, int sectorID){
+    public Sector(Player player, Context context, SurfaceHolder surfaceHolder, int sectorID, Activity activity){
+        this.activity = activity;
         this.componentFactory = new ComponentFactory(context);
         this.gameState = GameState.PAUSED;
         this.context = context;
@@ -64,19 +72,23 @@ public class Sector {
         this.filters = new CopyOnWriteArrayList<>();
         addEntityFront(exitGate);
         addEntityFront(player);
+        hud = new LinkedList<>();
+        hud.add(new HealthBar(player));
+        hud.add(new ShieldBar(player));
+        hud.add(new HUDText(player, sectorID));
+
+        for(HUDComponent hc : hud){
+            player.registerObeserver(hc);
+        }
+
+
         stars = new LinkedList<>();
         for(int i = 0; i < numStars; i++){
             stars.add(new Point((int)(Math.random()*starDimension),(int)(Math.random()*starDimension)));
         }
 
-        for(int x = -5; x <= 5; x+=2){
-            for(int y = -5; y <= 5; y+=2){
-                if((Math.random()*(sectorID+5))>5) {
-                    Enemy e = new BasicEnemy(new Point(x * 600, y * 600), context, componentFactory, this);
-                    addEntityFront(e);
-                }
-            }
-        }
+        enemySpawner = new EnemySpawner(sectorID, this, componentFactory, context);
+
     }
 
     public void pause(){
@@ -163,6 +175,7 @@ public class Sector {
         if(gameTick%10 == 0){ // TODO put enemy entity spawning in a factory
             addEntityFront(new Asteroid(this, player.getCoordinates(), context));
         }
+        enemySpawner.spawnEnemies();
     }
 
     public Player getPlayer(){
@@ -194,21 +207,9 @@ public class Sector {
                 filter.paint(canvas);
             }
 
-            // Draw coordinates, for help testing
-            paint.setColor(Color.YELLOW);
-            paint.setTextSize(40);
-            canvas.drawText("("+player.getCoordinates().x+", "+player.getCoordinates().y+")", canvasWidth-300, canvasHeight-100, paint);
-            paint.setColor(Color.CYAN);
-            paint.setTextSize(60);
-            canvas.drawText("Current Sector: "+sectorID, canvasWidth-600, 70, paint);
-            paint.setColor(Color.RED);
-            canvas.drawText(player.getCurrentHealth()+"/"+player.getMaxHealth(), 70, 70, paint);
-            if(player.getMaxShield() > 0) {
-                paint.setColor(Color.CYAN);
-                canvas.drawText(player.getCurrentShield() + "/" + player.getMaxShield(), 70, 140, paint);
+            for(HUDComponent hc : hud){
+                hc.paint(canvas);
             }
-            paint.setColor(Color.YELLOW);
-            canvas.drawText("MONEY: " + player.getMoney(), canvasWidth-600, 140, paint);
 
             if(gameState == GameState.PAUSED){
                 paint.setColor(Color.RED);

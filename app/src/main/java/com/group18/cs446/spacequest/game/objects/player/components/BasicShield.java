@@ -39,8 +39,8 @@ public class BasicShield implements Shield {
 
     @Override
     public void update(long gameTick) {
-        if(currentShield <= 0) return;
         if(tookDamageThisTick){
+            if(currentShield <= 0) return;
             tookDamageThisTick = false;
             lastDamageTick = gameTick;
             owner.getCurrentSector().addFilter(new DamageFilter(owner.getCurrentSector()));
