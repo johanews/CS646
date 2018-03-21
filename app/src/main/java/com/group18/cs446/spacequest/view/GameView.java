@@ -17,6 +17,7 @@ import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.io.FileHandler;
+import com.group18.cs446.spacequest.social.FacebookActivity;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -66,8 +67,9 @@ public class GameView extends SurfaceView implements Runnable {
                 System.err.println("Failed to save player info");
             }
 
-            Intent intent = new Intent(gameplayActivity, ShopActivity.class);
-            intent.putExtra("PlayerInfo", newPlayerInfo);
+            Intent intent = new Intent(gameplayActivity, FacebookActivity.class);
+            intent.putExtra("PlayerInfo", playerInfo);
+            intent.putExtra("nextActivity", "shop");
             gameplayActivity.startActivity(intent);
             gameplayActivity.finish();
          } else {
@@ -78,7 +80,9 @@ public class GameView extends SurfaceView implements Runnable {
             PlayerInfo newPlayerInfo = player.createPlayerInfo();
             newPlayerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
             newPlayerInfo.setCurrentSector(-1);
-            Intent intent = new Intent(gameplayActivity, MainActivity.class); // TODO social media activity
+            Intent intent = new Intent(gameplayActivity, FacebookActivity.class);
+            intent.putExtra("PlayerInfo", playerInfo);
+            intent.putExtra("nextActivity", "main");
             gameplayActivity.startActivity(intent);
             gameplayActivity.finish();
         }

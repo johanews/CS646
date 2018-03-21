@@ -12,6 +12,7 @@ import com.group18.cs446.spacequest.game.enums.Shields;
 import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.io.FileHandler;
+import com.group18.cs446.spacequest.social.FacebookActivity;
 import com.group18.cs446.spacequest.io.SoundManager;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
