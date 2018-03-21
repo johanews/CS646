@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View root = findViewById(android.R.id.content);
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
 
-        shopButton = findViewById(R.id.shop_button);
+        /*shopButton = findViewById(R.id.shop_button);
         shopButton.setOnClickListener((View v) -> startActivity(
-                new Intent(MainActivity.this, FacebookActivity.class)));
+                new Intent(MainActivity.this, FacebookActivity.class)));*/
 
         setting_button = findViewById(R.id.setting_button);
         setting_button.setOnClickListener((View v) -> startActivity(

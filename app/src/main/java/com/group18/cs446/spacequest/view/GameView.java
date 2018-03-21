@@ -17,6 +17,7 @@ import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.io.FileHandler;
+import com.group18.cs446.spacequest.social.FacebookActivity;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -67,14 +68,22 @@ public class GameView extends SurfaceView implements Runnable {
                 System.err.println("Failed to save player info");
             }
 
-            Intent intent = new Intent(gameplayActivity, ShopActivity.class);
+            Intent intent = new Intent(gameplayActivity, FacebookActivity.class);
             intent.putExtra("PlayerInfo", playerInfo);
+            intent.putExtra("nextActivity", "shop");
             gameplayActivity.startActivity(intent);
             gameplayActivity.finish();
          } else {
             // Update Highscores
             playerInfo.setCurrentSector(-1);
-            Intent intent = new Intent(gameplayActivity, MainActivity.class);
+
+            if (!FileHandler.savePlayer(playerInfo, getContext())){
+                System.err.println("Failed to save player info");
+            }
+
+            Intent intent = new Intent(gameplayActivity, FacebookActivity.class);
+            intent.putExtra("PlayerInfo", playerInfo);
+            intent.putExtra("nextActivity", "main");
             gameplayActivity.startActivity(intent);
             gameplayActivity.finish();
         }
