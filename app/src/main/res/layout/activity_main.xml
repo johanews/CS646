@@ -61,6 +61,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/play_button" />
+        app:srcCompat="@drawable/play_button"
+        android:background="@drawable/ripple_effect"/>
 
 </android.support.constraint.ConstraintLayout>

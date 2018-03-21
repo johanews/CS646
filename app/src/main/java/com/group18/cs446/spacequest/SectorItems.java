@@ -352,8 +352,8 @@ public class SectorItems extends Fragment {
 
         } else {
             //normalDialog.setIcon();
-            normalDialog.setTitle("Im a dialog");
-            normalDialog.setMessage("Do you want to buy " + name + "?");
+            normalDialog.setTitle(name);
+            normalDialog.setMessage("Do you want to buy it?");
             normalDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -367,8 +367,8 @@ public class SectorItems extends Fragment {
                         ((ShopActivity) getActivity()).getPlayerInfo().setHull((Hulls) itemID);
                     } else {
                     }
+                    ((ShopActivity) getActivity()).getPlayerInfo().setMoney(currentMoney - itemPrice);
                     ((ShopActivity) getActivity()).refresh();
-                    // deduct money here
                 }
             });
             normalDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {

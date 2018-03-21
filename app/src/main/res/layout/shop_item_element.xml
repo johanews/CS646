@@ -47,6 +47,7 @@
         android:layout_marginTop="10dp"
         android:backgroundTint="#FFA000"
         android:text="PURCHASE"
+        android:foreground="@drawable/ripple_effect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -75,6 +75,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginStart="50dp"
         android:src="@drawable/weapon_icon"
+        android:background="@drawable/ripple_effect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/engine_list" />
@@ -86,6 +87,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginStart="20dp"
         android:src="@drawable/shield_icon"
+        android:background="@drawable/ripple_effect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/weapon_icon_button"
         app:layout_constraintTop_toBottomOf="@+id/engine_list" />
@@ -97,6 +99,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginStart="20dp"
         android:src="@drawable/engine_icon"
+        android:background="@drawable/ripple_effect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/shield_icon_button"
         app:layout_constraintTop_toBottomOf="@+id/engine_list" />
@@ -108,6 +111,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginStart="20dp"
         android:src="@drawable/hull_icon"
+        android:background="@drawable/ripple_effect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/engine_icon_button"
         app:layout_constraintTop_toBottomOf="@+id/engine_list" />
