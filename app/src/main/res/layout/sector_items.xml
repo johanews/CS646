@@ -13,13 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="306dp"
         android:layout_margin="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="4dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="30.0sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.181" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ListView
         android:id="@+id/shield_list"
@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.181" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ListView
         android:id="@+id/engine_list"
@@ -46,9 +46,10 @@
         android:dividerHeight="30.0sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.181" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ListView
         android:id="@+id/hull_list"
@@ -62,16 +63,17 @@
         android:dividerHeight="30.0sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.181" />
+        app:layout_constraintVertical_bias="0.005" />
 
     <ImageView
         android:id="@+id/weapon_icon_button"
-        android:layout_width="80dp"
+        android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="50dp"
         android:src="@drawable/weapon_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
