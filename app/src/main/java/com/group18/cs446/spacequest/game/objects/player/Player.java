@@ -21,8 +21,11 @@ import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
+import com.group18.cs446.spacequest.game.vfx.HUDComponent;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class Player implements GameEntity, Serializable {
@@ -53,6 +56,8 @@ public class Player implements GameEntity, Serializable {
     private Hull equipedHull;
     private Shield equipedShield;
     private int money;
+
+    private List<HUDComponent> registeredHUDs = new LinkedList();
 
     public Player(Context context, PlayerInfo playerInfo) {
         double randomStartingAngle = random.nextDouble()*2*Math.PI;
@@ -100,19 +105,19 @@ public class Player implements GameEntity, Serializable {
     }
 
     public Weapon getWeapon() {
-        return (Weapon) equipedWeapon;
+        return equipedWeapon;
     }
 
     public Engine getEngine() {
-        return (Engine) equipedEngine;
+        return equipedEngine;
     }
 
     public Shield getShield() {
-        return (Shield) equipedShield;
+        return equipedShield;
     }
 
     public Hull getHull() {
-        return (Hull) equipedHull;
+        return equipedHull;
     }
 
     public void flyToTarget(Point p, int time){
@@ -185,7 +190,7 @@ public class Player implements GameEntity, Serializable {
     @Override
     public void update(long gameTick) {
         if(alive) {
-            if(equipedShield != null) getShield().update(gameTick);
+            getShield().update(gameTick);
             getHull().update(gameTick);
             getEngine().update(gameTick);
             if(doingAction){
@@ -246,6 +251,9 @@ public class Player implements GameEntity, Serializable {
             if(e != this && e.getCollisionEvent(this).getEvent() != CollisionEvent.NOTHING && intersects(e)){
                 triggerCollisionEvent(e);
             }
+        }
+        for(HUDComponent hc : registeredHUDs){
+            hc.update();
         }
     }
 
@@ -322,20 +330,6 @@ public class Player implements GameEntity, Serializable {
         canvas.restore();
     }
 
-    /*public void reset() { // Everything thats required for moving to a new sector
-        coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(1000+random.nextInt(4000)), (random.nextBoolean() ? 1 : -1 )*(1000+random.nextInt(4000)));
-        heading = 0; // Direction in degrees
-        currentCommand = PlayerCommand.NONE;
-        controlledByPlayer = true;
-        if(equipedWeapon != null){
-            getWeapon().refresh();
-        }
-        if(equipedEngine != null){
-            getEngine().refresh();
-        }
-        tookDamage = false;
-    }*/
-
     @Override
     public boolean intersects(GameEntity e){
         if(!controlledByPlayer){
@@ -395,5 +389,9 @@ public class Player implements GameEntity, Serializable {
         pinfo.setShield((Shields) equipedShield.ID());
         pinfo.setWeapon((Weapons) equipedWeapon.ID());
         return pinfo;
+    }
+
+    public void registerObeserver(HUDComponent hc) {
+        registeredHUDs.add(hc);
     }
 }

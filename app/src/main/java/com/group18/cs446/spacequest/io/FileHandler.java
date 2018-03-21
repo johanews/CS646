@@ -14,6 +14,20 @@ public class FileHandler {
 
     private static final String PLAYER_FILE_NAME = "player_data";
 
+    public static boolean wipeSave(Context context) {
+        try {
+            FileOutputStream fos = context.openFileOutput(PLAYER_FILE_NAME, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(null);
+            oos.close();
+            fos.close();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     public static boolean savePlayer(PlayerInfo player, Context context) {
         try {
             FileOutputStream fos = context.openFileOutput(PLAYER_FILE_NAME, Context.MODE_PRIVATE);
