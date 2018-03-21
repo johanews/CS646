@@ -2,7 +2,9 @@ package com.group18.cs446.spacequest.game.objects.player.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
@@ -23,7 +25,9 @@ public class FastEngine implements Engine {
     private int minTurnSpeed = 3;
     private int turnSpeed = maxTurnSpeed;
 
-    public FastEngine(Context context){}
+    public FastEngine(Context context){
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_fast_engine_image);
+    }
 
     @Override
     public int getTurnSpeed() {
