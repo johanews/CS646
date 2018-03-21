@@ -2,7 +2,10 @@ package com.group18.cs446.spacequest.game.objects.player.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.Engines;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
@@ -26,6 +29,7 @@ public class BasicEngine implements Engine {
         this.minSpeed = 17;
         this.speed = minSpeed;
         this.turnSpeed = 7;
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_basic_engine_image);
     }
 
     @Override
@@ -85,8 +89,8 @@ public class BasicEngine implements Engine {
     }
 
     @Override
-    public int ID() {
-        return ComponentFactory.BASIC_ENGINE;
+    public Engines ID() {
+        return Engines.BASIC_ENGINE;
     }
 
     @Override

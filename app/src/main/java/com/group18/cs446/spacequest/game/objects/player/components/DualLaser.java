@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
@@ -24,6 +25,7 @@ public class DualLaser implements Weapon {
 
     public DualLaser(Context context){
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_dual_laser_image);
     }
 
     @Override
@@ -78,8 +80,8 @@ public class DualLaser implements Weapon {
     }
 
     @Override
-    public int ID() {
-        return ComponentFactory.DUAL_LASER;
+    public Weapons ID() {
+        return Weapons.DUAL_LASER;
     }
 
     @Override

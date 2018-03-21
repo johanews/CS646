@@ -2,13 +2,16 @@ package com.group18.cs446.spacequest.game.objects.player.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Build;
 
+import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.collision.Damage;
+import com.group18.cs446.spacequest.game.enums.Shields;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Player;
@@ -17,7 +20,7 @@ import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
 public class BasicShield implements Shield {
     private static final String NAME = "Basic Shield";
-    private static final String DESCRIPTION = "Basic Laser Description";
+    private static final String DESCRIPTION = "Basic Shield Description";
     private static final int PRICE = 30;
 
     private int maxShield, currentShield;
@@ -35,6 +38,7 @@ public class BasicShield implements Shield {
         this.regenCooldown = 150;
         this.lastDamageTick = 0;
         this.tookDamageThisTick = false;
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_basic_shield_image);
     }
 
     @Override
@@ -156,8 +160,8 @@ public class BasicShield implements Shield {
     }
 
     @Override
-    public int ID() {
-        return ComponentFactory.BASIC_SHIELD;
+    public Shields ID() {
+        return Shields.BASIC_SHIELD;
     }
 
     @Override

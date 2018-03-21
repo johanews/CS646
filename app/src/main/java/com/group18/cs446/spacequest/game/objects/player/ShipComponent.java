@@ -9,6 +9,6 @@ public interface ShipComponent {
     String getDescription();
     Bitmap getBitmap();
     void registerOwner(GameEntity e);
-    int ID();
+    Enum ID();
     int getPrice();
 }
