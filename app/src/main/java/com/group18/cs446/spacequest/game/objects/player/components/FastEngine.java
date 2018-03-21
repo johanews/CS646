@@ -1,14 +1,23 @@
 package com.group18.cs446.spacequest.game.objects.player.components;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import com.group18.cs446.spacequest.game.enums.Engines;
+import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
+import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Engine;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 
 public class FastEngine implements Engine {
+    private static final String NAME = "Fast Engine";
+    private static final String DESCRIPTION = "Fast Engine Description";
+    private static final int PRICE = 200;
 
-    private Player owner;
+    private GameEntity owner;
     private Bitmap image;
     private int maxSpeed = 40;
     private int minSpeed = 17;
@@ -17,18 +26,8 @@ public class FastEngine implements Engine {
     private int minTurnSpeed = 3;
     private int turnSpeed = maxTurnSpeed;
 
-    public FastEngine(Player owner){
-        this.owner = owner;
-    }
-
-    @Override
-    public String getVersion() {
-        return "Fast Engine";
-    }
-
-    @Override
-    public Bitmap getImage() {
-        return image;
+    public FastEngine(Context context){
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_fast_engine_image);
     }
 
     @Override
@@ -70,5 +69,34 @@ public class FastEngine implements Engine {
     @Override
     public void refresh(){
         speed = minSpeed;
+    }
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    @Override
+    public Bitmap getBitmap() {
+        return this.image;
+    }
+
+    @Override
+    public void registerOwner(GameEntity e) {
+        this.owner = e;
+    }
+
+    @Override
+    public Engines ID() {
+        return Engines.FAST_ENGINE;
+    }
+
+    @Override
+    public int getPrice() {
+        return PRICE;
     }
 }

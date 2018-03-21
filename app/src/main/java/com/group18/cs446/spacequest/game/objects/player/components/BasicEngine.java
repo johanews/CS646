@@ -1,36 +1,32 @@
 package com.group18.cs446.spacequest.game.objects.player.components;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.Engines;
+import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
+import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Engine;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 
 public class BasicEngine implements Engine {
+    private static final String NAME = "Basic Engine";
+    private static final String DESCRIPTION = "Basic Engine Description";
+    private static final int PRICE = 30;
 
-    private Player owner;
+    private GameEntity owner;
     private Bitmap image;
     private int speed = 17;
-    private int maxSpeed = 20;
+    private int maxSpeed = 24;
     private int minSpeed = 17;
     private int turnSpeed = 7;
 
-    public BasicEngine(Player owner){
-        this.owner = owner;
-        this.maxSpeed = 20;
-        this.minSpeed = 17;
+    public BasicEngine(Context context){
         this.speed = minSpeed;
-        this.turnSpeed = 7;
-    }
-
-    @Override
-    public String getVersion() {
-        return "Basic Engine";
-    }
-
-    @Override
-    public Bitmap getImage() {
-        return image;
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_basic_engine_image);
     }
 
     @Override
@@ -67,5 +63,35 @@ public class BasicEngine implements Engine {
     @Override
     public void refresh(){
         speed = minSpeed;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    @Override
+    public Bitmap getBitmap() {
+        return this.image;
+    }
+
+    @Override
+    public void registerOwner(GameEntity e) {
+        this.owner = e;
+    }
+
+    @Override
+    public Engines ID() {
+        return Engines.BASIC_ENGINE;
+    }
+
+    @Override
+    public int getPrice() {
+        return PRICE;
     }
 }

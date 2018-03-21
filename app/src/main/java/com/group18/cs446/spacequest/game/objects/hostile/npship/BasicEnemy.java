@@ -13,14 +13,16 @@ import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.collision.CollisionEvent;
 import com.group18.cs446.spacequest.game.collision.Damage;
 import com.group18.cs446.spacequest.game.collision.DamageType;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
+import com.group18.cs446.spacequest.game.objects.hostile.EnemySpawner;
+import com.group18.cs446.spacequest.game.objects.loot.MoneyDrop;
+import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
+import com.group18.cs446.spacequest.game.objects.player.ShipComponent;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicLaser;
-import com.group18.cs446.spacequest.game.objects.player.components.ChainLaser;
-import com.group18.cs446.spacequest.game.objects.player.components.DualLaser;
 
 import java.util.Random;
 
@@ -40,8 +42,11 @@ public class BasicEnemy implements Enemy {
     private Random random = new Random();
     private Damage collisionDamage = new Damage(DamageType.PHYSICAL, 100);
     private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, collisionDamage);
+    private Context context;
+    private EnemySpawner spawner;
 
-    public BasicEnemy(Point spawnPoint, Context context, Sector currentSector){
+    public BasicEnemy(Point spawnPoint, Context context, ComponentFactory componentFactory, Sector currentSector){
+        this.context = context;
         this.coordinates = new Point(spawnPoint);
         this.speed = 15;
         this.turnSpeed = 3;
@@ -52,31 +57,35 @@ public class BasicEnemy implements Enemy {
         this.sector = currentSector;
         this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_1);
         this.angle = 0;
+        ShipComponent newWeapon;
         if(random.nextInt(40) == 0){ // Rare speedy low armour
-            this.weapon = new BasicLaser(this, context);
+            newWeapon = componentFactory.getWeaponComponent(Weapons.BASIC_LASER, context);
             this.sightDistance = 4000;
             this.turnSpeed = 5;
-            this.speed = 25;
-            this.fireDistance = 900;
-            this.hoverDistance = 900;
+            this.speed = 18;
+            this.fireDistance = 800;
+            this.hoverDistance = 800;
             this.maxHealth = 10;
         }
         else if(random.nextInt(10) < 8){ // 80% basic laser
-            this.weapon = new BasicLaser(this, context);
+            newWeapon = componentFactory.getWeaponComponent(Weapons.BASIC_LASER, context);
         } else {
             if(random.nextBoolean()){ // 10% dual laser
-                this.weapon = new DualLaser(this, context);
+                newWeapon = componentFactory.getWeaponComponent(Weapons.DUAL_LASER, context);
                 this.speed = 20;
                 this.hoverDistance = 700;
                 this.fireDistance = 700;
             } else { // 10% chainlaser
-                this.weapon = new ChainLaser(this, context);
+                newWeapon = componentFactory.getWeaponComponent(Weapons.CHAIN_LASER, context);
                 this.fireDistance = 900;
                 this.hoverDistance = 600;
                 this.maxHealth = 50;
                 this.speed = 13;
             }
         }
+        newWeapon.registerOwner(this);
+        this.weapon = (Weapon) newWeapon;
+
         this.currentHealth = maxHealth;
     }
 
@@ -190,6 +199,13 @@ public class BasicEnemy implements Enemy {
             if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x+15, coordinates.y+10, bitmap.getWidth()/7, Color.DKGRAY,10));
             if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x-1, coordinates.y+10, bitmap.getWidth()/3, Color.DKGRAY,40));
 
+            // Drop Money
+            MoneyDrop moneyDrop = new MoneyDrop(sector, coordinates, context, 15);
+            sector.addEntityFront(moneyDrop);
+            // Notify Spawner
+            if(spawner != null) {
+                spawner.reportDeath(this);
+            }
         }
     }
 
@@ -211,5 +227,10 @@ public class BasicEnemy implements Enemy {
     @Override
     public void setTarget(GameEntity e) {
         this.target = e;
+    }
+
+    @Override
+    public void registerSpawner(EnemySpawner enemySpawner) {
+        this.spawner = enemySpawner;
     }
 }

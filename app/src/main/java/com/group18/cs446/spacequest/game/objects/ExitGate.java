@@ -13,10 +13,12 @@ import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.collision.CollisionEvent;
 
 
-public class ExitGate implements GameEntity{
+public class ExitGate implements GameEntity {
+
     private Point coordinates; // Center of the gate
     private Bitmap bitmap;
     private Sector sector;
+    private int beepRadi = 0;
     private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.VICTORY);
 
     public ExitGate(Context context, int x, int y){
@@ -70,6 +72,17 @@ public class ExitGate implements GameEntity{
             int indicatory = Math.max(15, Math.min(getCoordinates().y - topLeftCorner.y, canvas.getHeight()-15));
             paint.setColor(Color.CYAN);
             canvas.drawCircle(indicatorX, indicatory, 15, paint);
+            if(beepRadi < 55){
+                beepRadi = (beepRadi+1)%70;
+                paint.setColor(Color.GREEN);
+                paint.setAlpha(240);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(5);
+                canvas.drawCircle(indicatorX, indicatory, 15+(beepRadi*beepRadi/13), paint);
+                paint.reset();
+            }else{
+                beepRadi = 0;
+            }
         } else {
             // Draw exit gate
             canvas.drawBitmap(

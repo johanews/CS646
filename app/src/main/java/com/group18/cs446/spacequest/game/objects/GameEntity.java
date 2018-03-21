@@ -11,6 +11,7 @@ import com.group18.cs446.spacequest.game.collision.Damage;
 
 
 public interface GameEntity {
+
     Point getCoordinates();
     void update(long gameTick);
     void paint(Canvas canvas, Paint paint, Point topLeftCorner);

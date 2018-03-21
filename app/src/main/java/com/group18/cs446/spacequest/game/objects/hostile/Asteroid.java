@@ -18,6 +18,7 @@ import com.group18.cs446.spacequest.game.collision.DamageType;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
+import com.group18.cs446.spacequest.game.objects.loot.MoneyDrop;
 
 import java.util.Random;
 
@@ -33,10 +34,12 @@ public class Asteroid implements GameEntity {
     private int maxDurability;
     private int durability;
     private Damage damage = new Damage(DamageType.PHYSICAL, 100);
+    private Context context;
 
     private Random random = new Random();
 
     public Asteroid(Sector sector, Point center, Context context){
+        this.context = context;
         this.maxDurability = 150;
         this.currentSector = sector;
         if(bitmap == null) bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid_1);
@@ -90,6 +93,9 @@ public class Asteroid implements GameEntity {
             durability = 0;
             currentSector.addEntityToBack(new SmokeParticle(currentSector, coordinates.x, coordinates.y, bitmap.getWidth()/2, Color.DKGRAY, 10));
             currentSector.removeEntity(this);
+            // TODO balance
+            //MoneyDrop moneyDrop = new MoneyDrop(currentSector, coordinates, context, 5);
+            //currentSector.addEntityFront(moneyDrop);
         }
     }
 

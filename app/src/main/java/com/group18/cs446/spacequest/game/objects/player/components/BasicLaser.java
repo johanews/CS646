@@ -6,10 +6,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
+import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class BasicLaser implements Weapon {
+    private static final String NAME = "Basic Laser";
+    private static final String DESCRIPTION = "Basic Laser Description";
+    private static final int PRICE = 30;
 
     private Bitmap bulletBitmap;
     private Bitmap image;
@@ -18,19 +23,9 @@ public class BasicLaser implements Weapon {
     private GameEntity owner;
     private int baseBulletSpeed = 25;
 
-    public BasicLaser(GameEntity owner, Context context){
-        this.owner = owner;
+    public BasicLaser(Context context){
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
-    }
-
-    @Override
-    public String getVersion() {
-        return "Basic Laser";
-    }
-
-    @Override
-    public Bitmap getImage() {
-        return image;
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_basic_laser_image);
     }
 
     @Override
@@ -54,5 +49,33 @@ public class BasicLaser implements Weapon {
             owner.getCurrentSector().addEntityToBack(projectile);
         }
     }
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    @Override
+    public Bitmap getBitmap() {
+        return this.image;
+    }
+
+    @Override
+    public void registerOwner(GameEntity e) {
+        this.owner = e;
+    }
+
+    @Override
+    public Weapons ID() {
+        return Weapons.BASIC_LASER;
+    }
+
+    @Override
+    public int getPrice() {
+        return PRICE;
+    }
 }

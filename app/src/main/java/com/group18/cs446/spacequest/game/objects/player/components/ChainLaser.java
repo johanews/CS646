@@ -6,10 +6,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
+import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
 
 public class ChainLaser implements Weapon {
+    private static final String NAME = "Chain Laser";
+    private static final String DESCRIPTION = "Chain Laser Description";
+    private static final int PRICE = 150;
 
     private Bitmap bulletBitmap;
     private Bitmap image;
@@ -22,21 +27,11 @@ public class ChainLaser implements Weapon {
     private GameEntity owner;
     private int baseBulletSpeed = 25;
 
-    public ChainLaser(GameEntity owner, Context context){
-        this.owner = owner;
+    public ChainLaser(Context context){
         this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
         this.lastReload = 0;
         this.shots = shotCapacity;
-    }
-
-    @Override
-    public String getVersion() {
-        return "Chain Laser";
-    }
-
-    @Override
-    public Bitmap getImage() {
-        return image;
+        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_chain_laser_image);
     }
 
     @Override
@@ -67,4 +62,33 @@ public class ChainLaser implements Weapon {
         }
     }
 
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    @Override
+    public Bitmap getBitmap() {
+        return this.image;
+    }
+
+    @Override
+    public void registerOwner(GameEntity e) {
+        this.owner = e;
+    }
+
+    @Override
+    public Weapons ID() {
+        return Weapons.CHAIN_LASER;
+    }
+
+    @Override
+    public int getPrice() {
+        return PRICE;
+    }
 }

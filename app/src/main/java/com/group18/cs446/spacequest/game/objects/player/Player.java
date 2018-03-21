@@ -12,20 +12,24 @@ import android.graphics.Rect;
 import com.group18.cs446.spacequest.game.collision.CollisionEvent;
 import com.group18.cs446.spacequest.game.collision.Damage;
 import com.group18.cs446.spacequest.game.collision.DamageType;
+import com.group18.cs446.spacequest.game.enums.Engines;
+import com.group18.cs446.spacequest.game.enums.Hulls;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.Shields;
+import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicEngine;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicHull;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicLaser;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicShield;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
+import com.group18.cs446.spacequest.game.vfx.HUDComponent;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class Player implements GameEntity, Serializable {
+
     private Point coordinates; // Now represents the center of the character, not the top left
     private int heading;
     private Bitmap bitmap;
@@ -53,20 +57,28 @@ public class Player implements GameEntity, Serializable {
     private Shield equipedShield;
     private int money;
 
-    public Player(Context context) {
+    private List<HUDComponent> registeredHUDs = new LinkedList();
 
-        coordinates = new Point(
-                (random.nextBoolean() ? 1 : -1)*(3500+random.nextInt(1000)),
-                (random.nextBoolean() ? 1 : -1)*(3500+random.nextInt(1000)));
+    public Player(Context context, PlayerInfo playerInfo) {
+        double randomStartingAngle = random.nextDouble()*2*Math.PI;
+        int randomStartingDistance = 4000+random.nextInt(2000);
+        coordinates = new Point((int)(Math.cos(randomStartingAngle) * randomStartingDistance),
+                (int)(Math.sin(randomStartingAngle)*randomStartingDistance));
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
+        ComponentFactory componentFactory = new ComponentFactory();
         bounds = null;
 
-        equipedEngine = new BasicEngine(this);
-        equipedWeapon = new BasicLaser(this, context);
-        equipedShield = new BasicShield(this);
-        equipedHull = new BasicHull(this);
+        equipedEngine = componentFactory.getEngineComponent(playerInfo.getEngine(), context);
+        equipedEngine.registerOwner(this);
+        equipedWeapon = componentFactory.getWeaponComponent(playerInfo.getWeapon(), context);
+        equipedWeapon.registerOwner(this);
+        equipedShield = componentFactory.getShieldComponent(playerInfo.getShield(), context);
+        equipedShield.registerOwner(this);
+        equipedHull = componentFactory.getHullComponent(playerInfo.getHull(), context);
+        equipedHull.registerOwner(this);
+        money = playerInfo.getMoney();
 
         doingAction = false;
         Damage collisionDamage = new Damage(DamageType.PHYSICAL, 100);
@@ -120,16 +132,16 @@ public class Player implements GameEntity, Serializable {
     }
 
     public int getCurrentHealth(){
-        return equipedHull.getCurrentHealth();
+        return getHull().getCurrentHealth();
     }
     public int getMaxHealth(){
-        return equipedHull.getMaxHealth();
+        return getHull().getMaxHealth();
     }
     public int getCurrentShield(){
-        return (equipedShield != null) ? equipedShield.getCurrentShield() : 0;
+        return (equipedShield != null) ? getShield().getCurrentShield() : 0;
     }
     public int getMaxShield(){
-        return (equipedShield != null) ? equipedShield.getMaxShield() : 0;
+        return (equipedShield != null) ? getShield().getMaxShield() : 0;
     }
 
     @Override
@@ -137,11 +149,11 @@ public class Player implements GameEntity, Serializable {
         if(!controlledByPlayer) return;
         tookDamage = true;
         currentSector.addFilter(new DamageFilter(currentSector));
-        if(equipedShield == null || !equipedShield.takeDamage(damage)) {
+        if(getShield() == null || !getShield().takeDamage(damage)) {
             // Shield takeDamage returns false if it doesn't handle the damage
-            equipedHull.takeDamage(damage);
+            getHull().takeDamage(damage);
         }
-        if(equipedHull.getCurrentHealth() <= 0){
+        if(getHull().getCurrentHealth() <= 0){
             currentSector.triggerDefeat();
         }
     }
@@ -178,26 +190,26 @@ public class Player implements GameEntity, Serializable {
     @Override
     public void update(long gameTick) {
         if(alive) {
-            if(equipedShield != null) equipedShield.update(gameTick);
-            equipedHull.update(gameTick);
-            equipedEngine.update(gameTick);
+            getShield().update(gameTick);
+            getHull().update(gameTick);
+            getEngine().update(gameTick);
             if(doingAction){
                 if(equipedWeapon != null){
-                    equipedWeapon.fire(gameTick);
+                    getWeapon().fire(gameTick);
                 }
             }
             if(currentCommand == PlayerCommand.BOTH){
                 if(equipedEngine != null){
-                    equipedEngine.doSpecial(gameTick);
+                    getEngine().doSpecial(gameTick);
                 }
             }
             if (controlledByPlayer) {
                 switch (currentCommand) {
                     case RIGHT:
-                        heading = (heading + 360 - equipedEngine.getTurnSpeed()) % 360;
+                        heading = (heading + 360 - getEngine().getTurnSpeed()) % 360;
                         break;
                     case LEFT:
-                        heading = (heading + 360 + equipedEngine.getTurnSpeed()) % 360;
+                        heading = (heading + 360 + getEngine().getTurnSpeed()) % 360;
                         break;
                     case BOTH:
                     case NONE:
@@ -210,12 +222,12 @@ public class Player implements GameEntity, Serializable {
                 if (updatesToTarget > 0) {
                     double normalized = Math.sqrt((coordinates.y - target.y) * (coordinates.y - target.y)
                             + (coordinates.x - target.x) * (coordinates.x - target.x));
-                    if (Math.abs(coordinates.y - target.y) < equipedEngine.getSpeed()) {
+                    if (Math.abs(coordinates.y - target.y) < getEngine().getSpeed()) {
                         coordinates.y = target.y;
                     } else {
                         coordinates.y -= ((coordinates.y - target.y) / normalized) * getSpeed();
                     }
-                    if (Math.abs(coordinates.x - target.x) < equipedEngine.getSpeed()) {
+                    if (Math.abs(coordinates.x - target.x) < getEngine().getSpeed()) {
                         coordinates.x = target.x;
                     } else {
                         coordinates.x -= ((coordinates.x - target.x) / normalized) * getSpeed();
@@ -240,12 +252,15 @@ public class Player implements GameEntity, Serializable {
                 triggerCollisionEvent(e);
             }
         }
+        for(HUDComponent hc : registeredHUDs){
+            hc.update();
+        }
     }
 
     public int getAngle(){
         return heading;
     }
-    public int getSpeed() {return equipedEngine.getSpeed(); }
+    public int getSpeed() {return getEngine().getSpeed(); }
 
     @Override
     public Bitmap getBitmap() {
@@ -309,24 +324,10 @@ public class Player implements GameEntity, Serializable {
                     getCoordinates().y - topLeftCorner.y - getBitmap().getWidth() / 2 - 10 + random.nextInt(getBitmap().getHeight()),
                     random.nextInt(40), paint);
         } else {
-            if(equipedShield != null) equipedShield.paint(canvas, paint, topLeftCorner);
+            if(equipedShield != null) getShield().paint(canvas, paint, topLeftCorner);
         }
         paint.reset();
         canvas.restore();
-    }
-
-    public void reset() { // Everything thats required for moving to a new sector
-        coordinates = new Point((random.nextBoolean() ? 1 : -1 )*(1000+random.nextInt(4000)), (random.nextBoolean() ? 1 : -1 )*(1000+random.nextInt(4000)));
-        heading = 0; // Direction in degrees
-        currentCommand = PlayerCommand.NONE;
-        controlledByPlayer = true;
-        if(equipedWeapon != null){
-            equipedWeapon.refresh();
-        }
-        if(equipedEngine != null){
-            equipedEngine.refresh();
-        }
-        tookDamage = false;
     }
 
     @Override
@@ -365,10 +366,32 @@ public class Player implements GameEntity, Serializable {
             case CollisionEvent.DEFEAT:
                 currentSector.triggerDefeat();
                 break;
+            case CollisionEvent.GET_MONEY:
+                collectMoney(event);
+                break;
         }
+    }
+
+    private void collectMoney(CollisionEvent event) {
+        this.money += event.getValue();
+        event.setValue(0);
     }
 
     public int getMoney() {
         return money;
+    }
+
+    public PlayerInfo createPlayerInfo() {
+        PlayerInfo pinfo = new PlayerInfo();
+        pinfo.setMoney(money);
+        pinfo.setEngine((Engines) equipedEngine.ID());
+        pinfo.setHull((Hulls) equipedHull.ID());
+        pinfo.setShield((Shields) equipedShield.ID());
+        pinfo.setWeapon((Weapons) equipedWeapon.ID());
+        return pinfo;
+    }
+
+    public void registerObeserver(HUDComponent hc) {
+        registeredHUDs.add(hc);
     }
 }
