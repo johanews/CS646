@@ -1,7 +1,5 @@
 package com.group18.cs446.spacequest.game.objects;
 
-
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,9 +9,7 @@ import android.view.SurfaceHolder;
 
 import com.group18.cs446.spacequest.game.enums.GameState;
 import com.group18.cs446.spacequest.game.objects.hostile.Asteroid;
-import com.group18.cs446.spacequest.game.objects.hostile.Enemy;
 import com.group18.cs446.spacequest.game.objects.hostile.EnemySpawner;
-import com.group18.cs446.spacequest.game.objects.hostile.npship.BasicEnemy;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.vfx.Filter;
@@ -21,6 +17,7 @@ import com.group18.cs446.spacequest.game.vfx.HUDComponent;
 import com.group18.cs446.spacequest.game.vfx.HUDText;
 import com.group18.cs446.spacequest.game.vfx.HealthBar;
 import com.group18.cs446.spacequest.game.vfx.ShieldBar;
+import com.group18.cs446.spacequest.view.GameView;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -55,10 +52,10 @@ public class Sector {
 
     private Context context;
     private ComponentFactory componentFactory;
-    private Activity activity;
+    private GameView gameView;
 
-    public Sector(Player player, Context context, SurfaceHolder surfaceHolder, int sectorID, Activity activity){
-        this.activity = activity;
+    public Sector(Player player, Context context, SurfaceHolder surfaceHolder, int sectorID, GameView gameView){
+        this.gameView = gameView;
         this.componentFactory = new ComponentFactory();
         this.gameState = GameState.PAUSED;
         this.context = context;
@@ -88,7 +85,6 @@ public class Sector {
         }
 
         enemySpawner = new EnemySpawner(sectorID, this, componentFactory, context);
-
     }
 
     public void pause(){

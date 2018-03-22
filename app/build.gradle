@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
+    }
     defaultConfig {
         applicationId "com.group18.cs446.spacequest"
         minSdkVersion 19
@@ -31,6 +34,8 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'org.jcodec:jcodec:0.2.3'
+    compile 'org.jcodec:jcodec-android:0.2.3'
     testCompile 'junit:junit:4.12'
     implementation 'com.android.support:design:27.1.0'
 }

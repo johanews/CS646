@@ -9,9 +9,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.group18.cs446.spacequest.Constants;
-import com.group18.cs446.spacequest.MainActivity;
 import com.group18.cs446.spacequest.R;
-import com.group18.cs446.spacequest.ShopActivity;
+import com.group18.cs446.spacequest.ShareSocialActivity;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.player.Player;
@@ -36,6 +35,7 @@ public class GameView extends SurfaceView implements Runnable {
     private PlayerInfo playerInfo;
     private Activity gameplayActivity;
 
+
     public GameView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         surfaceHolder = getHolder();
@@ -54,34 +54,25 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
-        sector = new Sector(player, getContext(), surfaceHolder, playerInfo.getCurrentSector(), gameplayActivity);
+        sector = new Sector(player, getContext(), surfaceHolder, playerInfo.getCurrentSector(), this);
         boolean successfulSector = sector.run();
         System.out.println("SECTOR END");
+        Intent intent = new Intent(gameplayActivity, ShareSocialActivity.class);
+        PlayerInfo newPlayerInfo = player.createPlayerInfo();
         if(successfulSector) { // returns true if successful, false otherwise
-            // Do all the store stuff
-            PlayerInfo newPlayerInfo = player.createPlayerInfo();
             newPlayerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
-
             if (!FileHandler.savePlayer(newPlayerInfo, getContext())){
                 System.err.println("Failed to save player info");
             }
-
-            Intent intent = new Intent(gameplayActivity, ShopActivity.class);
-            intent.putExtra("PlayerInfo", newPlayerInfo);
-            gameplayActivity.startActivity(intent);
-            gameplayActivity.finish();
          } else {
-            // Update Highscores and wipe save
             if (!FileHandler.wipeSave(getContext())){
                 System.err.println("Failed to wipeplayer info");
             }
-            PlayerInfo newPlayerInfo = player.createPlayerInfo();
-            newPlayerInfo.setCurrentSector(playerInfo.getCurrentSector()+1);
             newPlayerInfo.setCurrentSector(-1);
-            Intent intent = new Intent(gameplayActivity, MainActivity.class); // TODO social media activity
-            gameplayActivity.startActivity(intent);
-            gameplayActivity.finish();
         }
+        intent.putExtra("PlayerInfo", newPlayerInfo);
+        gameplayActivity.startActivity(intent);
+        gameplayActivity.finish();
     }
 
     @Override
