@@ -1,5 +1,6 @@
 package com.group18.cs446.spacequest;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -71,5 +72,11 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return gameView.handleButtonEvent(v.getId(), event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        gameView.getScreenRecorder().handleActivityResult(requestCode, resultCode, data);
     }
 }

@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 public class FileHandler {
 
     private static final String PLAYER_FILE_NAME = "player_data";
+    public static final String VIDEO_FILE_NAME = "recording.mp4";
 
     public static boolean wipeSave(Context context) {
         try {

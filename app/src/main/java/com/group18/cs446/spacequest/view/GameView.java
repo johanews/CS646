@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 
 import com.group18.cs446.spacequest.Constants;
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.ScreenRecorder;
 import com.group18.cs446.spacequest.game.enums.PlayerCommand;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.player.Player;
@@ -34,6 +35,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private PlayerInfo playerInfo;
     private Activity gameplayActivity;
+    private ScreenRecorder screenRecorder = new ScreenRecorder();
 
     public GameView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -45,6 +47,7 @@ public class GameView extends SurfaceView implements Runnable {
         this.playerInfo = new PlayerInfo(playerInfo);
         this.gameplayActivity = gameplayActivity;
         this.player = new Player(getContext(), playerInfo); // new player
+        this.screenRecorder.init(gameplayActivity);
     }
 
     public Player getPlayer() {
@@ -54,8 +57,16 @@ public class GameView extends SurfaceView implements Runnable {
     @Override
     public void run() {
         sector = new Sector(player, getContext(), surfaceHolder, playerInfo.getCurrentSector(), gameplayActivity);
+
+        // Start video recording
+        screenRecorder.startRecording(gameplayActivity);
+
         boolean successfulSector = sector.run();
         System.out.println("SECTOR END");
+
+        // Stop recording
+        screenRecorder.stop();
+
         if(successfulSector) { // returns true if successful, false otherwise
             // Do all the store stuff
             PlayerInfo newPlayerInfo = player.createPlayerInfo();
@@ -142,5 +153,9 @@ public class GameView extends SurfaceView implements Runnable {
             gameThread = new Thread(this);
             gameThread.start();
         }
+    }
+
+    public ScreenRecorder getScreenRecorder() {
+        return screenRecorder;
     }
 }
