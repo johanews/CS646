@@ -85,11 +85,11 @@ public class FileHandler {
     public static File createVideoFile(Context context) {
         File root = context.getFilesDir();
         File images = new File(root, "images");
+        if(!images.exists()){
+            images.mkdir();
+        }
         String id = "_"+System.currentTimeMillis();
         File file = new File(images, "savedVideo"+id+"."+"mp4");
-        if(file.exists()){
-            file.delete();
-        }
         //File videoFile = new File(context.getFilesDir(), Long.toString(System.currentTimeMillis()) + VIDEO_FILE_NAME);
         //longVideoFileName = videoFile.getAbsolutePath();
 

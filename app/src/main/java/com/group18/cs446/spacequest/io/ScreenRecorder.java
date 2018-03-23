@@ -34,6 +34,7 @@ public class ScreenRecorder {
     private MediaProjectionManager mediaProjectionManager;
     private MediaProjection mediaProjection;
     private File destinationFile;
+    private boolean init = false;
 
     public void init(Activity activity) {
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -58,17 +59,20 @@ public class ScreenRecorder {
     }
 
     private void initRecorder() {
-        try {
-            mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-            mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-            mediaRecorder.setVideoEncodingBitRate((int)(8*1280*720*25*0.07));//512 * 1000);
-            mediaRecorder.setVideoFrameRate(25);
-            mediaRecorder.setVideoSize(metrics.widthPixels, metrics.heightPixels);
-            mediaRecorder.setOutputFile(destinationFile.getAbsolutePath());
-            mediaRecorder.prepare();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(!init) {
+            try {
+                init = true;
+                mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+                mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+                mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+                mediaRecorder.setVideoEncodingBitRate((int) (8 * 1280 * 720 * 25 * 0.07));//512 * 1000);
+                mediaRecorder.setVideoFrameRate(25);
+                mediaRecorder.setVideoSize(metrics.widthPixels, metrics.heightPixels);
+                mediaRecorder.setOutputFile(destinationFile.getAbsolutePath());
+                mediaRecorder.prepare();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -96,7 +100,8 @@ public class ScreenRecorder {
         }
 
         mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
-        //mediaProjection.registerCallback(mediaProjectionCallback, null);
+        mediaProjection.registerCallback(mediaProjectionCallback, null);
+        //initRecorder();
         virtualDisplay = createVirtualDisplay();
         mediaRecorder.start();
         Log.i("spacequest", "Recording started");
@@ -113,7 +118,7 @@ public class ScreenRecorder {
     public File stop() {
         try {
             mediaRecorder.stop();
-            //mediaRecorder.reset();
+            mediaRecorder.reset();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -133,7 +138,7 @@ public class ScreenRecorder {
                 screenDensity, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, mediaRecorder.getSurface(), null, null);
     }
 
-    /*private MediaProjection.Callback mediaProjectionCallback = new MediaProjection.Callback() {
+    private MediaProjection.Callback mediaProjectionCallback = new MediaProjection.Callback() {
         @Override
         public void onStop() {
             super.onStop();
@@ -147,5 +152,5 @@ public class ScreenRecorder {
             mediaProjection = null;
             virtualDisplay.release();
         }
-    };*/
+    };
 }

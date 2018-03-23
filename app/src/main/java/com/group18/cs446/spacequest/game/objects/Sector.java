@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.provider.MediaStore;
 import android.view.SurfaceHolder;
 
 import com.group18.cs446.spacequest.game.enums.GameState;
@@ -20,7 +19,6 @@ import com.group18.cs446.spacequest.game.vfx.HUDComponent;
 import com.group18.cs446.spacequest.game.vfx.HUDText;
 import com.group18.cs446.spacequest.game.vfx.HealthBar;
 import com.group18.cs446.spacequest.game.vfx.ShieldBar;
-import com.group18.cs446.spacequest.io.VideoCaptureBuffer;
 import com.group18.cs446.spacequest.view.GameView;
 
 import java.util.LinkedList;
@@ -120,7 +118,7 @@ public class Sector {
     public void removeEntity(GameEntity e){
         entities.remove(e);
     }
-    public boolean run(VideoCaptureBuffer videoCaptureBuffer) {
+    public boolean run() {
 
         int droppedFrames = 0;
         int threshhold = 5;
@@ -143,11 +141,7 @@ public class Sector {
             } else {
                 droppedFrames = 0;
             }
-            if(frames%(tickRate*5) == 0){
-                draw(videoCaptureBuffer);
-            } else {
-                draw(null);
-            }
+            draw();
             lagging = control(tickStart, lagging);
             frames++;
             framesThisSecond++;
@@ -163,7 +157,7 @@ public class Sector {
                     victoryFinalizeTime--;
                     long tickStart = System.currentTimeMillis();
                     update();
-                    draw(null);
+                    draw();
                     control(tickStart, 0);
                 }
                 return true;
@@ -172,7 +166,7 @@ public class Sector {
                     defeatFinalizeTime--;
                     long tickStart = System.currentTimeMillis();
                     update();
-                    draw(null);
+                    draw();
                     control(tickStart, 0);
                 }
                 return false;
@@ -198,7 +192,7 @@ public class Sector {
         return player;
     }
 
-    private void draw(VideoCaptureBuffer videoCaptureBuffer){ // This draw function will be responsible for drawing each frame
+    private void draw(){ // This draw function will be responsible for drawing each frame
         CanvasComponent canvas = new CanvasComponent();
         if (surfaceHolder.getSurface().isValid()) { // acquire the canvas
             Canvas screenCanvas = surfaceHolder.lockCanvas();
@@ -207,13 +201,6 @@ public class Sector {
             }
             canvasWidth = screenCanvas.getWidth(); // so that we only have to do this once
             canvasHeight = screenCanvas.getHeight();
-            Bitmap recordBitmap = null;
-            if(videoCaptureBuffer != null){
-                Canvas recordCanvas = new Canvas();
-                recordBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.RGB_565);
-                recordCanvas.setBitmap(recordBitmap);
-                canvas.addCanvas(recordCanvas);
-            }
             canvas.addCanvas(screenCanvas);
             Point topLeftCorner = new Point(player.getCoordinates().x-canvasWidth/2,
                     player.getCoordinates().y-canvasHeight/2); // the point which will be the top left corner
@@ -264,9 +251,6 @@ public class Sector {
             }
 
             paint.reset();
-            if(videoCaptureBuffer != null) {
-                videoCaptureBuffer.captureFrame(recordBitmap);
-            }
             surfaceHolder.unlockCanvasAndPost(screenCanvas); // unlock and draw the frame
         }
     }
