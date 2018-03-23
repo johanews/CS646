@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">SpaceQuest</string>
+    <string name="start_button">Start Game</string>
+    <string name="upgrade_button">Upgrade Ship</string>
+    <string name="shop_button">Shop</string>
+    <string name="description">Description</string>
+    <string name="buy_button">Buy</string>
+    <string name="selected_weapon">Weapon</string>
+    <string name="goto_map">Go!</string>
+    <string name="selected_shield">Shield</string>
+    <string name="selected_hull">Hull</string>
+    <string name="selected_engine">Engine</string>
+    <string name="sell_button">"Sell"</string>
+    <string name="space">SPACE</string>
+    <string name="quest">QUEST</string>
+    <string name="money">Money available</string>
+    <string name="placeholder">Placeholder Text</string>
 </resources>
