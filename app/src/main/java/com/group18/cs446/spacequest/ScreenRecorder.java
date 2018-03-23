@@ -34,6 +34,8 @@ public class ScreenRecorder {
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
         screenDensity = metrics.densityDpi;
 
+        System.out.println(FileHandler.createVideoFile(activity.getApplicationContext()));
+
         mediaRecorder = new MediaRecorder();
         initRecorder();
 
@@ -48,7 +50,7 @@ public class ScreenRecorder {
         mediaRecorder.setVideoEncodingBitRate(512 * 1000);
         mediaRecorder.setVideoFrameRate(30);
         mediaRecorder.setVideoSize(metrics.widthPixels, metrics.heightPixels);
-        mediaRecorder.setOutputFile(FileHandler.VIDEO_FILE_NAME);
+        mediaRecorder.setOutputFile(FileHandler.longVideoFileName);
         try {
             mediaRecorder.prepare();
         } catch (IOException e) {
@@ -63,6 +65,7 @@ public class ScreenRecorder {
         }
         virtualDisplay = createVirtualDisplay();
         mediaRecorder.start();
+        Log.i("spacequest", "Recording started");
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
@@ -80,6 +83,7 @@ public class ScreenRecorder {
         mediaProjection.registerCallback(mediaProjectionCallback, null);
         virtualDisplay = createVirtualDisplay();
         mediaRecorder.start();
+        Log.i("spacequest", "Recording started");
     }
 
     public void destroy() {
@@ -98,6 +102,7 @@ public class ScreenRecorder {
         }
 
         virtualDisplay.release();
+        Log.i("spacequest", "Recording stopped");
     }
 
     private VirtualDisplay createVirtualDisplay() {
