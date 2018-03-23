@@ -3,7 +3,6 @@ package com.group18.cs446.spacequest.game.objects.player;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -20,6 +19,7 @@ import com.group18.cs446.spacequest.game.enums.Shields;
 import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
+import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 import com.group18.cs446.spacequest.game.vfx.HUDComponent;
 
@@ -309,7 +309,7 @@ public class Player implements GameEntity, Serializable {
     }
 
     @Override
-    public void paint(Canvas canvas, Paint paint, Point topLeftCorner) {
+    public void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner) {
         //Alternatively, pass this to Player to paint themselves here
         canvas.save();
         canvas.rotate(-getAngle(), getCoordinates().x - topLeftCorner.x, getCoordinates().y - topLeftCorner.y);

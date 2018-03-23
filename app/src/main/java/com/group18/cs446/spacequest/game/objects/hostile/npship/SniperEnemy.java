@@ -26,7 +26,7 @@ import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 
 import java.util.Random;
 
-public class BasicEnemy implements Enemy {
+public class SniperEnemy implements Enemy {
     private int maxHealth, currentHealth;
     private int speed;
     private int turnSpeed;
@@ -45,18 +45,18 @@ public class BasicEnemy implements Enemy {
     private Context context;
     private EnemySpawner spawner;
 
-    public BasicEnemy(Point spawnPoint, Context context, ComponentFactory componentFactory, Sector currentSector){
+    public SniperEnemy(Point spawnPoint, Context context, ComponentFactory componentFactory, Sector currentSector){
         this.context = context;
         this.coordinates = new Point(spawnPoint);
-        this.speed = 15;
-        this.turnSpeed = 3;
-        this.sightDistance = 3000;
-        this.fireDistance = 650;
-        this.hoverDistance = 700;
-        this.maxHealth = 100;
         this.sector = currentSector;
-        if(bitmap == null) bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_1);
+        if(bitmap == null) bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_sniper);
         this.angle = 0;
+        this.sightDistance = 4000;
+        this.turnSpeed = 5;
+        this.speed = 18;
+        this.fireDistance = 1300;
+        this.hoverDistance = 1200;
+        this.maxHealth = 10;
         ShipComponent newWeapon = componentFactory.getWeaponComponent(Weapons.BASIC_LASER, context);
         newWeapon.registerOwner(this);
         this.weapon = (Weapon) newWeapon;

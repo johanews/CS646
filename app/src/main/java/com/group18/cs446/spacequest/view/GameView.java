@@ -16,6 +16,10 @@ import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.io.FileHandler;
+import com.group18.cs446.spacequest.io.VideoCaptureBuffer;
+
+import java.io.File;
+import java.net.URI;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -55,7 +59,10 @@ public class GameView extends SurfaceView implements Runnable {
     @Override
     public void run() {
         sector = new Sector(player, getContext(), surfaceHolder, playerInfo.getCurrentSector(), this);
-        boolean successfulSector = sector.run();
+
+        VideoCaptureBuffer videoCaptureBuffer = new VideoCaptureBuffer(this, getContext());
+        boolean successfulSector = sector.run(videoCaptureBuffer);
+        File savedVideo = videoCaptureBuffer.finalizeVideo();
         System.out.println("SECTOR END");
         Intent intent = new Intent(gameplayActivity, ShareSocialActivity.class);
         PlayerInfo newPlayerInfo = player.createPlayerInfo();
@@ -71,6 +78,7 @@ public class GameView extends SurfaceView implements Runnable {
             newPlayerInfo.setCurrentSector(-1);
         }
         intent.putExtra("PlayerInfo", newPlayerInfo);
+        intent.putExtra("VideoFile", savedVideo);
         gameplayActivity.startActivity(intent);
         gameplayActivity.finish();
     }

@@ -1,7 +1,6 @@
 package com.group18.cs446.spacequest.game.objects.player.components;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -12,6 +11,7 @@ import com.group18.cs446.spacequest.game.collision.Damage;
 import com.group18.cs446.spacequest.game.collision.DamageType;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
+import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 
 public class BasicProjectile implements GameEntity {
 
@@ -68,7 +68,7 @@ public class BasicProjectile implements GameEntity {
     }
 
     @Override
-    public void paint(Canvas canvas, Paint paint, Point topLeftCorner) {
+    public void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner) {
         canvas.drawBitmap(bitmap, coordinates.x-topLeftCorner.x, coordinates.y-topLeftCorner.y, paint);
     }
 

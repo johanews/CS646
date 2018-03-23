@@ -3,7 +3,6 @@ package com.group18.cs446.spacequest.game.objects.player.components;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -13,9 +12,8 @@ import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.collision.Damage;
 import com.group18.cs446.spacequest.game.enums.Shields;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
-import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
-import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.objects.player.Shield;
+import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
 public class LaserOnlyShield implements Shield {
@@ -100,7 +98,7 @@ public class LaserOnlyShield implements Shield {
     }
 
     @Override
-    public void paint(Canvas canvas, Paint paint, Point topLeftCorner) {
+    public void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner) {
         int shieldXRadi = owner.getBitmap().getWidth() / 2 + 40;
         int shieldYRadi = owner.getBitmap().getHeight() / 2 + 40;
         paint.setColor(Color.argb(50, 255, 255, 15));

@@ -3,7 +3,6 @@ package com.group18.cs446.spacequest.game.objects;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -11,6 +10,7 @@ import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.collision.CollisionEvent;
+import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 
 
 public class ExitGate implements GameEntity {
@@ -60,7 +60,7 @@ public class ExitGate implements GameEntity {
     }
 
     @Override
-    public void paint(Canvas canvas, Paint paint, Point topLeftCorner) {
+    public void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner) {
 
         canvas.save();
         if(getCoordinates().x - topLeftCorner.x - getBitmap().getWidth() / 2 > canvas.getWidth() ||

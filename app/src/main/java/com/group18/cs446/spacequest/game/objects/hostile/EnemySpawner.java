@@ -17,45 +17,51 @@ public class EnemySpawner {
     private int sectorID;
     private int maxEnemies, spawnedEnemies;
     private List<Point> possibleSpawnPoints;
+    EnemyFactory enemyFactory;
 
     public EnemySpawner(int sectorID, Sector sector, ComponentFactory componentFactory, Context context){
         this.sector = sector;
         this.componentFactory = componentFactory;
         this.context = context;
         this.sectorID = sectorID;
-        this.maxEnemies = sectorID * 2 + 1;
+        this.maxEnemies = sectorID+ 1;
         this.spawnedEnemies = 0;
         possibleSpawnPoints = new LinkedList<>();
         possibleSpawnPoints.add(new Point(0, 0));
-        for(int i = -1; i < 2; i++){
-            for(int j = -1; j < 2; j++){
-                if(i*j==0)continue;
-                possibleSpawnPoints.add(new Point(750*i, 750*j));
-                possibleSpawnPoints.add(new Point(1500*i, 1500*j));
-                possibleSpawnPoints.add(new Point(2500*i, 2500*j));
+        for(int dist = 750; dist < 4000; dist += 750) {
+            for (int i = -1; i < 2; i++) {
+                for (int j = -1; j < 2; j++) {
+                    if (i * j == 0) continue;
+                    possibleSpawnPoints.add(new Point(dist * i, dist * j));
+                }
             }
         }
+        enemyFactory = new BasicEnemyFactoryImpl(sectorID);
         spawnEnemies();
     }
     public void spawnEnemies(){
         while(spawnedEnemies < maxEnemies) {
             Enemy e = null;
-            for (Point p : possibleSpawnPoints) {
+            for (int i = 0; i < possibleSpawnPoints.size(); i++) {
+                Point p = possibleSpawnPoints.get(i);
                 int dx = sector.getPlayer().getCoordinates().x - p.x;
                 int dy = sector.getPlayer().getCoordinates().y - p.y;
                 int distanceFromSpawn = dx * dx + dy * dy;
-                if (distanceFromSpawn > 2000 * 2000) {
+                if (distanceFromSpawn > 3000 * 3000) {
+                    possibleSpawnPoints.remove(p);
+                    possibleSpawnPoints.add(p);
+                    System.out.println("Spawning enemy at ("+p.x+", "+p.y+")");
                     spawnedEnemies++;
-                    e = new BasicEnemy(new Point(p), context, componentFactory, sector);
+                    e = enemyFactory.getEnemy(new Point(p), context, componentFactory, sector);
                     e.registerSpawner(this);
                     sector.addEntityFront(e);
-                    if(spawnedEnemies >= maxEnemies) break;
+                    break;
                 }
             }
         }
     }
 
-    public void reportDeath(BasicEnemy basicEnemy) {
+    public void reportDeath(Enemy enemy) {
         spawnedEnemies--;
     }
 }

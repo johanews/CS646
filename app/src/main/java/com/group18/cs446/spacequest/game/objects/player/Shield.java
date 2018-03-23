@@ -1,11 +1,10 @@
 package com.group18.cs446.spacequest.game.objects.player;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
 import com.group18.cs446.spacequest.game.collision.Damage;
+import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 
 public interface Shield extends ShipComponent{
     void update(long gameTick);
@@ -13,5 +12,5 @@ public interface Shield extends ShipComponent{
     boolean takeDamage(Damage damage);
     int getCurrentShield();
     int getMaxShield();
-    void paint(Canvas canvas, Paint paint, Point topLeftCorner);
+    void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner);
 }

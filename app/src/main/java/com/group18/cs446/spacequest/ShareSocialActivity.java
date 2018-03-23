@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,13 +20,15 @@ import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.io.FileHandler;
 import com.group18.cs446.spacequest.io.SoundManager;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URI;
 
 public class ShareSocialActivity extends AppCompatActivity {
 
     private PlayerInfo playerInfo;
-    private String videoURI;
+    private File file;
     private Button continueButton;
     private Button tweetButton;
 
@@ -38,7 +41,7 @@ public class ShareSocialActivity extends AppCompatActivity {
         View root = findViewById(android.R.id.content);
         root.setSystemUiVisibility(Constants.BASE_UI_VISIBILITY);
         playerInfo = (PlayerInfo) getIntent().getSerializableExtra("PlayerInfo");
-        videoURI = (String) getIntent().getSerializableExtra("VideoURI");
+        file = (File) getIntent().getSerializableExtra("VideoFile");
         continueButton = findViewById(R.id.continue_button);
         continueButton.setOnClickListener(this::goToNextActivity);
         tweetButton = findViewById(R.id.tweet_button);
@@ -55,27 +58,22 @@ public class ShareSocialActivity extends AppCompatActivity {
         return msg;
     }
 
+
     private void tweet(View v){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.setPackage("com.twitter.android"); // if the app isn't installed TODO
         String message = generateTweetMessage();
         intent.putExtra(Intent.EXTRA_TEXT, message);
-        if(videoURI != null){
-            intent.putExtra(Intent.EXTRA_STREAM, videoURI);
+        if(file != null){
+            intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(getBaseContext(), "com.group18.cs446.spacequest.io.VideoProvider", file));
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.setType("video/*");
+            intent.setType("image/*");
         }
         try{
-            startActivity(intent);
+            startActivity(Intent.createChooser(intent, "Share on social media"));
         } catch (android.content.ActivityNotFoundException e){
             e.printStackTrace();
         }
-
-//        String tweetUrl = "https://twitter.com/intent/tweet?text=Check out my most recent sector attempt&url="
-//                + "https://www.google.com";
-//        Uri uri = Uri.parse(tweetUrl);
-//        startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 
     private void goToNextActivity(View v){

@@ -1,11 +1,12 @@
 package com.group18.cs446.spacequest.game.objects;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+
+import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 
 public class SmokeParticle implements GameEntity {
     private Point coordinates;
@@ -55,7 +56,7 @@ public class SmokeParticle implements GameEntity {
     }
 
     @Override
-    public void paint(Canvas canvas, Paint paint, Point topLeftCorner) {
+    public void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner) {
         if(lifetime >= totalDuration) return;
         paint.setColor(color);
         paint.setAlpha((255*(totalDuration-lifetime))/totalDuration);

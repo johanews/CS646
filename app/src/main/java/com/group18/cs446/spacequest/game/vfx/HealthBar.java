@@ -1,11 +1,9 @@
 package com.group18.cs446.spacequest.game.vfx;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.game.objects.player.Player;
 
@@ -59,7 +57,7 @@ public class HealthBar implements HUDComponent {
   }
 
     @Override
-    public void paint(Canvas canvas) {
+    public void paint(CanvasComponent canvas) {
         Path fillPath = new Path();
         fillPath.moveTo(fillCoords[0].x, fillCoords[0].y);
         for(int i = 1; i < fillCoords.length; i++){

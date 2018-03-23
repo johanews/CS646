@@ -3,7 +3,6 @@ package com.group18.cs446.spacequest.game.objects.hostile;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -18,7 +17,7 @@ import com.group18.cs446.spacequest.game.collision.DamageType;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
-import com.group18.cs446.spacequest.game.objects.loot.MoneyDrop;
+import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 
 import java.util.Random;
 
@@ -100,7 +99,7 @@ public class Asteroid implements GameEntity {
     }
 
     @Override
-    public void paint(Canvas canvas, Paint paint, Point topLeftCorner) {
+    public void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner) {
         canvas.save();
         canvas.rotate(-getAngle(), getCoordinates().x - topLeftCorner.x, getCoordinates().y - topLeftCorner.y);
         canvas.drawBitmap(

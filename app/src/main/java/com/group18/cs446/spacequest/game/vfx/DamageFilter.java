@@ -1,6 +1,5 @@
 package com.group18.cs446.spacequest.game.vfx;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
@@ -14,7 +13,7 @@ public class DamageFilter implements Filter {
         this.duration = 1;
     }
     @Override
-    public void paint(Canvas c) {
+    public void paint(CanvasComponent c) {
         Paint paint = new Paint();
         paint.setColor(Color.argb(80, 255,10, 10));
         c.drawRect(c.getClipBounds(), paint);

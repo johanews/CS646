@@ -1,10 +1,12 @@
 package com.group18.cs446.spacequest.game.objects;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.provider.MediaStore;
 import android.view.SurfaceHolder;
 
 import com.group18.cs446.spacequest.game.enums.GameState;
@@ -12,11 +14,13 @@ import com.group18.cs446.spacequest.game.objects.hostile.Asteroid;
 import com.group18.cs446.spacequest.game.objects.hostile.EnemySpawner;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Player;
+import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 import com.group18.cs446.spacequest.game.vfx.Filter;
 import com.group18.cs446.spacequest.game.vfx.HUDComponent;
 import com.group18.cs446.spacequest.game.vfx.HUDText;
 import com.group18.cs446.spacequest.game.vfx.HealthBar;
 import com.group18.cs446.spacequest.game.vfx.ShieldBar;
+import com.group18.cs446.spacequest.io.VideoCaptureBuffer;
 import com.group18.cs446.spacequest.view.GameView;
 
 import java.util.LinkedList;
@@ -26,7 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Sector {
     // Properties
-    static final int tickRate = 30;
+    static final int tickRate = 25;
     private int victoryFinalizeTime = 120;
     private int defeatFinalizeTime = 50;
     private int sectorID;
@@ -116,9 +120,14 @@ public class Sector {
     public void removeEntity(GameEntity e){
         entities.remove(e);
     }
-    public boolean run() {
+    public boolean run(VideoCaptureBuffer videoCaptureBuffer) {
+
         int droppedFrames = 0;
         int threshhold = 5;
+        long lagging = 0;
+        int frames = 0;
+        int framesThisSecond = 0;
+        long thisSecondStart = System.currentTimeMillis();
         while (gameState == GameState.RUNNING || gameState == GameState.PAUSED) {
             long tickStart = System.currentTimeMillis();
             if(gameState != GameState.PAUSED){
@@ -134,8 +143,19 @@ public class Sector {
             } else {
                 droppedFrames = 0;
             }
-            draw();
-            control(tickStart);
+            if(frames%(tickRate*5) == 0){
+                draw(videoCaptureBuffer);
+            } else {
+                draw(null);
+            }
+            lagging = control(tickStart, lagging);
+            frames++;
+            framesThisSecond++;
+            if(System.currentTimeMillis() - 2000 > thisSecondStart){
+                System.out.println("FPS: "+framesThisSecond/2);
+                thisSecondStart = System.currentTimeMillis();
+                framesThisSecond = 0;
+            }
         }
         switch (gameState){
             case WON:
@@ -143,8 +163,8 @@ public class Sector {
                     victoryFinalizeTime--;
                     long tickStart = System.currentTimeMillis();
                     update();
-                    draw();
-                    control(tickStart);
+                    draw(null);
+                    control(tickStart, 0);
                 }
                 return true;
             case LOST:
@@ -152,8 +172,8 @@ public class Sector {
                     defeatFinalizeTime--;
                     long tickStart = System.currentTimeMillis();
                     update();
-                    draw();
-                    control(tickStart);
+                    draw(null);
+                    control(tickStart, 0);
                 }
                 return false;
             default:
@@ -178,15 +198,23 @@ public class Sector {
         return player;
     }
 
-    private void draw(){ // This draw function will be responsible for drawing each frame
+    private void draw(VideoCaptureBuffer videoCaptureBuffer){ // This draw function will be responsible for drawing each frame
+        CanvasComponent canvas = new CanvasComponent();
         if (surfaceHolder.getSurface().isValid()) { // acquire the canvas
-            canvas = surfaceHolder.lockCanvas();
-            if(canvas == null){
+            Canvas screenCanvas = surfaceHolder.lockCanvas();
+            if(screenCanvas == null){
                 return;
             }
-            canvasWidth = canvas.getWidth(); // so that we only have to do this once
-            canvasHeight = canvas.getHeight();
-
+            canvasWidth = screenCanvas.getWidth(); // so that we only have to do this once
+            canvasHeight = screenCanvas.getHeight();
+            Bitmap recordBitmap = null;
+            if(videoCaptureBuffer != null){
+                Canvas recordCanvas = new Canvas();
+                recordBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.RGB_565);
+                recordCanvas.setBitmap(recordBitmap);
+                canvas.addCanvas(recordCanvas);
+            }
+            canvas.addCanvas(screenCanvas);
             Point topLeftCorner = new Point(player.getCoordinates().x-canvasWidth/2,
                     player.getCoordinates().y-canvasHeight/2); // the point which will be the top left corner
             canvas.drawColor(Color.BLACK);
@@ -236,12 +264,14 @@ public class Sector {
             }
 
             paint.reset();
-
-            surfaceHolder.unlockCanvasAndPost(canvas); // unlock and draw the frame
+            if(videoCaptureBuffer != null) {
+                videoCaptureBuffer.captureFrame(recordBitmap);
+            }
+            surfaceHolder.unlockCanvasAndPost(screenCanvas); // unlock and draw the frame
         }
     }
 
-    private void drawStars(Canvas canvas, Paint paint, Point topLeftCorner){
+    private void drawStars(CanvasComponent canvas, Paint paint, Point topLeftCorner){
         paint.setColor(Color.WHITE);
         int i = 0;
         float width = 4;
@@ -259,13 +289,22 @@ public class Sector {
         }
 
     }
-    private void control(long start){
+    private long control(long start, long lagging){
         try {
-            long remaining = (1000/tickRate) -(System.currentTimeMillis() - start);
-            if(remaining > 0) Thread.sleep(remaining);
+            long remaining = (1000 / tickRate) - (System.currentTimeMillis() - start);
+            if (lagging > 0) {
+                remaining -= lagging;
+            }
+            if (remaining > 0) {
+                Thread.sleep(remaining);
+                lagging = 0;
+            } else {
+                lagging = -remaining;
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return lagging;
     }
 
     public void triggerVictory() {

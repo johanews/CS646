@@ -3,6 +3,7 @@ package com.group18.cs446.spacequest.game.objects.player.components;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 
 import com.group18.cs446.spacequest.game.enums.Engines;
 import com.group18.cs446.spacequest.R;
@@ -14,8 +15,8 @@ import com.group18.cs446.spacequest.game.objects.player.Player;
 
 public class FastEngine implements Engine {
     private static final String NAME = "Fast Engine";
-    private static final String DESCRIPTION = "Fast Engine Description";
-    private static final int PRICE = 200;
+    private static final String DESCRIPTION = "Very fast, great acceleration, hard to turn while accelerating";
+    private static final int PRICE = 160;
 
     private GameEntity owner;
     private Bitmap image;
@@ -52,7 +53,7 @@ public class FastEngine implements Engine {
         // Add smoke effect
         SmokeParticle basicSmokeParticle = new SmokeParticle(owner.getCurrentSector(),
                 owner.getCoordinates().x+(int)(20*Math.sin(owner.getAngle()*Math.PI/180)),
-                owner.getCoordinates().y+(int)(20*Math.cos(owner.getAngle()*Math.PI/180)), 70);
+                owner.getCoordinates().y+(int)(20*Math.cos(owner.getAngle()*Math.PI/180)),30, Color.GRAY, 70);
         owner.getCurrentSector().addEntityToBack(basicSmokeParticle);
     }
 

@@ -1,6 +1,5 @@
 package com.group18.cs446.spacequest.game.vfx;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -39,7 +38,7 @@ public class HUDText implements HUDComponent {
   }
 
     @Override
-    public void paint(Canvas canvas) {
+    public void paint(CanvasComponent canvas) {
         canvas.drawText(sectorMessage,
                 canvas.getWidth() - sectorTextPaint.measureText(sectorMessage) + sectorLocationOffset.x,
                 sectorLocationOffset.y - (sectorTextPaint.descent() + sectorTextPaint.ascent()),

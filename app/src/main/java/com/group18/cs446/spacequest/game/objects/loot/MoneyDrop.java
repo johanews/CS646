@@ -3,23 +3,16 @@ package com.group18.cs446.spacequest.game.objects.loot;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.collision.CollisionEvent;
 import com.group18.cs446.spacequest.game.collision.Damage;
-import com.group18.cs446.spacequest.game.collision.DamageType;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.Sector;
-import com.group18.cs446.spacequest.game.objects.SmokeParticle;
-
-import java.util.Random;
+import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 
 public class MoneyDrop implements GameEntity {
     private static Bitmap bitmap;
@@ -44,6 +37,7 @@ public class MoneyDrop implements GameEntity {
     public CollisionEvent getCollisionEvent(GameEntity entity){
         return collisionEvent;
     }
+
     @Override
     public void update(long gameTick){
         if(this.collisionEvent.getValue() == 0){
@@ -56,7 +50,7 @@ public class MoneyDrop implements GameEntity {
     }
 
     @Override
-    public void paint(Canvas canvas, Paint paint, Point topLeftCorner) {
+    public void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner) {
         canvas.save();
         canvas.rotate(-getAngle(), getCoordinates().x - topLeftCorner.x, getCoordinates().y - topLeftCorner.y);
         canvas.drawBitmap(
