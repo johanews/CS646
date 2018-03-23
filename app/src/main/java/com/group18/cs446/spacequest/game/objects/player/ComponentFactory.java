@@ -11,9 +11,12 @@ import com.group18.cs446.spacequest.game.objects.player.components.BasicHull;
 import com.group18.cs446.spacequest.game.objects.player.components.BasicLaser;
 import com.group18.cs446.spacequest.game.objects.player.components.BasicShield;
 import com.group18.cs446.spacequest.game.objects.player.components.ChainLaser;
+import com.group18.cs446.spacequest.game.objects.player.components.DamageReductionShield;
 import com.group18.cs446.spacequest.game.objects.player.components.DualLaser;
 import com.group18.cs446.spacequest.game.objects.player.components.FastEngine;
 import com.group18.cs446.spacequest.game.objects.player.components.LaserOnlyShield;
+import com.group18.cs446.spacequest.game.objects.player.components.RockSmasherHull;
+import com.group18.cs446.spacequest.game.objects.player.components.StrongerHull;
 
 public class ComponentFactory {
 
@@ -58,6 +61,10 @@ public class ComponentFactory {
         switch(hull) {
             case BASIC_HULL:
                 return new BasicHull(context);
+            case STRONGER_HULL:
+                return new StrongerHull(context);
+            case ROCKSMASHER_HULL:
+                return new RockSmasherHull(context);
             default:
                 return null;
         }
@@ -70,6 +77,8 @@ public class ComponentFactory {
                 return new BasicShield(context);
             case LASER_ONLY_SHIELD:
                 return new LaserOnlyShield(context);
+            case DAMAGE_REDUCTION_SHIELD:
+                return new DamageReductionShield(context);
             default:
                 return null;
         }

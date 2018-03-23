@@ -18,7 +18,7 @@ public class BasicEngine implements Engine {
     private static final int PRICE = 30;
 
     private GameEntity owner;
-    private Bitmap image;
+    private static Bitmap image;
     private int speed = 17;
     private int maxSpeed = 24;
     private int minSpeed = 17;
@@ -26,7 +26,7 @@ public class BasicEngine implements Engine {
 
     public BasicEngine(Context context){
         this.speed = minSpeed;
-        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_basic_engine_image);
+        if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
     @Override
@@ -93,5 +93,10 @@ public class BasicEngine implements Engine {
     @Override
     public int getPrice() {
         return PRICE;
+    }
+
+    @Override
+    public int getImageID() {
+        return R.drawable.item_basic_engine_image;
     }
 }

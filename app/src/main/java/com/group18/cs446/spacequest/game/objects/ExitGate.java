@@ -16,14 +16,14 @@ import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 public class ExitGate implements GameEntity {
 
     private Point coordinates; // Center of the gate
-    private Bitmap bitmap;
+    private static Bitmap bitmap;
     private Sector sector;
     private int beepRadi = 0;
     private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.VICTORY);
 
     public ExitGate(Context context, int x, int y){
         coordinates = new Point(x, y);
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.exitgate_1);
+        if(bitmap == null) bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.exitgate_1);
     }
     @Override
     public Point getCoordinates() {

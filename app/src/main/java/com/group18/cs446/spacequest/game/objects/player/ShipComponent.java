@@ -11,4 +11,6 @@ public interface ShipComponent {
     void registerOwner(GameEntity e);
     Enum ID();
     int getPrice();
+
+    int getImageID();
 }

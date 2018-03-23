@@ -111,7 +111,7 @@ public class MachineLaserEnemy implements Enemy {
                     coordinates.y -= Math.cos(angle * Math.PI / 180) * adjustedSpeed;
                     coordinates.x -= Math.sin(angle * Math.PI / 180) * adjustedSpeed;
                 }
-                if(distanceToTarget < fireDistance && Math.abs(targetAngle) < 15){
+                if(distanceToTarget < fireDistance && (Math.abs(targetTurn) < 15 || Math.abs(targetTurn) > 345)){
                     weapon.fire(gameTick);
                 }
             }

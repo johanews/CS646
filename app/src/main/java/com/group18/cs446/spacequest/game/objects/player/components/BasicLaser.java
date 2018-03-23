@@ -16,16 +16,16 @@ public class BasicLaser implements Weapon {
     private static final String DESCRIPTION = "Basic Laser Description";
     private static final int PRICE = 30;
 
-    private Bitmap bulletBitmap;
-    private Bitmap image;
+    private static Bitmap bulletBitmap;
+    private static Bitmap image;
     private int fireRate = 20;
     private long lastShot;
     private GameEntity owner;
     private int baseBulletSpeed = 25;
 
     public BasicLaser(Context context){
-        this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
-        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_basic_laser_image);
+        if(bulletBitmap == null) bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
+        if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
     @Override
@@ -77,5 +77,10 @@ public class BasicLaser implements Weapon {
     @Override
     public int getPrice() {
         return PRICE;
+    }
+
+    @Override
+    public int getImageID() {
+        return  R.drawable.item_basic_laser_image;
     }
 }

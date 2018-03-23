@@ -149,9 +149,9 @@ public class Player implements GameEntity, Serializable {
         if(!controlledByPlayer) return;
         tookDamage = true;
         currentSector.addFilter(new DamageFilter(currentSector));
-        if(getShield() == null || !getShield().takeDamage(damage)) {
-            // Shield takeDamage returns false if it doesn't handle the damage
-            getHull().takeDamage(damage);
+        Damage hullDamage = getShield().takeDamage(damage);
+        if(hullDamage != null && hullDamage.getAmount() > 0){
+            getHull().takeDamage(hullDamage);
         }
         if(getHull().getCurrentHealth() <= 0){
             currentSector.triggerDefeat();

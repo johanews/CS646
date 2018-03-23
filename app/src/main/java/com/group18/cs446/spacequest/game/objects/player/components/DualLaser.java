@@ -16,16 +16,16 @@ public class DualLaser implements Weapon {
     private static final String DESCRIPTION = "Dual Laser Description";
     private static final int PRICE = 125;
 
-    private Bitmap bulletBitmap;
-    private Bitmap image;
+    private static Bitmap bulletBitmap;
+    private static Bitmap image;
     private int fireRate = 30;
     private long lastShot;
     private GameEntity owner;
     private int baseBulletSpeed = 20;
 
     public DualLaser(Context context){
-        this.bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
-        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_dual_laser_image);
+        if(bulletBitmap == null) bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
+        if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
     @Override
@@ -87,5 +87,10 @@ public class DualLaser implements Weapon {
     @Override
     public int getPrice() {
         return PRICE;
+    }
+
+    @Override
+    public int getImageID() {
+        return R.drawable.item_dual_laser_image;
     }
 }

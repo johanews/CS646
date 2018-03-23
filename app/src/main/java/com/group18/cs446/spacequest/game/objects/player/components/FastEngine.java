@@ -19,7 +19,7 @@ public class FastEngine implements Engine {
     private static final int PRICE = 160;
 
     private GameEntity owner;
-    private Bitmap image;
+    private static Bitmap image;
     private int maxSpeed = 40;
     private int minSpeed = 17;
     private int speed = minSpeed;
@@ -28,7 +28,7 @@ public class FastEngine implements Engine {
     private int turnSpeed = maxTurnSpeed;
 
     public FastEngine(Context context){
-        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_fast_engine_image);
+        if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
     @Override
@@ -99,5 +99,10 @@ public class FastEngine implements Engine {
     @Override
     public int getPrice() {
         return PRICE;
+    }
+
+    @Override
+    public int getImageID() {
+        return R.drawable.item_fast_engine_image;
     }
 }

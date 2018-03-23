@@ -18,16 +18,16 @@ public class BasicProjectile implements GameEntity {
     private static final int despawnDistance = 2000;
     private Point coordinates;
     private Point velocity;
-    private Bitmap bitmap;
+    private static Bitmap bitmap;
     private GameEntity source;
     private Sector sector;
     private Damage damage;
     private CollisionEvent collisionEvent;
 
-    public BasicProjectile(Point coordinates, Point velocity, Bitmap bitmap, GameEntity source, Sector sector){
+    public BasicProjectile(Point coordinates, Point velocity, Bitmap provBitmap, GameEntity source, Sector sector){
         this.coordinates = coordinates;
         this.velocity = velocity;
-        this.bitmap = bitmap;
+        if(bitmap == null) bitmap = provBitmap;
         this.source = source;
         this.sector = sector;
         this.damage = new Damage(DamageType.LASER, 50);

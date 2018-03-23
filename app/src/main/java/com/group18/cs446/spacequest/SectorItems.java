@@ -38,38 +38,32 @@ public class SectorItems extends Fragment {
     ComponentFactory cf = new ComponentFactory();
 
     // weaponList
-
-    int [] weaponIMAGES = {R.drawable.item_basic_laser_image, R.drawable.item_chain_laser_image, R.drawable.item_dual_laser_image};
-
     Weapons[] weaponIDs = cf.getWeaponIDs();
     String [] weaponNAMES = new String[weaponIDs.length];
     String [] weaponDESCRIPTIONS = new String[weaponIDs.length];;
     String [] weaponPRICE = new String[weaponIDs.length];
+    int    [] weaponIMAGES = new int[weaponIDs.length];
 
     // shieldList
-
-    int [] shieldIMAGES = {R.drawable.item_basic_shield_image, R.drawable.item_laser_only_shield_image};
-
     Shields[] shieldIDs = cf.getShieldIDs();
     String [] shieldNAMES = new String[shieldIDs.length];
     String [] shieldDESCRIPTIONS = new String[shieldIDs.length];
     String [] shieldPRICE = new String[shieldIDs.length];
+    int    [] shieldIMAGES = new int[shieldIDs.length];
 
     // engineList
-
-    int [] engineIMAGES = {R.drawable.item_basic_engine_image, R.drawable.item_fast_engine_image};
-
     Engines[] engineIDs = cf.getEngineIDs();
     String [] engineNAMES = new String[engineIDs.length];
     String [] engineDESCRIPTIONS = new String[engineIDs.length];
     String [] enginePRICE = new String[engineIDs.length];
+    int    [] engineIMAGES = new int[engineIDs.length];
 
-    int [] hullIMAGES = {R.drawable.item_basic_hull_image};
-
+    // hullList
     Hulls[] hullIDs = cf.getHullIDs();
     String [] hullNAMES = new String[hullIDs.length];
     String [] hullDESCRIPTIONS = new String[hullIDs.length];
     String [] hullPRICE = new String[hullIDs.length];
+    int    [] hullIMAGES = new int[hullIDs.length];
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,6 +78,7 @@ public class SectorItems extends Fragment {
             weaponNAMES[i] = weapon.getName();
             weaponDESCRIPTIONS[i] = weapon.getDescription();
             weaponPRICE[i] = Integer.toString(weapon.getPrice());
+            weaponIMAGES[i] = weapon.getImageID();
         }
 
         for(int i = 0; i < shieldIDs.length; i++) {
@@ -92,6 +87,7 @@ public class SectorItems extends Fragment {
             shieldNAMES[i] = shield.getName();
             shieldDESCRIPTIONS[i] = shield.getDescription();
             shieldPRICE[i] = Integer.toString(shield.getPrice());
+            shieldIMAGES[i] = shield.getImageID();
         }
 
         for(int i = 0; i < hullIDs.length; i++) {
@@ -100,6 +96,7 @@ public class SectorItems extends Fragment {
             hullNAMES[i] = hull.getName();
             hullDESCRIPTIONS[i] = hull.getDescription();
             hullPRICE[i] = Integer.toString(hull.getPrice());
+            hullIMAGES[i] = hull.getImageID();
         }
 
         for(int i = 0; i < engineIDs.length; i++) {
@@ -108,6 +105,7 @@ public class SectorItems extends Fragment {
             engineNAMES[i] = engine.getName();
             engineDESCRIPTIONS[i] = engine.getDescription();
             enginePRICE[i] = Integer.toString(engine.getPrice());
+            engineIMAGES[i] = engine.getImageID();
         }
 
         // weapon list

@@ -1,5 +1,8 @@
 package com.group18.cs446.spacequest;
 
+import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -17,6 +20,13 @@ public class GamePlayActivity extends AppCompatActivity implements View.OnTouchL
 
     private Boolean right = false;
     private Boolean left = false;
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        gameView.getScreenRecorder().handleActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onPause() {

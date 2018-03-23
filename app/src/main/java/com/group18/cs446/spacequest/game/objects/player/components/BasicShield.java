@@ -27,7 +27,7 @@ public class BasicShield implements Shield {
     private long lastDamageTick;
     private boolean tookDamageThisTick;
     private GameEntity owner;
-    private Bitmap image;
+    private static Bitmap image;
 
     public BasicShield(Context context){
         this.maxShield = 500;
@@ -36,7 +36,7 @@ public class BasicShield implements Shield {
         this.regenCooldown = 150;
         this.lastDamageTick = 0;
         this.tookDamageThisTick = false;
-        this.image = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_basic_shield_image);
+        if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
     @Override
@@ -63,9 +63,9 @@ public class BasicShield implements Shield {
     }
 
     @Override
-    public boolean takeDamage(Damage damage) {
+    public Damage takeDamage(Damage damage) {
         if(currentShield == 0){
-            return false;
+            return damage;
         }
         int damageAmount = damage.getAmount();
         switch (damage.getType()){
@@ -79,12 +79,14 @@ public class BasicShield implements Shield {
                 break;
         }
         if(currentShield - damageAmount <= 0){
+            damageAmount = currentShield - damageAmount;
             currentShield = 0;
         } else {
             currentShield -= damageAmount;
+            damageAmount = 0;
         }
         tookDamageThisTick = true;
-        return true;
+        return new Damage(damage.getType(), damageAmount);
     }
 
     @Override
@@ -165,5 +167,10 @@ public class BasicShield implements Shield {
     @Override
     public int getPrice() {
         return PRICE;
+    }
+
+    @Override
+    public int getImageID() {
+        return R.drawable.item_basic_shield_image;
     }
 }

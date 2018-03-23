@@ -11,15 +11,13 @@ import com.group18.cs446.spacequest.game.collision.Damage;
 import com.group18.cs446.spacequest.game.enums.Hulls;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
-import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Hull;
-import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
-public class BasicHull implements Hull {
-    private static final String NAME = "Basic Hull";
-    private static final String DESCRIPTION = "Basic Hull Description";
-    private static final int PRICE = 30;
+public class StrongerHull implements Hull {
+    private static final String NAME = "Strong Hull";
+    private static final String DESCRIPTION = "More health then a basic hull";
+    private static final int PRICE = 100;
 
     private int maxHealth, currentHealth;
     private int regenAmount;
@@ -28,10 +26,10 @@ public class BasicHull implements Hull {
     private boolean tookDamageThisTick;
     private GameEntity owner;
     private static Bitmap image;
-    private Point[] smokeLocations = new Point[4];
+    private Point[] smokeLocations = new Point[6];
 
-    public BasicHull(Context context){
-        this.maxHealth = 250;
+    public StrongerHull(Context context){
+        this.maxHealth = 400;
         this.currentHealth = maxHealth;
         this.regenAmount = 1; // amount to increase
         this.regenCooldown = 150;
@@ -42,6 +40,8 @@ public class BasicHull implements Hull {
         this.smokeLocations[1] = new Point(-20, -20);
         this.smokeLocations[2] = new Point(15, -15);
         this.smokeLocations[3] = new Point(-15, -15);
+        this.smokeLocations[4] = new Point(10, -20);
+        this.smokeLocations[5] = new Point(-20, -10);
         if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
@@ -88,7 +88,7 @@ public class BasicHull implements Hull {
         int damageAmount = damage.getAmount();
         switch (damage.getType()){
             case LASER:
-                damageAmount *= 1.2;
+                damageAmount *= 1.0;
                 break;
             case PHYSICAL:
                 damageAmount *= 1.1;

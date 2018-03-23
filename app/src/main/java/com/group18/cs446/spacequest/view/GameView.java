@@ -3,6 +3,8 @@ package com.group18.cs446.spacequest.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,6 +18,7 @@ import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.objects.player.PlayerInfo;
 import com.group18.cs446.spacequest.io.FileHandler;
+import com.group18.cs446.spacequest.io.ScreenRecorder;
 import com.group18.cs446.spacequest.io.VideoCaptureBuffer;
 
 import java.io.File;
@@ -38,6 +41,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private PlayerInfo playerInfo;
     private Activity gameplayActivity;
+    private ScreenRecorder screenRecorder = new ScreenRecorder();
 
 
     public GameView(Context context, AttributeSet attributeSet) {
@@ -50,19 +54,21 @@ public class GameView extends SurfaceView implements Runnable {
         this.playerInfo = new PlayerInfo(playerInfo);
         this.gameplayActivity = gameplayActivity;
         this.player = new Player(getContext(), playerInfo); // new player
+        this.screenRecorder.init(gameplayActivity);
     }
 
     public Player getPlayer() {
         return player;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void run() {
         sector = new Sector(player, getContext(), surfaceHolder, playerInfo.getCurrentSector(), this);
 
-        VideoCaptureBuffer videoCaptureBuffer = new VideoCaptureBuffer(this, getContext());
-        boolean successfulSector = sector.run(videoCaptureBuffer);
-        File savedVideo = videoCaptureBuffer.finalizeVideo();
+        screenRecorder.startRecording(gameplayActivity);
+        boolean successfulSector = sector.run(null);
+        File savedVideo = screenRecorder.stop();
         System.out.println("SECTOR END");
         Intent intent = new Intent(gameplayActivity, ShareSocialActivity.class);
         PlayerInfo newPlayerInfo = player.createPlayerInfo();
@@ -81,6 +87,10 @@ public class GameView extends SurfaceView implements Runnable {
         intent.putExtra("VideoFile", savedVideo);
         gameplayActivity.startActivity(intent);
         gameplayActivity.finish();
+    }
+
+    public ScreenRecorder getScreenRecorder(){
+        return screenRecorder;
     }
 
     @Override

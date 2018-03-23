@@ -9,7 +9,7 @@ import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 public interface Shield extends ShipComponent{
     void update(long gameTick);
     void refresh();
-    boolean takeDamage(Damage damage);
+    Damage takeDamage(Damage damage);
     int getCurrentShield();
     int getMaxShield();
     void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner);

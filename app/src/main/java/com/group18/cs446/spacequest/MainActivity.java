@@ -16,6 +16,7 @@ import com.group18.cs446.spacequest.io.SoundManager;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int STARTING_MONEY = 6000;
     ImageView gameStartButton;
 
     PlayerInfo playerInfo;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             playerInfo.setShield(Shields.BASIC_SHIELD);
             playerInfo.setHull(Hulls.BASIC_HULL);
             playerInfo.setEngine(Engines.BASIC_ENGINE);
-            playerInfo.setMoney(0);
+            playerInfo.setMoney(STARTING_MONEY);
         }
 
         gameStartButton = findViewById(R.id.game_start_image);
