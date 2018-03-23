@@ -103,6 +103,6 @@ public class FastEngine implements Engine {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_fast_engine_image;
+        return R.drawable.item_engine_fast;
     }
 }

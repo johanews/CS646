@@ -91,6 +91,6 @@ public class DualLaser implements Weapon {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_dual_laser_image;
+        return R.drawable.item_weapon_duallaser;
     }
 }

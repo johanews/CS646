@@ -81,6 +81,6 @@ public class BasicLaser implements Weapon {
 
     @Override
     public int getImageID() {
-        return  R.drawable.item_basic_laser_image;
+        return  R.drawable.item_weapon_basiclaser;
     }
 }

@@ -94,6 +94,6 @@ public class ChainLaser implements Weapon {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_chain_laser_image;
+        return R.drawable.item_weapon_chainlaser;
     }
 }

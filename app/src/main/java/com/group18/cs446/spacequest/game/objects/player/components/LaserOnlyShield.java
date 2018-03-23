@@ -169,6 +169,6 @@ public class LaserOnlyShield implements Shield {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_laser_only_shield_image;
+        return R.drawable.item_shield_laseronly;
     }
 }

@@ -97,6 +97,6 @@ public class BasicEngine implements Engine {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_basic_engine_image;
+        return R.drawable.item_engine_basic;
     }
 }

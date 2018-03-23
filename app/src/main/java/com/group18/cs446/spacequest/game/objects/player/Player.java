@@ -32,7 +32,6 @@ public class Player implements GameEntity, Serializable {
 
     private Point coordinates; // Now represents the center of the character, not the top left
     private int heading;
-    private Bitmap bitmap;
     private PlayerCommand currentCommand;
     private Rect bounds;
     private Sector currentSector;
@@ -66,7 +65,6 @@ public class Player implements GameEntity, Serializable {
                 (int)(Math.sin(randomStartingAngle)*randomStartingDistance));
         heading = 0; // Direction in degrees
         currentCommand = PlayerCommand.NONE;
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
         ComponentFactory componentFactory = new ComponentFactory();
         bounds = null;
 
@@ -180,8 +178,8 @@ public class Player implements GameEntity, Serializable {
         }
         // TODO currently doesnt work properly for rotated ship
         return new Rect(
-                coordinates.x - bitmap.getWidth()/2,coordinates.y - bitmap.getHeight()/2,
-                coordinates.x + bitmap.getWidth()/2, coordinates.y + bitmap.getHeight()/2);
+                coordinates.x - getHull().getBitmap().getWidth()/2,coordinates.y - getHull().getBitmap().getHeight()/2,
+                coordinates.x + getHull().getBitmap().getWidth()/2, coordinates.y + getHull().getBitmap().getHeight()/2);
         //return new Rect(coordinates.x-bitmap.getWidth()-bitmap.getHeight(), coordinates.y-bitmap.getWidth()-bitmap.getHeight(),
         //coordinates.x+bitmap.getWidth()+bitmap.getHeight(), coordinates.y+bitmap.getWidth()+bitmap.getHeight());
 
@@ -264,7 +262,7 @@ public class Player implements GameEntity, Serializable {
 
     @Override
     public Bitmap getBitmap() {
-        return bitmap;
+        return getHull().getBitmap();
     }
 
     @Override
@@ -341,7 +339,7 @@ public class Player implements GameEntity, Serializable {
             // now we will do a pixel by pixel search to see if they actually overlap
             for(int x = intersect.left; x < intersect.right; x++){
                 for(int y = intersect.top; y < intersect.bottom; y++){
-                    if(bitmap.getPixel(x - getBounds().left, y-getBounds().top) != Color.TRANSPARENT){
+                    if(getHull().getBitmap().getPixel(x - getBounds().left, y-getBounds().top) != Color.TRANSPARENT){
                         if(e.getBitmap().getPixel(x - e.getBounds().left, y - e.getBounds().top) != Color.TRANSPARENT){
                             return true;
                         }

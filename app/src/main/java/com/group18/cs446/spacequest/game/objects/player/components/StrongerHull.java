@@ -147,6 +147,6 @@ public class StrongerHull implements Hull {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_basic_hull_image;
+        return R.drawable.item_hull_strong;
     }
 }

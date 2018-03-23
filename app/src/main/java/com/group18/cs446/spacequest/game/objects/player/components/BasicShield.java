@@ -171,6 +171,6 @@ public class BasicShield implements Shield {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_basic_shield_image;
+        return R.drawable.item_shield_basic;
     }
 }
