@@ -19,8 +19,8 @@ public class BasicEngine implements Engine {
     private static Bitmap image;
     private int speed = 17;
     private int maxSpeed = 24;
-    private int minSpeed = 17;
-    private int turnSpeed = 7;
+    private int minSpeed = 19;
+    private int turnSpeed = 10;
 
     public BasicEngine(Context context){
         this.speed = minSpeed;

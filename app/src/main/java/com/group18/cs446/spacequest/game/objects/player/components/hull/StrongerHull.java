@@ -42,7 +42,10 @@ public class StrongerHull implements Hull {
         this.smokeLocations[3] = new Point(-15, -15);
         this.smokeLocations[4] = new Point(10, -20);
         this.smokeLocations[5] = new Point(-20, -10);
-        if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
+        if(image == null) {
+            image = BitmapFactory.decodeResource(context.getResources(), getImageID());
+            image = Bitmap.createScaledBitmap(image, 2*image.getWidth()/3, 2*image.getHeight()/3, true);
+        }
     }
 
     @Override

@@ -18,7 +18,7 @@ import com.group18.cs446.spacequest.io.SoundManager;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final int STARTING_MONEY = 6000;
+    private static final int STARTING_MONEY = 1000;
     ImageView gameStartButton;
 
     PlayerInfo playerInfo;
