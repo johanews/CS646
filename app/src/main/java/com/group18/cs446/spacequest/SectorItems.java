@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import com.group18.cs446.spacequest.game.objects.player.Engine;
 import com.group18.cs446.spacequest.game.objects.player.Hull;
 import com.group18.cs446.spacequest.game.objects.player.Shield;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
+
+import java.text.Normalizer;
 
 public class SectorItems extends Fragment {
     View mView;
@@ -365,11 +368,12 @@ public class SectorItems extends Fragment {
 
         int currentMoney = ((ShopActivity) getActivity()).getPlayerInfo().getMoney();
 
-        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getContext());
+        ContextThemeWrapper ctw = new ContextThemeWrapper(getContext(), R.style.AppTheme_AppBarOverlay);
+        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(ctw); // change style
 
         if (itemPrice > currentMoney) {
             //normalDialog.setIcon();
-            normalDialog.setTitle("Im a dialog");
+            normalDialog.setTitle("                            Warning");
             normalDialog.setMessage("You don't have enough money");
             normalDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
@@ -378,7 +382,7 @@ public class SectorItems extends Fragment {
 
         } else {
             //normalDialog.setIcon();
-            normalDialog.setTitle(name);
+            normalDialog.setTitle("                           " + name);
             normalDialog.setMessage("Do you want to buy it?");
             normalDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
