@@ -1,4 +1,4 @@
-package com.group18.cs446.spacequest.game.objects.player.components;
+package com.group18.cs446.spacequest.game.objects.player.components.shield;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,43 +14,34 @@ import com.group18.cs446.spacequest.game.enums.Shields;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.player.Shield;
 import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
-import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
-public class BasicShield implements Shield {
-    private static final String NAME = "Basic Shield";
-    private static final String DESCRIPTION = "Basic Shield Description";
-    private static final int PRICE = 30;
+public class DamageReductionShield implements Shield {
+    private static final String NAME = "Damage Reduction Shield";
+    private static final String DESCRIPTION = "Doesn't block damage, reduces damage taken";
+    private static final int PRICE = 80;
 
     private int maxShield, currentShield;
-    private int regenAmount;
-    private int regenCooldown; // time to regen from last damage
-    private long lastDamageTick;
     private boolean tookDamageThisTick;
+    private long mostRecentDamage;
     private GameEntity owner;
     private static Bitmap image;
-
-    public BasicShield(Context context){
-        this.maxShield = 500;
+    public DamageReductionShield(Context context){
+        this.maxShield = 10;
         this.currentShield = maxShield;
-        this.regenAmount = 1; // amount to increase
-        this.regenCooldown = 150;
-        this.lastDamageTick = 0;
-        this.tookDamageThisTick = false;
-        if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
+        if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID()); // TODO
+        tookDamageThisTick = false;
+        mostRecentDamage = 0;
     }
 
     @Override
     public void update(long gameTick) {
         if(tookDamageThisTick){
-            if(currentShield <= 0) return;
             tookDamageThisTick = false;
-            lastDamageTick = gameTick;
-            owner.getCurrentSector().addFilter(new DamageFilter(owner.getCurrentSector()));
-        } else if (lastDamageTick + regenCooldown < gameTick && gameTick % 5 == 0){
-            if(currentShield + regenAmount >= maxShield){
-                currentShield = maxShield;
-            } else {
-                currentShield += regenAmount;
+            mostRecentDamage = gameTick;
+        } else if (currentShield < maxShield){
+            if(gameTick > mostRecentDamage + 200 && gameTick%5 == 0){
+                currentShield++;
+                if(currentShield > maxShield) currentShield = maxShield;
             }
         }
     }
@@ -58,8 +49,8 @@ public class BasicShield implements Shield {
     @Override
     public void refresh() {
         this.currentShield = maxShield;
-        this.lastDamageTick = 0;
-        this.tookDamageThisTick = false;
+        tookDamageThisTick = false;
+        mostRecentDamage = 0;
     }
 
     @Override
@@ -67,26 +58,10 @@ public class BasicShield implements Shield {
         if(currentShield == 0){
             return damage;
         }
-        int damageAmount = damage.getAmount();
-        switch (damage.getType()){
-            case LASER:
-                damageAmount *= 0.8;
-                break;
-            case PHYSICAL:
-                damageAmount *= 1.2;
-                break;
-            default:
-                break;
-        }
-        if(currentShield - damageAmount <= 0){
-            damageAmount = currentShield - damageAmount;
-            currentShield = 0;
-        } else {
-            currentShield -= damageAmount;
-            damageAmount = 0;
-        }
+        int newDamage = damage.getAmount()/(currentShield+1);
+        currentShield--;
         tookDamageThisTick = true;
-        return new Damage(damage.getType(), damageAmount);
+        return new Damage(damage.getType(), newDamage);
     }
 
     @Override
@@ -103,7 +78,7 @@ public class BasicShield implements Shield {
     public void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner) {
         int shieldXRadi = owner.getBitmap().getWidth() / 2 + 40;
         int shieldYRadi = owner.getBitmap().getHeight() / 2 + 40;
-        paint.setColor(Color.argb(50, 10, 100, 255));
+        paint.setColor(Color.argb(50, 10, 240, 50));
         if(currentShield > 0){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 canvas.drawOval(owner.getCoordinates().x - topLeftCorner.x - shieldXRadi,
@@ -161,7 +136,7 @@ public class BasicShield implements Shield {
 
     @Override
     public Shields ID() {
-        return Shields.BASIC_SHIELD;
+        return Shields.DAMAGE_REDUCTION_SHIELD;
     }
 
     @Override
@@ -171,6 +146,6 @@ public class BasicShield implements Shield {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_shield_basic;
+        return R.drawable.item_shield_reduction;
     }
 }

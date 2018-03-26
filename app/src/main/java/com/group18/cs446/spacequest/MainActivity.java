@@ -1,6 +1,8 @@
 package com.group18.cs446.spacequest;
 
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,10 +29,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         System.out.println("MAIN RESUMING");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SoundManager.init(getBaseContext());
         SoundManager.startSongLoop(SoundManager.MENU_MUSIC, getBaseContext());
 
         playerInfo = FileHandler.loadPlayer(getApplicationContext());

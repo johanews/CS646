@@ -26,7 +26,7 @@ import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 
 import java.util.Random;
 
-public class SniperEnemy implements Enemy {
+public class SuicideEnemy implements Enemy {
     private int maxHealth, currentHealth;
     private int speed;
     private int turnSpeed;
@@ -36,30 +36,25 @@ public class SniperEnemy implements Enemy {
     private int hoverDistance;
     private Point coordinates;
     private GameEntity target;
-    private Weapon weapon;
     private Sector sector;
     private static Bitmap bitmap;
     private Random random = new Random();
-    private Damage collisionDamage = new Damage(DamageType.PHYSICAL, 100);
+    private Damage collisionDamage = new Damage(DamageType.PHYSICAL, 75);
     private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, collisionDamage);
     private Context context;
     private EnemySpawner spawner;
 
-    public SniperEnemy(Point spawnPoint, Context context, ComponentFactory componentFactory, Sector currentSector){
+    public SuicideEnemy(Point spawnPoint, Context context, Sector currentSector, int angle){
+        this.angle = angle;
         this.context = context;
         this.coordinates = new Point(spawnPoint);
-        this.sector = currentSector;
-        if(bitmap == null) bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_sniper);
-        this.angle = 0;
+        this.speed = 22;
+        this.turnSpeed = 2;
         this.sightDistance = 4000;
-        this.turnSpeed = 5;
-        this.speed = 18;
-        this.fireDistance = 1300;
-        this.hoverDistance = 1200;
-        this.maxHealth = 10;
-        ShipComponent newWeapon = componentFactory.getWeaponComponent(Weapons.BASIC_LASER, context);
-        newWeapon.registerOwner(this);
-        this.weapon = (Weapon) newWeapon;
+        this.hoverDistance = 0;
+        this.maxHealth = 150;
+        this.sector = currentSector;
+        if(bitmap == null) bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_suicide);
 
         this.currentHealth = maxHealth;
     }
@@ -86,10 +81,20 @@ public class SniperEnemy implements Enemy {
             if(distanceToTarget > sightDistance){
                 target = null;
             } else {
-                // Aim for where the player is going
-                dx = (target.getCoordinates().x - coordinates.x) - (int)(4*(Math.sin(target.getAngle() * Math.PI / 180) * target.getSpeed()));
-                dy = (target.getCoordinates().y - coordinates.y) - (int)(4*(Math.cos(target.getAngle() * Math.PI / 180) * target.getSpeed()));
-                angle = AIUtils.getNewAngleFromTarget(dx, dy, angle, turnSpeed);
+                int targetAngle = ((int)(Math.atan2(dx, dy)*180/Math.PI)+180)%360;
+                int targetTurn = targetAngle - angle;
+                if(targetTurn > 180){
+                    targetTurn-=360;
+                } else if(targetTurn < -180){
+                    targetTurn+=360;
+                }
+                int turn = 0;
+                if(Math.abs(targetTurn) < turnSpeed) {
+                    turn = targetTurn;
+                } else {
+                    turn = turnSpeed * (targetTurn > 0 ? 1 : -1);
+                }
+                angle += turn;
                 int adjustedSpeed = speed;
                 if(distanceToTarget < hoverDistance){
                     adjustedSpeed = (adjustedSpeed*(2*distanceToTarget-hoverDistance))/hoverDistance;
@@ -102,12 +107,8 @@ public class SniperEnemy implements Enemy {
                     coordinates.x -= Math.sin(angle * Math.PI / 180) * adjustedSpeed;
                 }
             }
-            if(distanceToTarget < fireDistance){
-                weapon.fire(gameTick);
-            }
-            if(currentHealth < maxHealth){
-                sector.addEntityToBack(new SmokeParticle(sector, coordinates.x, coordinates.y, bitmap.getWidth()/4, Color.GRAY,20));
-            }
+            sector.addEntityToBack(new SmokeParticle(sector, coordinates.x, coordinates.y, bitmap.getWidth()/4, Color.GRAY,20));
+
         }
     }
 
@@ -164,9 +165,6 @@ public class SniperEnemy implements Enemy {
             if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x+15, coordinates.y+10, bitmap.getWidth()/7, Color.DKGRAY,10));
             if(random.nextBoolean()) sector.addEntityToBack(new SmokeParticle(sector, coordinates.x-1, coordinates.y+10, bitmap.getWidth()/3, Color.DKGRAY,40));
 
-            // Drop Money
-            MoneyDrop moneyDrop = new MoneyDrop(sector, coordinates, context, 15);
-            sector.addEntityFront(moneyDrop);
             // Notify Spawner
             if(spawner != null) {
                 spawner.reportDeath(this);

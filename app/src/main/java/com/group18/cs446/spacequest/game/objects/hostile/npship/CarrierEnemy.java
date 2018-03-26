@@ -26,7 +26,7 @@ import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 
 import java.util.Random;
 
-public class SniperEnemy implements Enemy {
+public class CarrierEnemy extends EnemySpawner implements Enemy {
     private int maxHealth, currentHealth;
     private int speed;
     private int turnSpeed;
@@ -36,7 +36,6 @@ public class SniperEnemy implements Enemy {
     private int hoverDistance;
     private Point coordinates;
     private GameEntity target;
-    private Weapon weapon;
     private Sector sector;
     private static Bitmap bitmap;
     private Random random = new Random();
@@ -45,21 +44,19 @@ public class SniperEnemy implements Enemy {
     private Context context;
     private EnemySpawner spawner;
 
-    public SniperEnemy(Point spawnPoint, Context context, ComponentFactory componentFactory, Sector currentSector){
+    public CarrierEnemy(Point spawnPoint, Context context, ComponentFactory componentFactory, Sector currentSector){
+        super(0, currentSector, componentFactory, context);
         this.context = context;
         this.coordinates = new Point(spawnPoint);
+        this.speed = 3;
+        this.turnSpeed = 3;
+        this.sightDistance = 3000;
+        this.fireDistance = 1250;
+        this.hoverDistance = 700;
+        this.maxHealth = 200;
         this.sector = currentSector;
-        if(bitmap == null) bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_sniper);
+        if(bitmap == null) bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_carrier);
         this.angle = 0;
-        this.sightDistance = 4000;
-        this.turnSpeed = 5;
-        this.speed = 18;
-        this.fireDistance = 1300;
-        this.hoverDistance = 1200;
-        this.maxHealth = 10;
-        ShipComponent newWeapon = componentFactory.getWeaponComponent(Weapons.BASIC_LASER, context);
-        newWeapon.registerOwner(this);
-        this.weapon = (Weapon) newWeapon;
 
         this.currentHealth = maxHealth;
     }
@@ -86,10 +83,20 @@ public class SniperEnemy implements Enemy {
             if(distanceToTarget > sightDistance){
                 target = null;
             } else {
-                // Aim for where the player is going
-                dx = (target.getCoordinates().x - coordinates.x) - (int)(4*(Math.sin(target.getAngle() * Math.PI / 180) * target.getSpeed()));
-                dy = (target.getCoordinates().y - coordinates.y) - (int)(4*(Math.cos(target.getAngle() * Math.PI / 180) * target.getSpeed()));
-                angle = AIUtils.getNewAngleFromTarget(dx, dy, angle, turnSpeed);
+                int targetAngle = ((int)(Math.atan2(dx, dy)*180/Math.PI)+180)%360;
+                int targetTurn = targetAngle - angle;
+                if(targetTurn > 180){
+                    targetTurn-=360;
+                } else if(targetTurn < -180){
+                    targetTurn+=360;
+                }
+                int turn = 0;
+                if(Math.abs(targetTurn) < turnSpeed) {
+                    turn = targetTurn;
+                } else {
+                    turn = turnSpeed * (targetTurn > 0 ? 1 : -1);
+                }
+                angle += turn;
                 int adjustedSpeed = speed;
                 if(distanceToTarget < hoverDistance){
                     adjustedSpeed = (adjustedSpeed*(2*distanceToTarget-hoverDistance))/hoverDistance;
@@ -103,7 +110,7 @@ public class SniperEnemy implements Enemy {
                 }
             }
             if(distanceToTarget < fireDistance){
-                weapon.fire(gameTick);
+                spawnEnemies();
             }
             if(currentHealth < maxHealth){
                 sector.addEntityToBack(new SmokeParticle(sector, coordinates.x, coordinates.y, bitmap.getWidth()/4, Color.GRAY,20));
@@ -197,5 +204,18 @@ public class SniperEnemy implements Enemy {
     @Override
     public void registerSpawner(EnemySpawner enemySpawner) {
         this.spawner = enemySpawner;
+    }
+
+    @Override
+    public void spawnEnemies(){
+        while(spawnedEnemies < maxEnemies) {
+            int dx = target.getCoordinates().x - coordinates.x;
+            int dy = target.getCoordinates().y - coordinates.y;
+            int targetAngle = ((int)(Math.atan2(dx, dy)*180/Math.PI)+180)%360;
+            Enemy e = new SuicideEnemy(coordinates, context, sector, targetAngle);
+            e.registerSpawner(this);
+            sector.addEntityFront(e);
+            spawnedEnemies++;
+        }
     }
 }

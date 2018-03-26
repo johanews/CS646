@@ -5,15 +5,17 @@ import android.graphics.Point;
 
 import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.objects.hostile.npship.BasicEnemy;
+import com.group18.cs446.spacequest.game.objects.hostile.npship.CarrierEnemy;
 import com.group18.cs446.spacequest.game.objects.hostile.npship.DualLaserEnemy;
 import com.group18.cs446.spacequest.game.objects.hostile.npship.MachineLaserEnemy;
 import com.group18.cs446.spacequest.game.objects.hostile.npship.SniperEnemy;
+import com.group18.cs446.spacequest.game.objects.hostile.npship.SuicideEnemy;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 
 import java.util.Random;
 
 class BasicEnemyFactoryImpl implements EnemyFactory {
-    int basicWeight, machineWeight, dualWeight, sniperWeight;
+    int basicWeight, machineWeight, dualWeight, sniperWeight, carrierWeight, suicideWeight;
     int totalWeight;
     Random r;
 
@@ -22,7 +24,9 @@ class BasicEnemyFactoryImpl implements EnemyFactory {
         machineWeight = (difficulty+2)*2;
         dualWeight = difficulty*3;
         sniperWeight = difficulty;
-        totalWeight = basicWeight + machineWeight + dualWeight + sniperWeight;
+        carrierWeight = difficulty/3;
+        suicideWeight = difficulty/2;
+        totalWeight = basicWeight + machineWeight + dualWeight + sniperWeight + carrierWeight + suicideWeight;
         r = new Random();
     }
 
@@ -45,6 +49,14 @@ class BasicEnemyFactoryImpl implements EnemyFactory {
             return new SniperEnemy(new Point(p), context, componentFactory, sector);
         }
         type -= sniperWeight;
+        if(type < carrierWeight){
+            return new CarrierEnemy(new Point(p), context, componentFactory, sector);
+        }
+        type -= carrierWeight;
+        if(type < suicideWeight){
+            return new SuicideEnemy(new Point(p), context, sector, 0);
+        }
+        type -= carrierWeight;
         return new BasicEnemy(new Point(p), context, componentFactory, sector); // Should not get here
     }
 }

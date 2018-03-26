@@ -63,8 +63,7 @@ public class GameView extends SurfaceView implements Runnable {
     @Override
     public void run() {
         sector = new Sector(player, getContext(), surfaceHolder, playerInfo.getCurrentSector(), this);
-
-        screenRecorder.startRecording(gameplayActivity);
+        sector.setScreenRecorder(screenRecorder);
         boolean successfulSector = sector.run();
         File savedVideo = screenRecorder.stop();
         System.out.println("SECTOR END");
@@ -147,5 +146,9 @@ public class GameView extends SurfaceView implements Runnable {
             gameThread = new Thread(this);
             gameThread.start();
         }
+    }
+
+    public Activity getGamePlayActivity() {
+        return gameplayActivity;
     }
 }

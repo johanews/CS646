@@ -55,10 +55,12 @@ public class Player implements GameEntity, Serializable {
     private Hull equipedHull;
     private Shield equipedShield;
     private int money;
+    private PlayerInfo playerInfo;
 
     private List<HUDComponent> registeredHUDs = new LinkedList();
 
     public Player(Context context, PlayerInfo playerInfo) {
+        this.playerInfo = playerInfo;
         double randomStartingAngle = random.nextDouble()*2*Math.PI;
         int randomStartingDistance = 4000+random.nextInt(2000);
         coordinates = new Point((int)(Math.cos(randomStartingAngle) * randomStartingDistance),
@@ -79,7 +81,7 @@ public class Player implements GameEntity, Serializable {
         money = playerInfo.getMoney();
 
         doingAction = false;
-        Damage collisionDamage = new Damage(DamageType.PHYSICAL, 100);
+        Damage collisionDamage = new Damage(DamageType.PHYSICAL, 60);
         collisionEvent = new CollisionEvent(CollisionEvent.DAMAGE, collisionDamage);
         tookDamage = false;
     }
@@ -188,9 +190,6 @@ public class Player implements GameEntity, Serializable {
     @Override
     public void update(long gameTick) {
         if(alive) {
-            getShield().update(gameTick);
-            getHull().update(gameTick);
-            getEngine().update(gameTick);
             if(doingAction){
                 if(equipedWeapon != null){
                     getWeapon().fire(gameTick);
@@ -201,6 +200,9 @@ public class Player implements GameEntity, Serializable {
                     getEngine().doSpecial(gameTick);
                 }
             }
+            getShield().update(gameTick);
+            getHull().update(gameTick);
+            getEngine().update(gameTick);
             if (controlledByPlayer) {
                 switch (currentCommand) {
                     case RIGHT:
@@ -220,15 +222,16 @@ public class Player implements GameEntity, Serializable {
                 if (updatesToTarget > 0) {
                     double normalized = Math.sqrt((coordinates.y - target.y) * (coordinates.y - target.y)
                             + (coordinates.x - target.x) * (coordinates.x - target.x));
-                    if (Math.abs(coordinates.y - target.y) < getEngine().getSpeed()) {
+                    int absSpeed = Math.abs(getSpeed());
+                    if (Math.abs(coordinates.y - target.y) < absSpeed) {
                         coordinates.y = target.y;
                     } else {
-                        coordinates.y -= ((coordinates.y - target.y) / normalized) * getSpeed();
+                        coordinates.y -= ((coordinates.y - target.y) / normalized) * absSpeed;
                     }
-                    if (Math.abs(coordinates.x - target.x) < getEngine().getSpeed()) {
+                    if (Math.abs(coordinates.x - target.x) < absSpeed) {
                         coordinates.x = target.x;
                     } else {
-                        coordinates.x -= ((coordinates.x - target.x) / normalized) * getSpeed();
+                        coordinates.x -= ((coordinates.x - target.x) / normalized) * absSpeed;
                     }
                     if (heading > 180) {
                         heading--;
@@ -248,6 +251,7 @@ public class Player implements GameEntity, Serializable {
         for(GameEntity e : currentSector.getEntities()){
             if(e != this && e.getCollisionEvent(this).getEvent() != CollisionEvent.NOTHING && intersects(e)){
                 triggerCollisionEvent(e);
+                e.takeDamage(collisionEvent.getDamage());
             }
         }
         for(HUDComponent hc : registeredHUDs){
@@ -322,17 +326,15 @@ public class Player implements GameEntity, Serializable {
                     getCoordinates().y - topLeftCorner.y - getBitmap().getWidth() / 2 - 10 + random.nextInt(getBitmap().getHeight()),
                     random.nextInt(40), paint);
         } else {
-            if(equipedShield != null) getShield().paint(canvas, paint, topLeftCorner);
+            getShield().paint(canvas, paint, topLeftCorner);
         }
+        getWeapon().paint(canvas, topLeftCorner);
         paint.reset();
         canvas.restore();
     }
 
     @Override
     public boolean intersects(GameEntity e){
-        if(!controlledByPlayer){
-            return false;
-        }
         Rect intersect = getBounds();
         if(intersect.intersect(e.getBounds())){
             // This just means the rectangle bounds intersect
@@ -355,14 +357,20 @@ public class Player implements GameEntity, Serializable {
         CollisionEvent event = e.getCollisionEvent(this);
         switch (event.getEvent()){
             case CollisionEvent.VICTORY:
-                currentSector.triggerVictory();
-                flyToTarget(e.getCoordinates(), currentSector.getVictoryFinalizeTime());
+                if(controlledByPlayer){
+                    currentSector.triggerVictory();
+                    flyToTarget(e.getCoordinates(), currentSector.getVictoryFinalizeTime());
+                }
                 break;
             case CollisionEvent.DAMAGE:
-                takeDamage(event.getDamage());
+                if(controlledByPlayer) {
+                    takeDamage(event.getDamage());
+                }
                 break;
             case CollisionEvent.DEFEAT:
-                currentSector.triggerDefeat();
+                if(controlledByPlayer) {
+                    currentSector.triggerDefeat();
+                }
                 break;
             case CollisionEvent.GET_MONEY:
                 collectMoney(event);
@@ -380,7 +388,7 @@ public class Player implements GameEntity, Serializable {
     }
 
     public PlayerInfo createPlayerInfo() {
-        PlayerInfo pinfo = new PlayerInfo();
+        PlayerInfo pinfo = new PlayerInfo(playerInfo);
         pinfo.setMoney(money);
         pinfo.setEngine((Engines) equipedEngine.ID());
         pinfo.setHull((Hulls) equipedHull.ID());

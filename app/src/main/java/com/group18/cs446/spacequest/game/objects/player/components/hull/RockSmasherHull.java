@@ -1,4 +1,4 @@
-package com.group18.cs446.spacequest.game.objects.player.components;
+package com.group18.cs446.spacequest.game.objects.player.components.hull;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,15 +11,13 @@ import com.group18.cs446.spacequest.game.collision.Damage;
 import com.group18.cs446.spacequest.game.enums.Hulls;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
-import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Hull;
-import com.group18.cs446.spacequest.game.objects.player.Player;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
-public class BasicHull implements Hull {
-    private static final String NAME = "Basic Hull";
-    private static final String DESCRIPTION = "Basic Hull Description";
-    private static final int PRICE = 30;
+public class RockSmasherHull implements Hull {
+    private static final String NAME = "Rock Smasher Hull";
+    private static final String DESCRIPTION = "Physical damage does little against this hull";
+    private static final int PRICE = 150;
 
     private int maxHealth, currentHealth;
     private int regenAmount;
@@ -28,10 +26,10 @@ public class BasicHull implements Hull {
     private boolean tookDamageThisTick;
     private GameEntity owner;
     private static Bitmap image;
-    private Point[] smokeLocations = new Point[4];
+    private Point[] smokeLocations = new Point[5];
 
-    public BasicHull(Context context){
-        this.maxHealth = 250;
+    public RockSmasherHull(Context context){
+        this.maxHealth = 300;
         this.currentHealth = maxHealth;
         this.regenAmount = 1; // amount to increase
         this.regenCooldown = 150;
@@ -42,6 +40,7 @@ public class BasicHull implements Hull {
         this.smokeLocations[1] = new Point(-20, -20);
         this.smokeLocations[2] = new Point(15, -15);
         this.smokeLocations[3] = new Point(-15, -15);
+        this.smokeLocations[4] = new Point(-5, -5);
         if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
@@ -88,10 +87,10 @@ public class BasicHull implements Hull {
         int damageAmount = damage.getAmount();
         switch (damage.getType()){
             case LASER:
-                damageAmount *= 1.2;
+                damageAmount *= 1.3;
                 break;
             case PHYSICAL:
-                damageAmount *= 1.1;
+                damageAmount *= 0.1;
                 break;
             default:
                 break;
@@ -137,7 +136,7 @@ public class BasicHull implements Hull {
 
     @Override
     public Hulls ID() {
-        return Hulls.BASIC_HULL;
+        return Hulls.ROCKSMASHER_HULL;
     }
 
     @Override
@@ -147,6 +146,6 @@ public class BasicHull implements Hull {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_hull_basic;
+        return R.drawable.item_hull_rocksmasher;
     }
 }

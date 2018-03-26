@@ -39,9 +39,6 @@ public class ScreenRecorder {
     public void init(Activity activity) {
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
         screenDensity = metrics.densityDpi;
-
-        System.out.println(FileHandler.createVideoFile(activity.getApplicationContext()));
-
         mediaRecorder = new MediaRecorder();
         destinationFile = FileHandler.createVideoFile(activity.getApplicationContext());
         initRecorder();
@@ -83,7 +80,7 @@ public class ScreenRecorder {
             return;
         }
         virtualDisplay = createVirtualDisplay();
-        mediaRecorder.start();
+        //mediaRecorder.start();
         Log.i("spacequest", "Recording started");
     }
 
@@ -100,7 +97,7 @@ public class ScreenRecorder {
         }
 
         mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
-        mediaProjection.registerCallback(mediaProjectionCallback, null);
+        //mediaProjection.registerCallback(mediaProjectionCallback, null);
         //initRecorder();
         virtualDisplay = createVirtualDisplay();
         mediaRecorder.start();
@@ -138,7 +135,7 @@ public class ScreenRecorder {
                 screenDensity, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, mediaRecorder.getSurface(), null, null);
     }
 
-    private MediaProjection.Callback mediaProjectionCallback = new MediaProjection.Callback() {
+    /*private MediaProjection.Callback mediaProjectionCallback = new MediaProjection.Callback() {
         @Override
         public void onStop() {
             super.onStop();
@@ -152,5 +149,5 @@ public class ScreenRecorder {
             mediaProjection = null;
             virtualDisplay.release();
         }
-    };
+    };*/
 }

@@ -1,4 +1,4 @@
-package com.group18.cs446.spacequest.game.objects.player.components;
+package com.group18.cs446.spacequest.game.objects.player.components.engine;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,24 +8,25 @@ import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.enums.Engines;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
-import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Engine;
-import com.group18.cs446.spacequest.game.objects.player.Player;
 
-public class BasicEngine implements Engine {
-    private static final String NAME = "Basic Engine";
-    private static final String DESCRIPTION = "Basic Engine Description";
-    private static final int PRICE = 30;
+public class ReverseEngine implements Engine {
+    private static final String NAME = "Reverse Engine";
+    private static final String DESCRIPTION = "Whiplash machine";
+    private static final int PRICE = 80;
 
     private GameEntity owner;
     private static Bitmap image;
-    private int speed = 17;
-    private int maxSpeed = 24;
-    private int minSpeed = 17;
-    private int turnSpeed = 7;
+    private int max = 20;
+    private int speed = max;
+    private int turnSpeed = 9;
+    private boolean forwards = true;
+    private boolean updated = false;
+    private int maxSwitchTime = 5;
+    private int switchTime = maxSwitchTime;
 
-    public BasicEngine(Context context){
-        this.speed = minSpeed;
+
+    public ReverseEngine(Context context){
         if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
@@ -41,28 +42,41 @@ public class BasicEngine implements Engine {
 
     @Override
     public void update(long gameTick) {
-        if(speed > minSpeed && gameTick%10 == 0){
-            speed--;
-        }
-
         // Add smoke effect
         SmokeParticle basicSmokeParticle = new SmokeParticle(owner.getCurrentSector(),
                 owner.getCoordinates().x+(int)(20*Math.sin(owner.getAngle()*Math.PI/180)),
                 owner.getCoordinates().y+(int)(20*Math.cos(owner.getAngle()*Math.PI/180)), 70);
         owner.getCurrentSector().addEntityToBack(basicSmokeParticle);
+        if(updated){
+            updated = false;
+            switchTime = maxSwitchTime;
+        } else {
+            switchTime--;
+            if(switchTime < 0) {
+                forwards = true;
+            }
+        }
+        if(forwards){
+            if(speed < max){
+                speed+=5;
+            }
+        } else {
+            if(speed > -max){
+                speed-=5;
+            }
+        }
 
     }
 
     @Override
     public void doSpecial(long gameTick) {
-        if(speed < maxSpeed){
-            speed++;
-        }
+        forwards = false;
+        updated = true;
     }
 
     @Override
     public void refresh(){
-        speed = minSpeed;
+        forwards = true;
     }
 
     @Override
@@ -87,7 +101,7 @@ public class BasicEngine implements Engine {
 
     @Override
     public Engines ID() {
-        return Engines.BASIC_ENGINE;
+        return Engines.REVERSE_ENGINE;
     }
 
     @Override

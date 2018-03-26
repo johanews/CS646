@@ -3,6 +3,7 @@ package com.group18.cs446.spacequest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -114,6 +115,7 @@ public class SectorItems extends Fragment {
         weaponList.setAdapter(weaponAdapter);
         weaponList.setVisibility(View.VISIBLE);
 
+
         // shield list
         ListView shieldList = mView.findViewById(R.id.shield_list);
         shieldListAdapter shieldAdapter = new shieldListAdapter();
@@ -132,48 +134,59 @@ public class SectorItems extends Fragment {
         hullList.setAdapter(hullAdapter);
         hullList.setVisibility(View.INVISIBLE);
 
+
         weaponIconButton = mView.findViewById(R.id.weapon_icon_button);
-        weaponIconButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                weaponList.setVisibility(View.VISIBLE);
-                shieldList.setVisibility(View.INVISIBLE);
-                engineList.setVisibility(View.INVISIBLE);
-                hullList.setVisibility(View.INVISIBLE);
-            }
-        });
-
         shieldIconButton = mView.findViewById(R.id.shield_icon_button);
-        shieldIconButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                weaponList.setVisibility(View.INVISIBLE);
-                shieldList.setVisibility(View.VISIBLE);
-                engineList.setVisibility(View.INVISIBLE);
-                hullList.setVisibility(View.INVISIBLE);
-            }
-        });
-
         engineIconButton = mView.findViewById(R.id.engine_icon_button);
-        engineIconButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                weaponList.setVisibility(View.INVISIBLE);
-                shieldList.setVisibility(View.INVISIBLE);
-                engineList.setVisibility(View.VISIBLE);
-                hullList.setVisibility(View.INVISIBLE);
-            }
+        hullIconButton = mView.findViewById(R.id.hull_icon_button);
+
+        weaponIconButton.setColorFilter(Color.BLACK);
+        weaponIconButton.setOnClickListener(view -> {
+            weaponIconButton.setColorFilter(Color.BLACK);
+            shieldIconButton.setColorFilter(Color.WHITE);
+            engineIconButton.setColorFilter(Color.WHITE);
+            hullIconButton.setColorFilter(Color.WHITE);
+
+            weaponList.setVisibility(View.VISIBLE);
+            shieldList.setVisibility(View.INVISIBLE);
+            engineList.setVisibility(View.INVISIBLE);
+            hullList.setVisibility(View.INVISIBLE);
         });
 
-        hullIconButton = mView.findViewById(R.id.hull_icon_button);
-        hullIconButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                weaponList.setVisibility(View.INVISIBLE);
-                shieldList.setVisibility(View.INVISIBLE);
-                engineList.setVisibility(View.INVISIBLE);
-                hullList.setVisibility(View.VISIBLE);
-            }
+        shieldIconButton.setOnClickListener(view -> {
+            weaponIconButton.setColorFilter(Color.WHITE);
+            shieldIconButton.setColorFilter(Color.BLACK);
+            engineIconButton.setColorFilter(Color.WHITE);
+            hullIconButton.setColorFilter(Color.WHITE);
+
+            weaponList.setVisibility(View.INVISIBLE);
+            shieldList.setVisibility(View.VISIBLE);
+            engineList.setVisibility(View.INVISIBLE);
+            hullList.setVisibility(View.INVISIBLE);
+        });
+
+        engineIconButton.setOnClickListener(view -> {
+            weaponIconButton.setColorFilter(Color.WHITE);
+            shieldIconButton.setColorFilter(Color.WHITE);
+            engineIconButton.setColorFilter(Color.BLACK);
+            hullIconButton.setColorFilter(Color.WHITE);
+
+            weaponList.setVisibility(View.INVISIBLE);
+            shieldList.setVisibility(View.INVISIBLE);
+            engineList.setVisibility(View.VISIBLE);
+            hullList.setVisibility(View.INVISIBLE);
+        });
+
+        hullIconButton.setOnClickListener(view -> {
+            weaponIconButton.setColorFilter(Color.WHITE);
+            shieldIconButton.setColorFilter(Color.WHITE);
+            engineIconButton.setColorFilter(Color.WHITE);
+            hullIconButton.setColorFilter(Color.BLACK);
+
+            weaponList.setVisibility(View.INVISIBLE);
+            shieldList.setVisibility(View.INVISIBLE);
+            engineList.setVisibility(View.INVISIBLE);
+            hullList.setVisibility(View.VISIBLE);
         });
 
         return mView;
@@ -205,13 +218,13 @@ public class SectorItems extends Fragment {
             TextView descriptionText = view.findViewById(R.id.description_text);
             TextView priceText = view.findViewById(R.id.price_text);
             Button testButton = view.findViewById(R.id.buy_button);
-            testButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showNormalDialog(weaponNAMES[i], weaponIDs[i], "weapon", Integer.parseInt(weaponPRICE[i]));
-                }
-            });
-
+            if(((ShopActivity) getActivity()).getPlayerInfo().ownsWeapon(weaponIDs[i])){
+                testButton.setText("Equip");
+                testButton.setOnClickListener(v -> equipItem(weaponNAMES[i], weaponIDs[i], "weapon"));
+            } else {
+                testButton.setOnClickListener(view1 ->
+                        showNormalDialog(weaponNAMES[i], weaponIDs[i], "weapon", Integer.parseInt(weaponPRICE[i]), testButton));
+            }
             imageView.setImageResource(weaponIMAGES[i]);
             nameText.setText(weaponNAMES[i]);
             descriptionText.setText(weaponDESCRIPTIONS[i]);
@@ -241,12 +254,13 @@ public class SectorItems extends Fragment {
             TextView descriptionText = view.findViewById(R.id.description_text);
             TextView priceText = view.findViewById(R.id.price_text);
             Button testButton = view.findViewById(R.id.buy_button);
-            testButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showNormalDialog(shieldNAMES[i], shieldIDs[i], "shield", Integer.parseInt(shieldPRICE[i]));
-                }
-            });
+            if(((ShopActivity) getActivity()).getPlayerInfo().ownsShield(shieldIDs[i])){
+                testButton.setText("Equip");
+                testButton.setOnClickListener(v -> equipItem(shieldNAMES[i], shieldIDs[i], "shield"));
+            } else {
+                testButton.setOnClickListener(view1 ->
+                        showNormalDialog(shieldNAMES[i], shieldIDs[i], "shield", Integer.parseInt(shieldPRICE[i]), testButton));
+            }
 
             imageView.setImageResource(shieldIMAGES[i]);
             nameText.setText(shieldNAMES[i]);
@@ -278,12 +292,13 @@ public class SectorItems extends Fragment {
             TextView descriptionText = view.findViewById(R.id.description_text);
             TextView priceText = view.findViewById(R.id.price_text);
             Button testButton = view.findViewById(R.id.buy_button);
-            testButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showNormalDialog(engineNAMES[i], engineIDs[i], "engine", Integer.parseInt(enginePRICE[i]));
-                }
-            });
+            if(((ShopActivity) getActivity()).getPlayerInfo().ownsEngine(engineIDs[i])){
+                testButton.setText("Equip");
+                testButton.setOnClickListener(v -> equipItem(engineNAMES[i], engineIDs[i], "engine"));
+            } else {
+                testButton.setOnClickListener(view1 ->
+                        showNormalDialog(engineNAMES[i], engineIDs[i], "engine", Integer.parseInt(enginePRICE[i]), testButton));
+            }
 
             imageView.setImageResource(engineIMAGES[i]);
             nameText.setText(engineNAMES[i]);
@@ -315,12 +330,13 @@ public class SectorItems extends Fragment {
             TextView descriptionText = view.findViewById(R.id.description_text);
             TextView priceText = view.findViewById(R.id.price_text);
             Button testButton = view.findViewById(R.id.buy_button);
-            testButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showNormalDialog(hullNAMES[i], hullIDs[i], "hull", Integer.parseInt(hullPRICE[i]));
-                }
-            });
+            if(((ShopActivity) getActivity()).getPlayerInfo().ownsHull(hullIDs[i])){
+                testButton.setText("Equip");
+                testButton.setOnClickListener(v -> equipItem(hullNAMES[i], hullIDs[i], "hull"));
+            } else {
+                testButton.setOnClickListener(view1 ->
+                        showNormalDialog(hullNAMES[i], hullIDs[i], "hull", Integer.parseInt(hullPRICE[i]), testButton));
+            }
 
             imageView.setImageResource(hullIMAGES[i]);
             nameText.setText(hullNAMES[i]);
@@ -331,9 +347,21 @@ public class SectorItems extends Fragment {
         }
     } // engineList
 
+    private void equipItem(String name, Enum itemID, String category){
+        if (category.equals("weapon")) {
+            ((ShopActivity) getActivity()).getPlayerInfo().setWeapon((Weapons) itemID);
+        } else if (category.equals("shield")) {
+            ((ShopActivity) getActivity()).getPlayerInfo().setShield((Shields) itemID);
+        } else if (category.equals("engine")) {
+            ((ShopActivity) getActivity()).getPlayerInfo().setEngine((Engines) itemID);
+        } else if (category.equals("hull")) {
+            ((ShopActivity) getActivity()).getPlayerInfo().setHull((Hulls) itemID);
+        }
+        ((ShopActivity) getActivity()).refresh();
+    }
 
     // dialog part, costumization needed
-    private void showNormalDialog(String name, Enum itemID, String category, int itemPrice) {
+    private void showNormalDialog(String name, Enum itemID, String category, int itemPrice, Button button) {
 
         int currentMoney = ((ShopActivity) getActivity()).getPlayerInfo().getMoney();
 
@@ -355,14 +383,20 @@ public class SectorItems extends Fragment {
             normalDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    button.setText("Equip");
+                    button.setOnClickListener(view -> equipItem(name, itemID, category));
                     if (category.equals("weapon")) {
                         ((ShopActivity) getActivity()).getPlayerInfo().setWeapon((Weapons) itemID);
+                        ((ShopActivity) getActivity()).getPlayerInfo().addWeapon((Weapons) itemID);
                     } else if (category.equals("shield")) {
                         ((ShopActivity) getActivity()).getPlayerInfo().setShield((Shields) itemID);
+                        ((ShopActivity) getActivity()).getPlayerInfo().addShield((Shields) itemID);
                     } else if (category.equals("engine")) {
                         ((ShopActivity) getActivity()).getPlayerInfo().setEngine((Engines) itemID);
+                        ((ShopActivity) getActivity()).getPlayerInfo().addEngine((Engines) itemID);
                     } else if (category.equals("hull")) {
                         ((ShopActivity) getActivity()).getPlayerInfo().setHull((Hulls) itemID);
+                        ((ShopActivity) getActivity()).getPlayerInfo().addHull((Hulls) itemID);
                     } else {
                     }
                     ((ShopActivity) getActivity()).getPlayerInfo().setMoney(currentMoney - itemPrice);

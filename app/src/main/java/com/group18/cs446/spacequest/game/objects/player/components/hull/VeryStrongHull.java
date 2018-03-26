@@ -1,4 +1,4 @@
-package com.group18.cs446.spacequest.game.objects.player.components;
+package com.group18.cs446.spacequest.game.objects.player.components.hull;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,10 +14,10 @@ import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.player.Hull;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
-public class RockSmasherHull implements Hull {
-    private static final String NAME = "Rock Smasher Hull";
-    private static final String DESCRIPTION = "Physical damage does little against this hull";
-    private static final int PRICE = 120;
+public class VeryStrongHull implements Hull {
+    private static final String NAME = "Thick Hull";
+    private static final String DESCRIPTION = "Very Strong, Slow Regen";
+    private static final int PRICE = 300;
 
     private int maxHealth, currentHealth;
     private int regenAmount;
@@ -26,13 +26,13 @@ public class RockSmasherHull implements Hull {
     private boolean tookDamageThisTick;
     private GameEntity owner;
     private static Bitmap image;
-    private Point[] smokeLocations = new Point[5];
+    private Point[] smokeLocations = new Point[8];
 
-    public RockSmasherHull(Context context){
-        this.maxHealth = 300;
+    public VeryStrongHull(Context context){
+        this.maxHealth = 800;
         this.currentHealth = maxHealth;
         this.regenAmount = 1; // amount to increase
-        this.regenCooldown = 150;
+        this.regenCooldown = 400;
         this.lastDamageTick = 0;
         this.tookDamageThisTick = false;
         // These are aesthetic
@@ -40,7 +40,10 @@ public class RockSmasherHull implements Hull {
         this.smokeLocations[1] = new Point(-20, -20);
         this.smokeLocations[2] = new Point(15, -15);
         this.smokeLocations[3] = new Point(-15, -15);
-        this.smokeLocations[4] = new Point(-5, -5);
+        this.smokeLocations[4] = new Point(10, -20);
+        this.smokeLocations[5] = new Point(-20, -10);
+        this.smokeLocations[6] = new Point(30, -20);
+        this.smokeLocations[7] = new Point(-30, -20);
         if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
@@ -51,7 +54,7 @@ public class RockSmasherHull implements Hull {
             tookDamageThisTick = false;
             lastDamageTick = gameTick;
             owner.getCurrentSector().addFilter(new DamageFilter(owner.getCurrentSector()));
-        } else if (lastDamageTick + regenCooldown < gameTick && gameTick % 15 == 0){
+        } else if (lastDamageTick + regenCooldown < gameTick && gameTick % 35 == 0){
             if(currentHealth + regenAmount >= maxHealth){
                 currentHealth = maxHealth;
             } else {
@@ -87,10 +90,10 @@ public class RockSmasherHull implements Hull {
         int damageAmount = damage.getAmount();
         switch (damage.getType()){
             case LASER:
-                damageAmount *= 1.3;
+                damageAmount *= 1.05;
                 break;
             case PHYSICAL:
-                damageAmount *= 0.1;
+                damageAmount *= 1.05;
                 break;
             default:
                 break;
@@ -136,7 +139,7 @@ public class RockSmasherHull implements Hull {
 
     @Override
     public Hulls ID() {
-        return Hulls.BASIC_HULL;
+        return Hulls.VERY_STRONG_HULL;
     }
 
     @Override
@@ -146,6 +149,6 @@ public class RockSmasherHull implements Hull {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_hull_rocksmasher;
+        return R.drawable.item_hull_verystrong;
     }
 }

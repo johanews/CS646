@@ -1,4 +1,4 @@
-package com.group18.cs446.spacequest.game.objects.player.components;
+package com.group18.cs446.spacequest.game.objects.player.components.hull;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,10 +14,10 @@ import com.group18.cs446.spacequest.game.objects.SmokeParticle;
 import com.group18.cs446.spacequest.game.objects.player.Hull;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
-public class StrongerHull implements Hull {
-    private static final String NAME = "Strong Hull";
-    private static final String DESCRIPTION = "More health then a basic hull";
-    private static final int PRICE = 100;
+public class BasicHull implements Hull {
+    private static final String NAME = "Basic Hull";
+    private static final String DESCRIPTION = "Its a hull";
+    private static final int PRICE = 30;
 
     private int maxHealth, currentHealth;
     private int regenAmount;
@@ -26,10 +26,10 @@ public class StrongerHull implements Hull {
     private boolean tookDamageThisTick;
     private GameEntity owner;
     private static Bitmap image;
-    private Point[] smokeLocations = new Point[6];
+    private Point[] smokeLocations = new Point[4];
 
-    public StrongerHull(Context context){
-        this.maxHealth = 400;
+    public BasicHull(Context context){
+        this.maxHealth = 250;
         this.currentHealth = maxHealth;
         this.regenAmount = 1; // amount to increase
         this.regenCooldown = 150;
@@ -40,8 +40,6 @@ public class StrongerHull implements Hull {
         this.smokeLocations[1] = new Point(-20, -20);
         this.smokeLocations[2] = new Point(15, -15);
         this.smokeLocations[3] = new Point(-15, -15);
-        this.smokeLocations[4] = new Point(10, -20);
-        this.smokeLocations[5] = new Point(-20, -10);
         if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
@@ -88,7 +86,7 @@ public class StrongerHull implements Hull {
         int damageAmount = damage.getAmount();
         switch (damage.getType()){
             case LASER:
-                damageAmount *= 1.0;
+                damageAmount *= 1.2;
                 break;
             case PHYSICAL:
                 damageAmount *= 1.1;
@@ -147,6 +145,6 @@ public class StrongerHull implements Hull {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_hull_strong;
+        return R.drawable.item_hull_basic;
     }
 }

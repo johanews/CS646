@@ -1,33 +1,29 @@
-package com.group18.cs446.spacequest.game.objects.player.components;
+package com.group18.cs446.spacequest.game.objects.player.components.engine;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 
-import com.group18.cs446.spacequest.game.enums.Engines;
 import com.group18.cs446.spacequest.R;
+import com.group18.cs446.spacequest.game.enums.Engines;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
 import com.group18.cs446.spacequest.game.objects.SmokeParticle;
-import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Engine;
-import com.group18.cs446.spacequest.game.objects.player.Player;
 
-public class FastEngine implements Engine {
-    private static final String NAME = "Fast Engine";
-    private static final String DESCRIPTION = "Very fast, great acceleration, hard to turn while accelerating";
-    private static final int PRICE = 160;
+public class BasicEngine implements Engine {
+    private static final String NAME = "Basic Engine";
+    private static final String DESCRIPTION = "Gets you there";
+    private static final int PRICE = 30;
 
     private GameEntity owner;
     private static Bitmap image;
-    private int maxSpeed = 40;
+    private int speed = 17;
+    private int maxSpeed = 24;
     private int minSpeed = 17;
-    private int speed = minSpeed;
-    private int maxTurnSpeed = 8;
-    private int minTurnSpeed = 3;
-    private int turnSpeed = maxTurnSpeed;
+    private int turnSpeed = 7;
 
-    public FastEngine(Context context){
+    public BasicEngine(Context context){
+        this.speed = minSpeed;
         if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
     }
 
@@ -43,18 +39,16 @@ public class FastEngine implements Engine {
 
     @Override
     public void update(long gameTick) {
-        if(speed > minSpeed && gameTick%3 == 0){
+        if(speed > minSpeed && gameTick%10 == 0){
             speed--;
-        }
-        if(turnSpeed < maxTurnSpeed && gameTick%3 == 0){
-            turnSpeed++;
         }
 
         // Add smoke effect
         SmokeParticle basicSmokeParticle = new SmokeParticle(owner.getCurrentSector(),
                 owner.getCoordinates().x+(int)(20*Math.sin(owner.getAngle()*Math.PI/180)),
-                owner.getCoordinates().y+(int)(20*Math.cos(owner.getAngle()*Math.PI/180)),30, Color.GRAY, 70);
+                owner.getCoordinates().y+(int)(20*Math.cos(owner.getAngle()*Math.PI/180)), 70);
         owner.getCurrentSector().addEntityToBack(basicSmokeParticle);
+
     }
 
     @Override
@@ -62,15 +56,13 @@ public class FastEngine implements Engine {
         if(speed < maxSpeed){
             speed++;
         }
-        if(turnSpeed > minTurnSpeed){
-            turnSpeed--;
-        }
     }
 
     @Override
     public void refresh(){
         speed = minSpeed;
     }
+
     @Override
     public String getName() {
         return NAME;
@@ -93,7 +85,7 @@ public class FastEngine implements Engine {
 
     @Override
     public Engines ID() {
-        return Engines.FAST_ENGINE;
+        return Engines.BASIC_ENGINE;
     }
 
     @Override
@@ -103,6 +95,6 @@ public class FastEngine implements Engine {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_engine_fast;
+        return R.drawable.item_engine_basic;
     }
 }

@@ -1,6 +1,7 @@
 package com.group18.cs446.spacequest;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.VideoView;
 
 import com.group18.cs446.spacequest.game.enums.Engines;
 import com.group18.cs446.spacequest.game.enums.Hulls;
@@ -46,6 +48,11 @@ public class ShareSocialActivity extends AppCompatActivity {
         continueButton.setOnClickListener(this::goToNextActivity);
         tweetButton = findViewById(R.id.tweet_button);
         tweetButton.setOnClickListener(this::tweet);
+
+        VideoView videoView = findViewById(R.id.videoView);
+        videoView.setOnPreparedListener(mp -> mp.setLooping(true));
+        videoView.setVideoURI(Uri.fromFile(file));
+        videoView.start();
     }
 
     private String generateTweetMessage(){

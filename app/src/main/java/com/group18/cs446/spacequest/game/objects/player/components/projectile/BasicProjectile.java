@@ -1,4 +1,4 @@
-package com.group18.cs446.spacequest.game.objects.player.components;
+package com.group18.cs446.spacequest.game.objects.player.components.projectile;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;

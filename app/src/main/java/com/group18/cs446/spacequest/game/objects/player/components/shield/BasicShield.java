@@ -1,4 +1,4 @@
-package com.group18.cs446.spacequest.game.objects.player.components;
+package com.group18.cs446.spacequest.game.objects.player.components.shield;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,11 +16,10 @@ import com.group18.cs446.spacequest.game.objects.player.Shield;
 import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 
-public class LaserOnlyShield implements Shield {
-
-    private static final String NAME = "Laser Only Shield";
-    private static final String DESCRIPTION = "Great against lasers, does nothing agains physical damage";
-    private static final int PRICE = 80;
+public class BasicShield implements Shield {
+    private static final String NAME = "Basic Shield";
+    private static final String DESCRIPTION = "Protects your hull";
+    private static final int PRICE = 30;
 
     private int maxShield, currentShield;
     private int regenAmount;
@@ -30,11 +29,11 @@ public class LaserOnlyShield implements Shield {
     private GameEntity owner;
     private static Bitmap image;
 
-    public LaserOnlyShield(Context context){
-        this.maxShield = 300;
+    public BasicShield(Context context){
+        this.maxShield = 500;
         this.currentShield = maxShield;
-        this.regenAmount = 2; // amount to increase
-        this.regenCooldown = 120;
+        this.regenAmount = 1; // amount to increase
+        this.regenCooldown = 150;
         this.lastDamageTick = 0;
         this.tookDamageThisTick = false;
         if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
@@ -42,12 +41,11 @@ public class LaserOnlyShield implements Shield {
 
     @Override
     public void update(long gameTick) {
-        if(currentShield <= 0) return;
         if(tookDamageThisTick){
             tookDamageThisTick = false;
             lastDamageTick = gameTick;
             owner.getCurrentSector().addFilter(new DamageFilter(owner.getCurrentSector()));
-        } else if (lastDamageTick + regenCooldown < gameTick && gameTick % 2 == 0){
+        } else if (lastDamageTick + regenCooldown < gameTick && gameTick % 5 == 0){
             if(currentShield + regenAmount >= maxShield){
                 currentShield = maxShield;
             } else {
@@ -71,10 +69,11 @@ public class LaserOnlyShield implements Shield {
         int damageAmount = damage.getAmount();
         switch (damage.getType()){
             case LASER:
-                damageAmount *= 0.4;
+                damageAmount *= 0.8;
                 break;
             case PHYSICAL:
-                return damage; // physical damage bypasses this shield
+                damageAmount *= 1.2;
+                break;
             default:
                 break;
         }
@@ -103,7 +102,7 @@ public class LaserOnlyShield implements Shield {
     public void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner) {
         int shieldXRadi = owner.getBitmap().getWidth() / 2 + 40;
         int shieldYRadi = owner.getBitmap().getHeight() / 2 + 40;
-        paint.setColor(Color.argb(50, 255, 255, 15));
+        paint.setColor(Color.argb(50, 10, 100, 255));
         if(currentShield > 0){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 canvas.drawOval(owner.getCoordinates().x - topLeftCorner.x - shieldXRadi,
@@ -137,6 +136,8 @@ public class LaserOnlyShield implements Shield {
             }
         }
     }
+
+
     @Override
     public String getName() {
         return NAME;
@@ -159,7 +160,7 @@ public class LaserOnlyShield implements Shield {
 
     @Override
     public Shields ID() {
-        return Shields.LASER_ONLY_SHIELD;
+        return Shields.BASIC_SHIELD;
     }
 
     @Override
@@ -169,6 +170,6 @@ public class LaserOnlyShield implements Shield {
 
     @Override
     public int getImageID() {
-        return R.drawable.item_shield_laseronly;
+        return R.drawable.item_shield_basic;
     }
 }

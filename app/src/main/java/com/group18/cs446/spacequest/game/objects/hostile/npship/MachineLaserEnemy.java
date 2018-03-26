@@ -86,20 +86,10 @@ public class MachineLaserEnemy implements Enemy {
             if(distanceToTarget > sightDistance){
                 target = null;
             } else {
-                int targetAngle = ((int)(Math.atan2(dx, dy)*180/Math.PI)+180)%360;
-                int targetTurn = targetAngle - angle;
-                if(targetTurn > 180){
-                    targetTurn-=360;
-                } else if(targetTurn < -180){
-                    targetTurn+=360;
-                }
-                int turn = 0;
-                if(Math.abs(targetTurn) < turnSpeed) {
-                    turn = targetTurn;
-                } else {
-                    turn = turnSpeed * (targetTurn > 0 ? 1 : -1);
-                }
-                angle += turn;
+                // Aim for where the player is going
+                dx = (target.getCoordinates().x - coordinates.x) - (int)(4*(Math.sin(target.getAngle() * Math.PI / 180) * target.getSpeed()));
+                dy = (target.getCoordinates().y - coordinates.y) - (int)(4*(Math.cos(target.getAngle() * Math.PI / 180) * target.getSpeed()));
+                angle = AIUtils.getNewAngleFromTarget(dx, dy, angle, turnSpeed);
                 int adjustedSpeed = speed;
                 if(distanceToTarget < hoverDistance){
                     adjustedSpeed = (adjustedSpeed*(2*distanceToTarget-hoverDistance))/hoverDistance;
@@ -111,7 +101,7 @@ public class MachineLaserEnemy implements Enemy {
                     coordinates.y -= Math.cos(angle * Math.PI / 180) * adjustedSpeed;
                     coordinates.x -= Math.sin(angle * Math.PI / 180) * adjustedSpeed;
                 }
-                if(distanceToTarget < fireDistance && (Math.abs(targetTurn) < 15 || Math.abs(targetTurn) > 345)){
+                if(distanceToTarget < fireDistance){
                     weapon.fire(gameTick);
                 }
             }

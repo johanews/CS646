@@ -15,7 +15,8 @@ public class EnemySpawner {
     private ComponentFactory componentFactory;
     private Context context;
     private int sectorID;
-    private int maxEnemies, spawnedEnemies;
+    protected int maxEnemies;
+    protected int spawnedEnemies;
     private List<Point> possibleSpawnPoints;
     EnemyFactory enemyFactory;
 
@@ -37,7 +38,6 @@ public class EnemySpawner {
             }
         }
         enemyFactory = new BasicEnemyFactoryImpl(sectorID);
-        spawnEnemies();
     }
     public void spawnEnemies(){
         while(spawnedEnemies < maxEnemies) {

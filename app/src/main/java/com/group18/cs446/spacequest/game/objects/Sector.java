@@ -19,6 +19,8 @@ import com.group18.cs446.spacequest.game.vfx.HUDComponent;
 import com.group18.cs446.spacequest.game.vfx.HUDText;
 import com.group18.cs446.spacequest.game.vfx.HealthBar;
 import com.group18.cs446.spacequest.game.vfx.ShieldBar;
+import com.group18.cs446.spacequest.io.ScreenRecorder;
+import com.group18.cs446.spacequest.io.SoundManager;
 import com.group18.cs446.spacequest.view.GameView;
 
 import java.util.LinkedList;
@@ -55,6 +57,7 @@ public class Sector {
     private Context context;
     private ComponentFactory componentFactory;
     private GameView gameView;
+    private ScreenRecorder screenRecorder;
 
     public Sector(Player player, Context context, SurfaceHolder surfaceHolder, int sectorID, GameView gameView){
         this.gameView = gameView;
@@ -119,11 +122,11 @@ public class Sector {
         entities.remove(e);
     }
     public boolean run() {
-
+        if(screenRecorder != null){
+            screenRecorder.startRecording(gameView.getGamePlayActivity());
+        }
         int droppedFrames = 0;
         int threshhold = 5;
-        long lagging = 0;
-        int frames = 0;
         int framesThisSecond = 0;
         long thisSecondStart = System.currentTimeMillis();
         while (gameState == GameState.RUNNING || gameState == GameState.PAUSED) {
@@ -142,8 +145,7 @@ public class Sector {
                 droppedFrames = 0;
             }
             draw();
-            lagging = control(tickStart, lagging);
-            frames++;
+            control(tickStart);
             framesThisSecond++;
             if(System.currentTimeMillis() - 2000 > thisSecondStart){
                 System.out.println("FPS: "+framesThisSecond/2);
@@ -158,7 +160,7 @@ public class Sector {
                     long tickStart = System.currentTimeMillis();
                     update();
                     draw();
-                    control(tickStart, 0);
+                    control(tickStart);
                 }
                 return true;
             case LOST:
@@ -167,7 +169,7 @@ public class Sector {
                     long tickStart = System.currentTimeMillis();
                     update();
                     draw();
-                    control(tickStart, 0);
+                    control(tickStart);
                 }
                 return false;
             default:
@@ -273,22 +275,15 @@ public class Sector {
         }
 
     }
-    private long control(long start, long lagging){
+    private void control(long start){
         try {
             long remaining = (1000 / tickRate) - (System.currentTimeMillis() - start);
-            if (lagging > 0) {
-                remaining -= lagging;
-            }
             if (remaining > 0) {
                 Thread.sleep(remaining);
-                lagging = 0;
-            } else {
-                lagging = -remaining;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return lagging;
     }
 
     public void triggerVictory() {
@@ -301,10 +296,15 @@ public class Sector {
             player.explode(defeatFinalizeTime);
             previousGameState = gameState;
             gameState = GameState.LOST;
+            SoundManager.playSound(SoundManager.PLAYER_DEATH, context);
         }
     }
 
     public int getVictoryFinalizeTime() {
         return victoryFinalizeTime;
+    }
+
+    public void setScreenRecorder(ScreenRecorder screenRecorder) {
+        this.screenRecorder = screenRecorder;
     }
 }

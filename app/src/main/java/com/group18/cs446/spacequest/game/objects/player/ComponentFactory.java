@@ -6,17 +6,23 @@ import com.group18.cs446.spacequest.game.enums.Engines;
 import com.group18.cs446.spacequest.game.enums.Hulls;
 import com.group18.cs446.spacequest.game.enums.Shields;
 import com.group18.cs446.spacequest.game.enums.Weapons;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicEngine;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicHull;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicLaser;
-import com.group18.cs446.spacequest.game.objects.player.components.BasicShield;
-import com.group18.cs446.spacequest.game.objects.player.components.ChainLaser;
-import com.group18.cs446.spacequest.game.objects.player.components.DamageReductionShield;
-import com.group18.cs446.spacequest.game.objects.player.components.DualLaser;
-import com.group18.cs446.spacequest.game.objects.player.components.FastEngine;
-import com.group18.cs446.spacequest.game.objects.player.components.LaserOnlyShield;
-import com.group18.cs446.spacequest.game.objects.player.components.RockSmasherHull;
-import com.group18.cs446.spacequest.game.objects.player.components.StrongerHull;
+import com.group18.cs446.spacequest.game.objects.player.components.engine.BasicEngine;
+import com.group18.cs446.spacequest.game.objects.player.components.hull.BasicHull;
+import com.group18.cs446.spacequest.game.objects.player.components.weapon.BasicLaser;
+import com.group18.cs446.spacequest.game.objects.player.components.shield.BasicShield;
+import com.group18.cs446.spacequest.game.objects.player.components.weapon.ChainLaser;
+import com.group18.cs446.spacequest.game.objects.player.components.shield.DamageReductionShield;
+import com.group18.cs446.spacequest.game.objects.player.components.weapon.DualLaser;
+import com.group18.cs446.spacequest.game.objects.player.components.engine.FastEngine;
+import com.group18.cs446.spacequest.game.objects.player.components.shield.LaserOnlyShield;
+import com.group18.cs446.spacequest.game.objects.player.components.engine.ReverseEngine;
+import com.group18.cs446.spacequest.game.objects.player.components.hull.RockSmasherHull;
+import com.group18.cs446.spacequest.game.objects.player.components.shield.StrongShield;
+import com.group18.cs446.spacequest.game.objects.player.components.hull.StrongerHull;
+import com.group18.cs446.spacequest.game.objects.player.components.hull.SuperStrongHull;
+import com.group18.cs446.spacequest.game.objects.player.components.weapon.TripleLaser;
+import com.group18.cs446.spacequest.game.objects.player.components.engine.TronEngine;
+import com.group18.cs446.spacequest.game.objects.player.components.hull.VeryStrongHull;
 
 public class ComponentFactory {
 
@@ -37,6 +43,10 @@ public class ComponentFactory {
                 return new BasicEngine(context);
             case FAST_ENGINE:
                 return new FastEngine(context);
+            case REVERSE_ENGINE:
+                return new ReverseEngine(context);
+            case TRON_ENGINE:
+                return new TronEngine(context);
             default:
                 return null;
         }
@@ -51,6 +61,8 @@ public class ComponentFactory {
                 return new ChainLaser(context);
             case DUAL_LASER:
                 return new DualLaser(context);
+            case TRIPLE_LASER:
+                return new TripleLaser(context);
             default:
                 return null;
         }
@@ -65,6 +77,10 @@ public class ComponentFactory {
                 return new StrongerHull(context);
             case ROCKSMASHER_HULL:
                 return new RockSmasherHull(context);
+            case VERY_STRONG_HULL:
+                return new VeryStrongHull(context);
+            case VERY_VERY_STRONG_HULL:
+                return new SuperStrongHull(context);
             default:
                 return null;
         }
@@ -79,6 +95,8 @@ public class ComponentFactory {
                 return new LaserOnlyShield(context);
             case DAMAGE_REDUCTION_SHIELD:
                 return new DamageReductionShield(context);
+            case STRONG_SHIELD:
+                return new StrongShield(context);
             default:
                 return null;
         }

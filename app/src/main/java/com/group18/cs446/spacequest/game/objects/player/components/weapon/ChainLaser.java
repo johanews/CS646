@@ -1,15 +1,18 @@
-package com.group18.cs446.spacequest.game.objects.player.components;
+package com.group18.cs446.spacequest.game.objects.player.components.weapon;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.graphics.Point;
 
 import com.group18.cs446.spacequest.R;
 import com.group18.cs446.spacequest.game.enums.Weapons;
 import com.group18.cs446.spacequest.game.objects.GameEntity;
-import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Weapon;
+import com.group18.cs446.spacequest.game.objects.player.components.projectile.BasicProjectile;
+import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
+import com.group18.cs446.spacequest.io.SoundManager;
 
 public class ChainLaser implements Weapon {
     private static final String NAME = "Chain Laser";
@@ -18,6 +21,7 @@ public class ChainLaser implements Weapon {
 
     private static Bitmap bulletBitmap;
     private static Bitmap image;
+    private Paint paint;
     private int fireRate = 3;
     private int shotCapacity = 6;
     private int ticksPerReload = 20;
@@ -26,12 +30,18 @@ public class ChainLaser implements Weapon {
     private long lastReload;
     private GameEntity owner;
     private int baseBulletSpeed = 25;
+    private Context context;
 
     public ChainLaser(Context context){
+        this.context = context;
         if(bulletBitmap == null) bulletBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_1);
         this.lastReload = 0;
         this.shots = shotCapacity;
-        if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
+        if(image == null) {
+            image= BitmapFactory.decodeResource(context.getResources(), getImageID());
+            image = Bitmap.createScaledBitmap(image, image.getWidth()/2, image.getHeight()/2, true);
+        }
+        paint = new Paint();
     }
 
     @Override
@@ -48,16 +58,19 @@ public class ChainLaser implements Weapon {
         lastReload = gameTick - (timeSinceLastReload%ticksPerReload);
         if(shots > shotCapacity) shots = shotCapacity;
         if(shots > 0 && gameTick > lastShot + fireRate){
+            SoundManager.playSound(SoundManager.FIRE_WEAPON, context);
             lastShot = gameTick;
             Point velocity = new Point((int)(bulletSpeed*(-Math.sin((owner.getAngle()) * Math.PI / 180))),
                     (int)(bulletSpeed*(-Math.cos((owner.getAngle()) * Math.PI / 180))));
+            Point projectileStart = new Point((owner.getCoordinates().x - bulletBitmap.getWidth()/2)-(int)(Math.sin(owner.getAngle() * Math.PI / 180) * getBitmap().getHeight()),
+                    (owner.getCoordinates().y - bulletBitmap.getHeight()/2)-(int)(Math.cos(owner.getAngle() * Math.PI / 180) * getBitmap().getHeight()));
             BasicProjectile projectile = new BasicProjectile(
-                    new Point(owner.getCoordinates().x - bulletBitmap.getWidth()/2, owner.getCoordinates().y - bulletBitmap.getHeight()/2),
+                    projectileStart,
                     velocity,
                     bulletBitmap,
                     owner,
                     owner.getCurrentSector());
-            owner.getCurrentSector().addEntityToBack(projectile);
+            owner.getCurrentSector().addEntityFront(projectile);
             shots--;
         }
     }
@@ -95,5 +108,14 @@ public class ChainLaser implements Weapon {
     @Override
     public int getImageID() {
         return R.drawable.item_weapon_chainlaser;
+    }
+
+    @Override
+    public void paint(CanvasComponent canvas, Point topLeftCorner){
+        canvas.drawBitmap(
+                getBitmap(),
+                owner.getCoordinates().x - topLeftCorner.x - getBitmap().getWidth() / 2,
+                owner.getCoordinates().y - topLeftCorner.y - getBitmap().getHeight() / 2,
+                paint);
     }
 }
