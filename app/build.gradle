@@ -10,8 +10,19 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        release {
+            // TODO remove this before github
+            storeFile file("owen-release-key.jks")
+            storePassword "*******13"
+            keyAlias "owen-alias"
+            keyPassword "*******13"
+        }
+    }
     buildTypes {
         release {
+            //  signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -19,6 +30,9 @@ android {
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 

@@ -17,11 +17,13 @@ import java.util.TimerTask;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class SoundManager {
-    public static final int MENU_MUSIC = R.raw.sos_020;
-    public static final int GAME_MUSIC_1 = R.raw.dstt_2ndballad;
+    public static final int MENU_MUSIC = R.raw.menumusic;
+    public static final int GAME_MUSIC_1 = R.raw.song1;
 
-    public static final int PLAYER_DEATH = R.raw.playerdeath;
+    public static final int PLAYER_DEATH = R.raw.explosion;
     public static final int FIRE_WEAPON = R.raw.fireweapon;
+    public static final int GET_MONEY = R.raw.moneysound;
+
     private static Map<Integer, Integer> sounds = new HashMap<>();
     private static Map<Integer, MediaPlayer> songs = new HashMap<>();
     private static Map<MediaPlayer, Float> vols = new HashMap<>();
@@ -42,8 +44,15 @@ public class SoundManager {
         sound = PLAYER_DEATH;
         soundId = soundPool.load(context, sound, 1);
         sounds.put(sound,soundId);
+        sound = GET_MONEY;
+        soundId = soundPool.load(context, sound, 1);
+        sounds.put(sound,soundId);
     }
-
+    public static void playSound(int sound){
+        System.out.println("Sound");
+        Integer soundId = sounds.get(sound);
+        soundPool.play(soundId, 1, 1, 0, 0, 1);
+    }
     public static void playSound(int sound, Context context){
 
         System.out.println("Sound");

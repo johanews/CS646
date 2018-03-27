@@ -19,7 +19,7 @@ public class ReverseEngine implements Engine {
     private static Bitmap image;
     private int max = 20;
     private int speed = max;
-    private int turnSpeed = 9;
+    private int turnSpeed = 12;
     private boolean forwards = true;
     private boolean updated = false;
     private int maxSwitchTime = 5;

@@ -21,8 +21,8 @@ public class FastEngine implements Engine {
     private int maxSpeed = 40;
     private int minSpeed = 17;
     private int speed = minSpeed;
-    private int maxTurnSpeed = 8;
-    private int minTurnSpeed = 3;
+    private int maxTurnSpeed = 11;
+    private int minTurnSpeed = 5;
     private int turnSpeed = maxTurnSpeed;
 
     public FastEngine(Context context){

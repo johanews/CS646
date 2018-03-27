@@ -48,7 +48,12 @@ public class ShareSocialActivity extends AppCompatActivity {
         continueButton.setOnClickListener(this::goToNextActivity);
         tweetButton = findViewById(R.id.tweet_button);
         tweetButton.setOnClickListener(this::tweet);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         VideoView videoView = findViewById(R.id.videoView);
         videoView.setOnPreparedListener(mp -> mp.setLooping(true));
         videoView.setVideoURI(Uri.fromFile(file));
@@ -84,18 +89,16 @@ public class ShareSocialActivity extends AppCompatActivity {
     }
 
     private void goToNextActivity(View v){
+        Intent intent;
         if(playerInfo.getCurrentSector() == -1){ // Game Over go to MainActivity
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            intent = new Intent(this, MainActivity.class);
         } else {
-            Intent intent = new Intent(this, ShopActivity.class);
+            intent = new Intent(this, ShopActivity.class);
             intent.putExtra("PlayerInfo", playerInfo);
-            startActivity(intent);
-            finish();
-
-
         }
+        startActivity(intent);
+        FileHandler.clearVideoRepos(getApplicationContext());
+        finish();
     }
 
 }

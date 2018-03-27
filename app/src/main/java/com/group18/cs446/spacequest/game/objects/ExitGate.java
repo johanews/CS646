@@ -19,6 +19,8 @@ public class ExitGate implements GameEntity {
     private static Bitmap bitmap;
     private Sector sector;
     private int beepRadi = 0;
+    private int maxRadi = 0;
+    private int initialBeepRadi = 0;
     private CollisionEvent collisionEvent = new CollisionEvent(CollisionEvent.VICTORY);
 
     public ExitGate(Context context, int x, int y){
@@ -37,6 +39,8 @@ public class ExitGate implements GameEntity {
     }
     @Override
     public void update(long gameTick) {
+        if(initialBeepRadi != 0)initialBeepRadi = 2*initialBeepRadi/3;
+
     }
 
     @Override
@@ -61,7 +65,10 @@ public class ExitGate implements GameEntity {
 
     @Override
     public void paint(CanvasComponent canvas, Paint paint, Point topLeftCorner) {
-
+        if(maxRadi == 0){
+            maxRadi = canvas.getWidth();
+            initialBeepRadi = maxRadi;
+        }
         canvas.save();
         if(getCoordinates().x - topLeftCorner.x - getBitmap().getWidth() / 2 > canvas.getWidth() ||
                 getCoordinates().y - topLeftCorner.y - getBitmap().getHeight() / 2 > canvas.getHeight() ||
@@ -82,6 +89,13 @@ public class ExitGate implements GameEntity {
                 paint.reset();
             }else{
                 beepRadi = 0;
+            }
+            if(initialBeepRadi > 0){paint.setColor(Color.GREEN);
+                paint.setAlpha(240);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(5);
+                canvas.drawCircle(indicatorX, indicatory, 15+initialBeepRadi, paint);
+                paint.reset();
             }
         } else {
             // Draw exit gate

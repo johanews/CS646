@@ -6,10 +6,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.Build;
 import android.view.SurfaceHolder;
 
 import com.group18.cs446.spacequest.game.enums.GameState;
 import com.group18.cs446.spacequest.game.objects.hostile.Asteroid;
+import com.group18.cs446.spacequest.game.objects.hostile.AsteroidSpawner;
 import com.group18.cs446.spacequest.game.objects.hostile.EnemySpawner;
 import com.group18.cs446.spacequest.game.objects.player.ComponentFactory;
 import com.group18.cs446.spacequest.game.objects.player.Player;
@@ -47,6 +49,7 @@ public class Sector {
     int starDimension = 3000;
     int numStars = 6000;
     private EnemySpawner enemySpawner;
+    private AsteroidSpawner asteroidSpawner;
 
     // Graphics Members
     private Paint paint;
@@ -90,6 +93,7 @@ public class Sector {
         }
 
         enemySpawner = new EnemySpawner(sectorID, this, componentFactory, context);
+        asteroidSpawner = new AsteroidSpawner(sectorID, this, context);
     }
 
     public void pause(){
@@ -184,9 +188,7 @@ public class Sector {
         for(GameEntity e : entities){
             e.update(gameTick);
         }
-        if(gameTick%10 == 0){ // TODO put enemy entity spawning in a factory
-            addEntityFront(new Asteroid(this, player.getCoordinates(), context));
-        }
+        asteroidSpawner.spawnAsteroids();
         enemySpawner.spawnEnemies();
     }
 
@@ -296,7 +298,6 @@ public class Sector {
             player.explode(defeatFinalizeTime);
             previousGameState = gameState;
             gameState = GameState.LOST;
-            SoundManager.playSound(SoundManager.PLAYER_DEATH, context);
         }
     }
 

@@ -22,8 +22,8 @@ import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 import java.util.Random;
 
 public class Asteroid implements GameEntity {
-    private static final int MIN_DISTANCE = 1500;
-    private static final int MAX_DISTANCE = 3000;
+    protected static final int MIN_DISTANCE = 1500;
+    protected static final int MAX_DISTANCE = 3000;
     private static Bitmap bitmap;
     private Point coordinates = new Point();
     private Point speed = new Point();
@@ -36,19 +36,17 @@ public class Asteroid implements GameEntity {
     private Context context;
 
     private Random random = new Random();
+    private AsteroidSpawner spawner;
 
     public Asteroid(Sector sector, Point center, Context context){
         this.context = context;
         this.maxDurability = 150;
         this.currentSector = sector;
         if(bitmap == null) bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid_1);
-        double spawnAngle = random.nextDouble() * 2 * Math.PI;
-        double spawnDistance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
-        coordinates.set((int)(center.x+Math.cos(spawnAngle)*spawnDistance),
-                (int)(center.y+Math.sin(spawnAngle)*spawnDistance));
         arcSpeed = random.nextBoolean() ? random.nextFloat() + 0.2F : -random.nextFloat();
         speed.x = random.nextBoolean() ? random.nextInt(5)+1 : -random.nextInt(5) -1;
         speed.y = random.nextBoolean() ? random.nextInt(5)+1 : -random.nextInt(5) -1;
+        coordinates = new Point(center);
         durability = maxDurability;
     }
 
@@ -62,6 +60,12 @@ public class Asteroid implements GameEntity {
     public CollisionEvent getCollisionEvent(GameEntity entity){
         return new CollisionEvent(CollisionEvent.DAMAGE, damage);
     }
+
+    private void die(){
+        currentSector.removeEntity(this);
+        spawner.reportDeath(this);
+
+    }
     @Override
     public void update(long gameTick){
         coordinates.x += speed.x;
@@ -72,7 +76,7 @@ public class Asteroid implements GameEntity {
         int deltaX = currentSector.getPlayer().getCoordinates().x - coordinates.x;
         int deltaY = currentSector.getPlayer().getCoordinates().y - coordinates.y;
         if((deltaX*deltaX)+(deltaY*deltaY) > MAX_DISTANCE*MAX_DISTANCE){
-            currentSector.removeEntity(this);
+            die();
         }
     }
 
@@ -91,7 +95,7 @@ public class Asteroid implements GameEntity {
         if(durability <= 0){
             durability = 0;
             currentSector.addEntityToBack(new SmokeParticle(currentSector, coordinates.x, coordinates.y, bitmap.getWidth()/2, Color.DKGRAY, 10));
-            currentSector.removeEntity(this);
+            die();
             // TODO balance
             //MoneyDrop moneyDrop = new MoneyDrop(currentSector, coordinates, context, 5);
             //currentSector.addEntityFront(moneyDrop);
@@ -152,5 +156,9 @@ public class Asteroid implements GameEntity {
     public Rect getBounds(){
         return new Rect(coordinates.x-bitmap.getWidth()/2, coordinates.y-bitmap.getHeight()/2,
                 coordinates.x+bitmap.getWidth()/2, coordinates.y+bitmap.getHeight()/2);
+    }
+
+    public void registerSpawner(AsteroidSpawner asteroidSpawner) {
+        this.spawner = asteroidSpawner;
     }
 }

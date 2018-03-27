@@ -18,9 +18,6 @@ import java.io.ObjectOutputStream;
 public class FileHandler {
 
     private static final String PLAYER_FILE_NAME = "player_data";
-    public static final String VIDEO_FILE_NAME = "spacequest-recording.mp4";
-
-    //public static String longVideoFileName = "";
 
     public static boolean wipeSave(Context context) {
         try {
@@ -90,42 +87,18 @@ public class FileHandler {
         }
         String id = "_"+System.currentTimeMillis();
         File file = new File(images, "savedVideo"+id+"."+"mp4");
-        //File videoFile = new File(context.getFilesDir(), Long.toString(System.currentTimeMillis()) + VIDEO_FILE_NAME);
-        //longVideoFileName = videoFile.getAbsolutePath();
-
         return file;
-        /*boolean result = false;
-
-        if (!isExternalStorageWritable()) {
-            System.out.println("Can't write to external storage");
-            return false;
-        }
-
-        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_MOVIES),
-                Long.toString(System.currentTimeMillis()) + VIDEO_FILE_NAME);
-
-        longVideoFileName = file.getAbsolutePath();
-        Log.i("spacequest", "Video file path: " + longVideoFileName);
-
-        if (file.exists()) {
-            result = file.delete();
-        }
-
-            /*if (!file.exists() || result)
-                result = file.createNewFile();
-
-        if (!file.mkdirs()) {
-            Log.e("spacequest", "Directory not created");
-            result = false;
-        }
-
-        return result;*/
     }
 
-    /* Checks if external storage is available for read and write */
-    private static boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
-    }
+    public static void clearVideoRepos(Context context){
+        File root = context.getFilesDir();
+        File images = new File(root, "images");
+        if(!images.exists()){
+            images.mkdir();
+        }
+        for(File f : images.listFiles()){
+            f.delete();
+        }
 
+    }
 }
