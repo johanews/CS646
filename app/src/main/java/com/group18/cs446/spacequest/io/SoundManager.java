@@ -17,7 +17,7 @@ import java.util.TimerTask;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class SoundManager {
-    public static final int MENU_MUSIC = R.raw.sos_020;
+    public static final int MENU_MUSIC = R.raw.menumusic;
     public static final int GAME_MUSIC_1 = R.raw.song1;
 
     public static final int PLAYER_DEATH = R.raw.explosion;
