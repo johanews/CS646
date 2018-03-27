@@ -24,7 +24,9 @@ public class BasicEngine implements Engine {
 
     public BasicEngine(Context context){
         this.speed = minSpeed;
-        if(image == null) image = BitmapFactory.decodeResource(context.getResources(), getImageID());
+        if(image == null) {
+            image = BitmapFactory.decodeResource(context.getResources(), getImageID());
+        }
     }
 
     @Override

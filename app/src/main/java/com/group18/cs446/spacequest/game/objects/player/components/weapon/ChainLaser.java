@@ -39,7 +39,7 @@ public class ChainLaser implements Weapon {
         this.shots = shotCapacity;
         if(image == null) {
             image= BitmapFactory.decodeResource(context.getResources(), getImageID());
-            image = Bitmap.createScaledBitmap(image, image.getWidth()/2, image.getHeight()/2, true);
+            image = Bitmap.createScaledBitmap(image, image.getWidth()/2, image.getHeight()/2, false);
         }
         paint = new Paint();
     }

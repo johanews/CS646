@@ -24,7 +24,7 @@ class BasicEnemyFactoryImpl implements EnemyFactory {
         machineWeight = (difficulty+2)*2;
         dualWeight = difficulty*3;
         sniperWeight = difficulty;
-        carrierWeight = difficulty/3;
+        carrierWeight = difficulty/2;
         suicideWeight = difficulty/2;
         totalWeight = basicWeight + machineWeight + dualWeight + sniperWeight + carrierWeight + suicideWeight;
         r = new Random();

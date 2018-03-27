@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 
 import com.group18.cs446.spacequest.game.collision.CollisionEvent;
 import com.group18.cs446.spacequest.game.collision.Damage;
@@ -22,6 +23,7 @@ import com.group18.cs446.spacequest.game.objects.Sector;
 import com.group18.cs446.spacequest.game.vfx.CanvasComponent;
 import com.group18.cs446.spacequest.game.vfx.DamageFilter;
 import com.group18.cs446.spacequest.game.vfx.HUDComponent;
+import com.group18.cs446.spacequest.io.SoundManager;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -381,6 +383,9 @@ public class Player implements GameEntity, Serializable {
     private void collectMoney(CollisionEvent event) {
         this.money += event.getValue();
         event.setValue(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            SoundManager.playSound(SoundManager.GET_MONEY);
+        }
     }
 
     public int getMoney() {

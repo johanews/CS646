@@ -43,7 +43,7 @@ public class RockSmasherHull implements Hull {
         this.smokeLocations[4] = new Point(-5, -5);
         if(image == null) {
             image = BitmapFactory.decodeResource(context.getResources(), getImageID());
-            image = Bitmap.createScaledBitmap(image, 2*image.getWidth()/3, 2*image.getHeight()/3, true);
+            image = Bitmap.createScaledBitmap(image, 2*image.getWidth()/3, 2*image.getHeight()/3, false);
         }
     }
 

@@ -42,7 +42,7 @@ public class BasicHull implements Hull {
         this.smokeLocations[3] = new Point(-15, -15);
         if(image == null) {
             image = BitmapFactory.decodeResource(context.getResources(), getImageID());
-            image = Bitmap.createScaledBitmap(image, 2*image.getWidth()/3, 2*image.getHeight()/3, true);
+            image = Bitmap.createScaledBitmap(image, 2*image.getWidth()/3, 2*image.getHeight()/3, false);
         }
     }
 
